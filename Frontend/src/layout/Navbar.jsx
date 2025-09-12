@@ -22,7 +22,7 @@ const Navbar = () => {
   const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
-    if (isAuthenticated) isAdminUser(user.id).then(setIsAdmin);
+    if (isAuthenticated) isAdminUser().then(setIsAdmin);
     else setIsAdmin(false);
     const handleScroll = () => setScrolled(window.scrollY > 20);
     window.addEventListener("scroll", handleScroll);
@@ -46,7 +46,7 @@ const Navbar = () => {
 
   const UserAvatar = (
     <Avatar className="h-8 w-8">
-      {user?.profile_photo ? <AvatarImage src={user.profile_photo} alt={user.name} /> : <AvatarFallback>{user?.name?.[0]?.toUpperCase()}</AvatarFallback>}
+      {user?.profile_photo ? <AvatarImage src={user.profile_photo} alt={user.full_name} /> : <AvatarFallback>{user?.full_name?.[0]?.toUpperCase()}</AvatarFallback>}
     </Avatar>
   );
 
@@ -81,10 +81,10 @@ const Navbar = () => {
           ) : (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <button className="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-neutral-100 dark:hover:bg-neutral-800">{UserAvatar}<span className="hidden lg:block">{user.name}</span></button>
+                <button className="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-neutral-100 dark:hover:bg-neutral-800">{UserAvatar}<span className="hidden lg:block">{user.full_name}</span></button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="w-56 p-1">
-                <DropdownMenuLabel className="px-3 py-2 flex items-center gap-3">{UserAvatar}<span>{user.name}</span></DropdownMenuLabel>
+                <DropdownMenuLabel className="px-3 py-2 flex items-center gap-3">{UserAvatar}<span>{user.full_name}</span></DropdownMenuLabel>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem asChild><Link to="/profile" className="flex items-center gap-3 px-3 py-2 rounded-md"><Settings className="w-4 h-4" />Profile</Link></DropdownMenuItem>
                 <DropdownMenuSeparator />

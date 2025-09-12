@@ -37,7 +37,7 @@ const signupSchema = Yup.object().shape({
 function Signup() {
   const navigate = useNavigate();
   const location = useLocation();
-  const { signup } = UrlState();   // ✅ use signup from context
+  const { signup } = UrlState(); // ✅ use signup from context
 
   // redirect to the page user originally wanted, or dashboard
   const from = location.state?.from?.pathname || "/dashboard";
@@ -68,11 +68,16 @@ function Signup() {
     setErrors({});
     try {
       setLoading(true);
+
       await signupSchema.validate(formData, { abortEarly: false });
 
       // ✅ remove confirmPassword before sending
       const { confirmPassword, ...signupData } = formData;
-      await signup(signupData);   // use context signup
+
+      // ✅ ensure passoutYear is sent as an integer
+      signupData.passoutYear = parseInt(signupData.passoutYear, 10);
+
+      await signup(signupData); // use context signup
 
       setSuccessAlert(true);
 
@@ -101,9 +106,7 @@ function Signup() {
       {successAlert && (
         <Alert variant="success" className="mb-4">
           <AlertTitle>Signup Successful!</AlertTitle>
-          <AlertDescription>
-            Redirecting...
-          </AlertDescription>
+          <AlertDescription>Redirecting...</AlertDescription>
         </Alert>
       )}
 

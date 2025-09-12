@@ -24,9 +24,16 @@ export default function RequireAdmin({ children }) {
     }
 
     const checkAdminStatus = async () => {
-      const isAdmin = await isAdminUser(user.id);
-      if (!isAdmin) setDenied(true);
-      setLoading(false);
+      try {
+        const result = await isAdminUser();
+        if (!result.admin) {
+          setDenied(true);
+        }
+      } catch (err) {
+        setDenied(true);
+      } finally {
+        setLoading(false);
+      }
     };
 
     checkAdminStatus();
@@ -35,7 +42,7 @@ export default function RequireAdmin({ children }) {
   // Trigger redirect 2s after denied
   useEffect(() => {
     if (denied) {
-      const timer = setTimeout(() => setRedirect(true), 2000);
+      const timer = setTimeout(() => setRedirect(true), 1000);
       return () => clearTimeout(timer);
     }
   }, [denied]);

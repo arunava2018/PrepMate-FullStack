@@ -1,81 +1,101 @@
-import supabase from "./supabase";
+const BASE_URL = import.meta.env.VITE_BACKEND_URL;
 
-export async function login({ email, password }) {
-  const { data, error } = await supabase.auth.signInWithPassword({
-    email,
-    password,
-  });
-  if (error) {
-    throw new Error(error.message);
-  }
-  return data;
-}
-// fetch the currently logged-in user's profile
-export async function getCurrentUserProfile() {
-  const {
-    data: { session },
-  } = await supabase.auth.getSession();
-
-  if (!session?.user?.id) return null;
-
-  const userId = session.user.id;
-
-  const { data, error } = await supabase
-    .from("usersProfile")
-    .select("id, name, profile_photo, college_name, passout_year")
-    .eq("id", userId)
-    .single();
- 
-  if (error) throw new Error(error.message);
-//   console.log("Fetched user profile:", data);
-  return data;
-}
+// -------- SIGN UP --------
 export async function signup({ name, email, password, college, passoutYear }) {
-  // 1. Create user in Supabase Auth
-  const { data: authData, error: authError } = await supabase.auth.signUp({
-    email,
-    password,
-  });
+  try {
+    const res = await fetch(`${BASE_URL}/auth/signup`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        email,
+        password,
+        full_name: name,
+        college_name: college,
+        passout_year: passoutYear,
+      }),
+    });
 
-  if (authError) throw new Error(authError.message);
+    const data = await res.json();
 
-  const userId = authData.user.id;
+    if (!res.ok) {
+      throw new Error(data.error || "Signup failed");
+    }
 
-  // 2.Insert user profile in usersProfile table
-  const { data: profileData, error: profileError } = await supabase
-    .from("usersProfile")
-    .insert({
-      id: userId,
-      name,
-      college_name: college,
-      passout_year: passoutYear,
-      profile_photo: null, // Placeholder for now
-    })
-    .select()
-    .single();
-
-  if (profileError) throw new Error(profileError.message);
-//   console.log("Created user profile:", profileData);
-  return profileData;
+    localStorage.setItem("token", data.token);
+    return data.user;
+  } catch (err) {
+    throw err;
+  }
 }
 
-export async function signout() {
-  const { error } = await supabase.auth.signOut();
-  if (error) {
-    throw new Error(error.message);
+// -------- LOGIN --------
+export async function login({ email, password }) {
+  try {
+    const res = await fetch(`${BASE_URL}/auth/login`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email, password }),
+    });
+
+    const data = await res.json();
+
+    if (!res.ok) {
+      throw new Error(data.error || "Login failed");
+    }
+
+    localStorage.setItem("token", data.token);
+    return data.user;
+  } catch (err) {
+    throw err;
   }
+}
+
+// -------- LOGOUT --------
+export async function signout() {
+  localStorage.removeItem("token");
   return true; // success indicator
 }
 
-export async function getUserById(id) {
-  const {data, error} = await supabase
-    .from("usersProfile")
-    .select("name")
-    .eq("id", id)
-    .maybeSingle();
+// -------- GET CURRENT USER PROFILE --------
+export async function getCurrentUserProfile() {
+  const token = localStorage.getItem("token");
+  if (!token) return null;
 
-  if (error) {
-    throw new Error(error.message);
+  const res = await fetch(`${BASE_URL}/auth/me`, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  const data = await res.json();
+
+  if (!res.ok) {
+    throw new Error(data.error || "Failed to fetch profile");
   }
+
+  return data;
+}
+
+// -------- GET USER BY ID --------
+export async function getUserById(id) {
+  const token = localStorage.getItem("token");
+  if (!token) throw new Error("Not authenticated");
+
+  const res = await fetch(`${BASE_URL}/auth/user/${id}`, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  const data = await res.json();
+
+  if (!res.ok) {
+    throw new Error(data.error || "Failed to fetch user");
+  }
+
   return data;
 }

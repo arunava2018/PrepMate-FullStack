@@ -102,7 +102,7 @@ export default function AdminDashboard() {
         <div className="flex items-center gap-3">
           <Shield className="w-8 h-8 text-red-500" />
           <h1 className="lg:text-3xl text-2xl font-bold text-gray-900 dark:text-gray-100">
-            Hello, {user?.name || "Admin"}
+            Hello, {user?.full_name || "Admin"}
           </h1>
         </div>
         <motion.span
