@@ -55,8 +55,8 @@ export default function AddSubject() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     const res = await saveSubject(form);
-    if (res) {
-      setSuccessMsg(`"${res.name}" has been successfully added.`);
+    if (res?.saved) {
+      setSuccessMsg(`"${res.subject.name}" has been successfully added.`);
       setForm({ name: "", description: "", icon: "" });
     }
   };
