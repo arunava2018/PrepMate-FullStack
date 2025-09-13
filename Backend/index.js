@@ -4,6 +4,7 @@ import dotenv from "dotenv";
 import apiAuth from "./routes/apiAuth.js"
 import apiAdmin from "./routes/apiAdmin.js"
 import apiSubject from "./routes/apiSubjects.js"
+import apiSubtopic from "./routes/apiSubtopic.js"
 dotenv.config();
 const app = express();
 
@@ -14,8 +15,8 @@ const PORT = process.env.PORT || 5000;
 // Routes
 app.use("/auth", apiAuth);
 app.use("/admin", apiAdmin);
-app.use("/subject", apiSubject);
-
+app.use("/subjects", apiSubject);
+app.use("/subtopics", apiSubtopic)
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });

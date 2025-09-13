@@ -14,11 +14,11 @@ function Addsubtopic() {
   const [successMsg, setSuccessMsg] = useState("");
 
   const { data, loading, error, fn: fnSubjects } = useFetch(getSubjects);
-  const { fn: fnSubtopic } = useFetch(addSubtopic);
+  const { loading: load, fn: fnSubtopic } = useFetch(addSubtopic);
 
   useEffect(() => {
     fnSubjects();
-  }, [form]);
+  }, [form.subject]);
 
   const handleChange = (e) => {
     setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
@@ -29,7 +29,7 @@ function Addsubtopic() {
     const res = await fnSubtopic(form);
     if (res) {
       setSuccessMsg(`Subtopic "${res.name}" has been successfully added.`);
-      setForm({ name: "" });
+      setForm({ subject:"",name: "" });
     }
   };
 
@@ -135,10 +135,10 @@ function Addsubtopic() {
             {/* Submit */}
             <Button
               type="submit"
-              disabled={loading}
-              className="w-full bg-yellow-500 hover:bg-yellow-600 text-white font-semibold px-4 py-2 rounded-lg transition-colors disabled:opacity-50"
+              disabled={load}
+              className="w-full bg-yellow-500 hover:bg-yellow-600 text-white font-semibold px-4 py-2 rounded-lg transition-colors disabled:opacity-50 cursor-pointer"
             >
-              {loading ? "Saving..." : "Add Subtopic"}
+              {load ? "Saving..." : "Add Subtopic"}
             </Button>
           </form>
         </CardContent>

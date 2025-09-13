@@ -1,9 +1,8 @@
 import express from "express";
-import { addSubject, getSubjectById, getSubjects } from "../controllers/subjectController.js";
+import { addSubtopic, fetchSubtopics } from "../controllers/subtopicController.js";
 import { authMiddleware as requireAuth } from "../middleware/authMiddleware.js";
 import { requireAdmin } from "../middleware/adminMiddleware.js";
 const router = express.Router();
-router.get("/", getSubjects);
-router.get("/:id", getSubjectById);
-router.post("/addsubject", requireAuth, requireAdmin, addSubject);
+router.post("/addsubtopic", requireAuth, requireAdmin, addSubtopic);
+router.get("/:subject", fetchSubtopics);
 export default router;

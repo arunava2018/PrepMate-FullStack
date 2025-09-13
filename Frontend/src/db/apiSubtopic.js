@@ -1,39 +1,36 @@
-import supabase from "./supabase";
+const BASE_URL = import.meta.env.VITE_BACKEND_URL;
 export async function addSubtopic({ subject, name }) {
-    // First, get the subject ID based on the subject name
-    const { data: subjectId, error: subjectError } = await supabase
-        .from("subjects")
-        .select("id")
-        .eq("name", subject)
-        .single();      
-    if (subjectError) throw new Error(subjectError.message);
-
-    // Now, insert the new subtopic with the retrieved subject ID
-    const { data, error } = await supabase
-        .from("subtopics")
-        .insert({
-            subject_id: subjectId.id,
-            name,
-        })
-        .select()
-        .single();
-    if (error) throw new Error(error.message);
-    return data;    
+  try {
+    const token = localStorage.getItem("token");
+    if (!token) throw new Error("Not authenticated");
+    const res = await fetch(`${BASE_URL}/subtopics/addsubtopic`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({subject, name}),
+    });
+    const data = await res.json();
+    if (!res.ok) {
+      throw new Error(data.error || "Failed to add subject");
+    }
+    return data;
+  } catch (err) {
+    throw err;
+  }
 }
 
-export async function fetchSubtopics({subject}) {
-    // First, get the subject ID based on the subject name
-    const { data: subjectId, error: subjectError } = await supabase
-        .from("subjects")
-        .select("id")
-        .eq("name", subject)
-        .single();      
-    if (subjectError) throw new Error(subjectError.message);
-    // Now, fetch subtopics for the retrieved subject ID
-    const { data, error } = await supabase
-        .from("subtopics")
-        .select("*")
-        .eq("subject_id", subjectId.id);
-    if (error) throw new Error(error.message);
+export async function fetchSubtopics({ subject }) {
+  try{
+    const res = await fetch(`${BASE_URL}/subtopics/${subject}`)
+    if (!res.ok) {
+      const errorData = await res.json();
+      throw new Error(errorData.message || "Failed to fetch subtopics");
+    }
+    const data = await res.json();
     return data;
+  }catch(err){
+    throw err;
+  }
 }
