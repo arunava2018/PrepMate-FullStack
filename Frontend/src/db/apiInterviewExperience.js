@@ -1,6 +1,6 @@
-import supabase from "./supabase";
+const BASE_URL = import.meta.env.VITE_BACKEND_URL + "/interview";
 
-// Add interview experience
+// -------- Add interview experience (requires auth) --------
 export async function addInterviewExperience({
   userId,
   company_name,
@@ -12,103 +12,121 @@ export async function addInterviewExperience({
   opportunity_type,
   is_public = false,
 }) {
-  const { data, error } = await supabase
-    .from("interview_experiences")
-    .insert({
-      user_id: userId,
-      company_name,
-      role,
-      linkedin_url,
-      github_url,
-      content,
-      offer_type,
-      opportunity_type,
-      is_public,
-    })
-    .select()
-    .single();
+  try {
+    const token = localStorage.getItem("token");
+    if (!token) throw new Error("Not authenticated");
 
-  if (error) {
-    console.error("Supabase insert error:", error);
-    throw new Error(error.message || "Failed to add interview experience");
+    const res = await fetch(`${BASE_URL}/add`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({
+        userId,
+        company_name,
+        role,
+        linkedin_url,
+        github_url,
+        content,
+        offer_type,
+        opportunity_type,
+        is_public,
+      }),
+    });
+
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || "Failed to add interview experience");
+    return data;
+  } catch (err) {
+    throw err;
   }
-
-  return data;
 }
 
-// Fetch unpublished interview experiences
+// -------- Fetch unpublished interview experiences (admin only) --------
 export async function fetchUnpublishedInterviewExperiences() {
-  const { data, error } = await supabase
-    .from("interview_experiences")
-    .select(`
-      id,
-      company_name,
-      user_id,
-      content,
-      linkedin_url,
-      offer_type,
-      opportunity_type,
-      github_url,
-      role,
-      usersProfile ( name )
-    `)
-    .eq("is_public", false);
+  try {
+    const token = localStorage.getItem("token");
+    if (!token) throw new Error("Not authenticated");
 
-  if (error) {
-    console.error("Error fetching unpublished experiences:", error);
-    throw new Error(error.message);
+    const res = await fetch(`${BASE_URL}/unpublished`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || "Failed to fetch unpublished experiences");
+    return data;
+  } catch (err) {
+    throw err;
   }
-  return data;
 }
 
-
-// Delete interview experience by id
+// -------- Delete interview experience (admin only) --------
 export async function deleteExperience(id) {
-  const { data, error } = await supabase
-    .from("interview_experiences")
-    .delete()
-    .eq("id", id)
-    .select()
-    .single();
+  try {
+    const token = localStorage.getItem("token");
+    if (!token) throw new Error("Not authenticated");
 
-  if (error) {
-    console.error("Error deleting experience:", error);
-    throw new Error(error.message);
+    const res = await fetch(`${BASE_URL}/${id}`, {
+      method: "DELETE",
+      headers: { Authorization: `Bearer ${token}` },
+    });
+
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || "Failed to delete experience");
+    return data;
+  } catch (err) {
+    throw err;
   }
-  return data;
 }
 
-// Approve interview experience by id
+// -------- Approve interview experience (admin only) --------
 export async function approveExperience(id, updatedData) {
-  const payload = {
-    ...updatedData,
-    content: updatedData.content || updatedData.experience || "", // fallback
-    is_public: true,
-  };
-  delete payload.experience;
-  const { data, error } = await supabase
-    .from("interview_experiences")
-    .update(payload)
-    .eq("id", id)
-    .select()
-    .single();
+  try {
+    const token = localStorage.getItem("token");
+    if (!token) throw new Error("Not authenticated");
 
-  if (error) {
-    console.error("Error approving experience:", error);
-    throw new Error(error.message);
+    const payload = {
+      ...updatedData,
+      content: updatedData.content || updatedData.experience || "",
+      is_public: true,
+    };
+    delete payload.experience;
+
+    const res = await fetch(`${BASE_URL}/approve/${id}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify(payload),
+    });
+
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || "Failed to approve experience");
+    return data;
+  } catch (err) {
+    throw err;
   }
-  return data;
 }
 
-//fetch public interview experiences
+// -------- Fetch public interview experiences  --------
 export async function fetchPublicInterviewExperiences() {
-  const { data, error } = await supabase.from("interview_experiences")
-  .select("*")
-  .eq("is_public", true)
-  .order('company_name', { ascending: true });
-  if(error){
-    console.error("Error fetching public experiences:", error);
-    throw new Error(error.message);
+  try {
+    const token = localStorage.getItem("token");
+    if (!token) throw new Error("Not authenticated");
+    const res = await fetch(`${BASE_URL}/public`,{
+      method:"GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    const data = await res.json();
+
+    if (!res.ok) throw new Error(data.error || "Failed to fetch public experiences");
+    return data;
+  } catch (err) {
+    throw err;
   }
-  return data;
 }

@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Linkedin, Github, Briefcase, FileText } from "lucide-react";
 import {
@@ -7,11 +7,7 @@ import {
 } from "@/db/apiInterviewExperience";
 import MarkdownEditor from "@/components/submit-experience-form/MarkdownEditor";
 
-export default function AdminApprovalForm({
-  initialData,
-  onClose,
-  fetchData,
-}) {
+export default function AdminApprovalForm({ initialData, onClose, fetchData }) {
   const [formData, setFormData] = useState({
     role: initialData.role || "",
     offer_type: initialData.offer_type || "",
@@ -21,6 +17,7 @@ export default function AdminApprovalForm({
     content: initialData.content || "",
   });
   const [loading, setLoading] = useState(false);
+  const [action, setAction] = useState(null);
 
   const offerTypes = [
     { value: "internship", label: "Internship" },
@@ -33,46 +30,45 @@ export default function AdminApprovalForm({
     { value: "off", label: "Off Campus" },
   ];
 
-  const handleChange = (e) => {
-    setFormData((prev) => ({
-      ...prev,
-      [e.target.name]: e.target.value,
-    }));
-  };
+  const handleChange = (e) =>
+    setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
 
-  const handleExperienceChange = (val) => {
+  const handleExperienceChange = (val) =>
     setFormData((prev) => ({ ...prev, content: val }));
-  };
 
   const handleApprove = async () => {
     try {
       setLoading(true);
+      setAction("approve");
       await approveExperience(initialData.id, formData);
-      fetchData();
-      onClose();
+      await fetchData();
+      onClose(); // close modal after success
     } catch (err) {
       console.error("Error approving:", err);
     } finally {
       setLoading(false);
+      setAction(null);
     }
   };
 
   const handleDelete = async () => {
     try {
       setLoading(true);
+      setAction("delete");
       await deleteExperience(initialData.id);
-      fetchData();
-      onClose();
+      await fetchData();
+      onClose(); // close modal after success
     } catch (err) {
       console.error("Error deleting:", err);
     } finally {
       setLoading(false);
+      setAction(null);
     }
   };
 
   return (
     <div className="space-y-6">
-      {/* Role (Position) */}
+      {/* Role */}
       <div className="space-y-2">
         <label className="text-sm font-medium text-gray-300 flex items-center gap-2">
           <Briefcase className="w-4 h-4 text-yellow-500" /> Position
@@ -130,9 +126,9 @@ export default function AdminApprovalForm({
         </select>
       </div>
 
-      {/* LinkedIn & GitHub */}
-      <div className="grid grid-cols-2 space-x-6">
-        <div className="space-y-2">
+      {/* Links */}
+      <div className="grid grid-cols-2 gap-4">
+        <div>
           <label className="text-sm font-medium text-gray-300 flex items-center gap-2">
             <Linkedin className="w-4 h-4 text-blue-500" /> LinkedIn URL
           </label>
@@ -143,12 +139,11 @@ export default function AdminApprovalForm({
               value={formData.linkedin_url}
               onChange={handleChange}
               className="w-full bg-transparent outline-none text-white"
-              placeholder="https://linkedin.com/in/username"
             />
           </div>
         </div>
 
-        <div className="space-y-2">
+        <div>
           <label className="text-sm font-medium text-gray-300 flex items-center gap-2">
             <Github className="w-4 h-4 text-gray-400" /> GitHub URL
           </label>
@@ -159,7 +154,6 @@ export default function AdminApprovalForm({
               value={formData.github_url}
               onChange={handleChange}
               className="w-full bg-transparent outline-none text-white"
-              placeholder="https://github.com/username"
             />
           </div>
         </div>
@@ -167,31 +161,41 @@ export default function AdminApprovalForm({
 
       {/* Markdown Editor */}
       <div className="space-y-2">
-        <label className="text-sm font-medium text-gray-300 flex items-center gap-2">
-          Experience Content
-        </label>
-        <MarkdownEditor
-          value={formData.content}
-          onChange={handleExperienceChange}
-        />
+        <label className="text-sm font-medium text-gray-300">Experience Content</label>
+        <MarkdownEditor value={formData.content} onChange={handleExperienceChange} />
       </div>
 
-      {/* Action buttons */}
+      {/* Actions */}
       <div className="flex justify-between mt-6">
         <Button
-          className="cursor-pointer"
+          className="cursor-pointer flex items-center gap-2"
           variant="destructive"
           disabled={loading}
           onClick={handleDelete}
         >
-          Delete
+          {loading && action === "delete" ? (
+            <>
+              <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></span>
+              Deleting...
+            </>
+          ) : (
+            "Delete"
+          )}
         </Button>
+
         <Button
-          className="bg-yellow-500 hover:bg-yellow-600 text-black font-medium cursor-pointer"
+          className="bg-yellow-500 hover:bg-yellow-600 text-black font-medium cursor-pointer flex items-center gap-2"
           disabled={loading}
           onClick={handleApprove}
         >
-          Approve
+          {loading && action === "approve" ? (
+            <>
+              <span className="w-4 h-4 border-2 border-black border-t-transparent rounded-full animate-spin"></span>
+              Approving...
+            </>
+          ) : (
+            "Approve"
+          )}
         </Button>
       </div>
     </div>

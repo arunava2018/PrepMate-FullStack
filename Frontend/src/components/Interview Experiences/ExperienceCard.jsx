@@ -1,42 +1,28 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { oneDark, oneLight } from "react-syntax-highlighter/dist/cjs/styles/prism";
-import { 
+import {
   AccordionItem,
   AccordionTrigger,
   AccordionContent,
 } from "../ui/accordion";
 import { Badge } from "../ui/badge";
-import { 
-  Briefcase,
-  ExternalLink,
-  Github,
-  Linkedin,
-  User
-} from "lucide-react";
-import { getUserById } from "@/db/apiAuth";
+import { Briefcase, ExternalLink, Github, Linkedin, User } from "lucide-react";
 
 function ExperienceCard({ experience, index }) {
-  const [userName, setUserName] = useState("");
   const {
     id,
     role,
     content,
     linkedin_url,
     github_url,
-    user_id,
-    offer_type
+    offer_type,
+    users,
   } = experience;
 
-  useEffect(() => {
-    getUserById(user_id).then((res) => {
-      setUserName(res?.name || "Anonymous User");
-    }).catch(() => {
-      setUserName("Anonymous User");
-    });
-  }, [user_id]);
+  const userName = users?.full_name || "Anonymous User";
 
   // Markdown renderers with theme support
   const markdownComponents = {
@@ -44,7 +30,12 @@ function ExperienceCard({ experience, index }) {
       const match = /language-(\w+)/.exec(className || "");
       return !inline && match ? (
         <SyntaxHighlighter
-          style={typeof window !== 'undefined' && document.documentElement.classList.contains('dark') ? oneDark : oneLight}
+          style={
+            typeof window !== "undefined" &&
+            document.documentElement.classList.contains("dark")
+              ? oneDark
+              : oneLight
+          }
           language={match[1]}
           PreTag="div"
           className="rounded-md !mt-4 !mb-4"
@@ -66,22 +57,22 @@ function ExperienceCard({ experience, index }) {
       case "full_time":
         return {
           className: "bg-green-500 hover:bg-green-600 text-white",
-          text: "Full Time"
+          text: "Full Time",
         };
       case "internship_ppo":
         return {
           className: "bg-purple-500 hover:bg-purple-600 text-white",
-          text: "Internship Ppo"
+          text: "Internship Ppo",
         };
       case "internship":
         return {
           className: "bg-blue-500 hover:bg-blue-600 text-white",
-          text: "Internship"
+          text: "Internship",
         };
       default:
         return {
           className: "bg-gray-500 hover:bg-gray-600 text-white",
-          text: type || "Unknown"
+          text: type || "Unknown",
         };
     }
   };
@@ -106,14 +97,20 @@ function ExperienceCard({ experience, index }) {
             <div className="w-full min-w-0 flex-1">
               <div className="w-full flex items-center gap-2 mb-1">
                 <User className="w-4 h-4 text-orange-500 dark:text-orange-400 flex-shrink-0" />
-                <h3 className="text-lg font-semibold text-gray-900 dark:text-white truncate flex-1" title={userName}>
-                  {userName || "Loading..."}
+                <h3
+                  className="text-lg font-semibold text-gray-900 dark:text-white truncate flex-1"
+                  title={userName}
+                >
+                  {userName}
                 </h3>
               </div>
 
               <div className="w-full flex items-center gap-2">
                 <Briefcase className="w-4 h-4 text-gray-500 dark:text-slate-400 flex-shrink-0" />
-                <p className="text-sm text-gray-600 dark:text-slate-400 truncate flex-1" title={role || "Position Not Specified"}>
+                <p
+                  className="text-sm text-gray-600 dark:text-slate-400 truncate flex-1"
+                  title={role || "Position Not Specified"}
+                >
                   {role || "Position Not Specified"}
                 </p>
               </div>
@@ -122,7 +119,7 @@ function ExperienceCard({ experience, index }) {
 
           {/* Right side - Offer type badge */}
           {offer_type && (
-            <Badge 
+            <Badge
               className={`ml-4 px-3 py-1 text-xs font-medium transition-colors duration-200 flex-shrink-0 ${badgeConfig.className}`}
             >
               {badgeConfig.text}
