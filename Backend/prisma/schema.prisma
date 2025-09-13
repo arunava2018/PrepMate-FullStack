@@ -95,6 +95,7 @@ model user_question_progress {
   @@index([question_id], map: "idx_user_question_progress_question_id")
   @@index([subject_id], map: "idx_user_question_progress_subject_id")
   @@index([user_id], map: "idx_user_question_progress_user_id")
+  @@unique([user_id, question_id], name: "user_id_question_id")
 }
 
 model users {
