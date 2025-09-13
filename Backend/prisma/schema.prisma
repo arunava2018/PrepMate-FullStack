@@ -73,7 +73,7 @@ model subjects {
 model subtopics {
   id         String      @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   subject_id String      @db.Uuid
-  name       String
+  name       String 
   created_at DateTime?   @default(now()) @db.Timestamptz(6)
   questions  questions[]
   subjects   subjects    @relation(fields: [subject_id], references: [id], onDelete: NoAction, onUpdate: NoAction)

@@ -19,7 +19,7 @@ export default function AddQuestion() {
 
   const [successMsg, setSuccessMsg] = useState("");
   const [errorMsg, setErrorMsg] = useState("");
-
+  const [submitting, setSubmitting] = useState(false); 
   const { data: subjects, loading, fn: fnSubjects } = useFetch(getSubjects);
   const { data: subtopicData, fn: fnSubtopic } = useFetch(fetchSubtopics);
 
@@ -51,11 +51,14 @@ export default function AddQuestion() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
+      setSubmitting(true); 
       await addQuestion(form);
       setSuccessMsg("Question has been successfully added.");
       setForm({ subject: "", subtopic: "", question: "", answer: "" });
     } catch (err) {
       setErrorMsg(err.message || "Something went wrong!");
+    } finally {
+      setSubmitting(false);
     }
   };
 
@@ -165,13 +168,13 @@ export default function AddQuestion() {
             {/* Submit */}
             <Button
               type="submit"
-              disabled={loading}
+              disabled={submitting}
               className="w-full cursor-pointer bg-yellow-500 hover:bg-yellow-600 text-white font-semibold px-4 py-2 rounded-lg shadow-md transition-all disabled:opacity-50 flex items-center justify-center gap-2"
             >
-              {loading && (
+              {submitting && (
                 <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></span>
               )}
-              {loading ? "Saving..." : "Add Question"}
+              {submitting ? "Adding Question..." : "Add Question"}
             </Button>
           </form>
         </CardContent>

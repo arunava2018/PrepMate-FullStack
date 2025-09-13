@@ -1,65 +1,96 @@
-import supabase from "./supabase";
+const BASE_URL = import.meta.env.VITE_BACKEND_URL + "/questions";
+// -------- Add new question --------
 export async function addQuestion({ subject, subtopic, question, answer }) {
-    //1st find the subject id from the subject name
-    const { data: subjectId, error: subjectError } = await supabase
-        .from("subjects")
-        .select("id")
-        .eq("name", subject)
-        .single();
-    if (subjectError) throw new Error(subjectError.message);
-    //2nd find the subtopic id from the subtopic name
-    const { data: subtopicId, error: subtopicError } = await supabase
-        .from("subtopics")
-        .select("id")
-        .eq("name", subtopic)
-        .single();
-    if (subtopicError) throw new Error(subtopicError.message);
-    //3rd insert the question into the questions table
-    const { data, error } = await supabase.from("questions").insert([
-        {
-            subject_id: subjectId.id,
-            subtopic_id: subtopicId.id,
-            question_text: question,
-            answer_text: answer,
-        },
-    ]);
-    if (error) throw new Error(error.message);
+  try {
+    const token = localStorage.getItem("token");
+    if (!token) throw new Error("Not authenticated");
+
+    const res = await fetch(`${BASE_URL}/addquestion`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({
+        subject,
+        subtopic,
+        question_text: question,
+        answer_text: answer,
+      }),
+    });
+
+    const data = await res.json();
+    if (!res.ok) {
+      throw new Error(data.error || "Failed to add question");
+    }
     return data;
+  } catch (err) {
+    throw err;
+  }
 }
 
+// -------- Fetch questions by subtopic --------
 export async function fetchQuestions(subtopicId) {
-  const { data, error } = await supabase
-    .from("questions")
-    .select("*")
-    .eq("subtopic_id", subtopicId)
-    .order("created_at", { ascending: true });
+  try {
+    const res = await fetch(`${BASE_URL}/${subtopicId}`);
+    const data = await res.json();
 
-  if (error) throw new Error(error.message);
-//   console.log(data);
-  
-  return data;
+    if (!res.ok) {
+      throw new Error(data.error || "Failed to fetch questions");
+    }
+
+    return data;
+  } catch (err) {
+    throw err;
+  }
 }
 
-// Update question
+// -------- Update question --------
 export async function updateQuestion({ questionId, question_text, answer_text }) {
-  const { data, error } = await supabase
-    .from("questions")
-    .update({
-      question_text,
-      answer_text,
-      updated_at: new Date(),
-    })
-    .eq("id", questionId)
-    .select()
-    .single();
+  try {
+    const token = localStorage.getItem("token");
+    if (!token) throw new Error("Not authenticated");
 
-  if (error) throw new Error(error.message);
-  return data;
+    const res = await fetch(`${BASE_URL}/${questionId}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({ question_text, answer_text }),
+    });
+
+    const data = await res.json();
+    if (!res.ok) {
+      throw new Error(data.error || "Failed to update question");
+    }
+
+    return data;
+  } catch (err) {
+    throw err;
+  }
 }
 
-// Delete question
+// -------- Delete question --------
 export async function deleteQuestion(questionId) {
-  const { data, error } = await supabase.from("questions").delete().eq("id", questionId);
-  if (error) throw new Error(error.message);
-  return data;
+  try {
+    const token = localStorage.getItem("token");
+    if (!token) throw new Error("Not authenticated");
+
+    const res = await fetch(`${BASE_URL}/${questionId}`, {
+      method: "DELETE",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    const data = await res.json();
+    if (!res.ok) {
+      throw new Error(data.error || "Failed to delete question");
+    }
+
+    return data;
+  } catch (err) {
+    throw err;
+  }
 }
