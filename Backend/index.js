@@ -8,8 +8,10 @@ import apiSubtopic from "./routes/apiSubtopic.js";
 import apiQuestion from "./routes/apiQuestion.js";
 import apiInterviewexperience from "./routes/apiInterviewExperience.js";
 import apiProgress from "./routes/apiProgress.js";
+
 dotenv.config();
 const app = express();
+
 app.use(
   cors({
     origin: process.env.FRONTEND_URL,
@@ -17,6 +19,7 @@ app.use(
   })
 );
 app.use(express.json());
+
 app.get("/", (req, res) => {
   res.send("🚀 PrepMate backend is running...");
 });
@@ -30,8 +33,5 @@ app.use("/questions", apiQuestion);
 app.use("/interview", apiInterviewexperience);
 app.use("/progress", apiProgress);
 
-// // Server
-// const PORT = process.env.PORT || 5000;
-// app.listen(PORT, () => {
-//   console.log(`✅ Server running on port ${PORT}`);
-// });
+// ✅ Export app for Vercel
+export default app;
