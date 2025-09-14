@@ -10,7 +10,8 @@ import { getSubjects } from "@/db/apiSubjects";
 import { addSubtopic } from "@/db/apiSubtopic";
 
 function Addsubtopic() {
-  const [form, setForm] = useState({ subject: "", name: "" });
+  // ✅ Use subjectId instead of subject name
+  const [form, setForm] = useState({ subjectId: "", name: "" });
   const [successMsg, setSuccessMsg] = useState("");
 
   const { data, loading, error, fn: fnSubjects } = useFetch(getSubjects);
@@ -18,7 +19,7 @@ function Addsubtopic() {
 
   useEffect(() => {
     fnSubjects();
-  }, [form.subject]);
+  }, []);
 
   const handleChange = (e) => {
     setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
@@ -26,10 +27,10 @@ function Addsubtopic() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const res = await fnSubtopic(form);
+    const res = await fnSubtopic(form); // ✅ form = { subjectId, name }
     if (res) {
       setSuccessMsg(`Subtopic "${res.name}" has been successfully added.`);
-      setForm({ subject:"",name: "" });
+      setForm({ subjectId: "", name: "" }); // reset
     }
   };
 
@@ -57,24 +58,25 @@ function Addsubtopic() {
 
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-6">
-            {/* Subject Name */}
+            {/* Subject Dropdown */}
             <div>
               <label className="block mb-2 font-medium text-gray-800 dark:text-gray-200">
-                Subject Name
+                Subject
               </label>
               <select
-                name="subject"
-                value={form.subject}
+                name="subjectId" // ✅ use subjectId
+                value={form.subjectId}
                 onChange={handleChange}
                 required
                 className="w-full p-2 border rounded-lg bg-gray-50 dark:bg-gray-900 dark:text-gray-100"
               >
                 <option value="">Select Subject</option>
-                {(data || []).map(({ id, name }) => (
-                  <option key={id} value={name}>
-                    {name}
-                  </option>
-                ))}
+                {Array.isArray(data) &&
+                  data.map(({ id, name }) => (
+                    <option key={id} value={id}>
+                      {name}
+                    </option>
+                  ))}
               </select>
             </div>
 
@@ -93,7 +95,7 @@ function Addsubtopic() {
               />
             </div>
 
-            {/* Animated Alerts */}
+            {/* Alerts */}
             <AnimatePresence>
               {successMsg && (
                 <motion.div

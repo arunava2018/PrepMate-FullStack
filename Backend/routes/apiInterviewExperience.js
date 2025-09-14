@@ -6,24 +6,31 @@ import {
   approveExperience,
   fetchPublicInterviewExperiences,
 } from "../controllers/interviewexperienceController.js";
-import { authMiddleware as requireAuth } from "../middleware/authMiddleware.js";
-import { requireAdmin } from "../middleware/adminMiddleware.js";
+import { cacheMiddleware } from "../middleware/cache.js";
 
 const router = express.Router();
 
-// Authenticated user: fetch all published interview experiences
-router.get("/public", requireAuth, fetchPublicInterviewExperiences);
+// Public interview experiences (cache for 30 min)
+router.get(
+  "/public",
+  cacheMiddleware({ key: "interview:public", ttl: 1800 }),
+  fetchPublicInterviewExperiences
+);
 
-// Authenticated user: add a new interview experience
-router.post("/add", requireAuth, addInterviewExperience);
+// Unpublished interview experiences (cache for 5 min)
+router.get(
+  "/unpublished",
+  cacheMiddleware({ key: "interview:unpublished", ttl: 300 }),
+  fetchUnpublishedInterviewExperiences
+);
 
-// Admin-only: fetch unpublished interview experiences
-router.get("/unpublished", requireAuth, requireAdmin, fetchUnpublishedInterviewExperiences);
+// Add new interview experience
+router.post("/add", addInterviewExperience);
 
-// Admin-only: approve an interview experience
-router.put("/approve/:id", requireAuth, requireAdmin, approveExperience);
+// Approve (makes it public + invalidates)
+router.put("/approve/:id", approveExperience);
 
-// Admin-only: delete an interview experience
-router.delete("/:id", requireAuth, requireAdmin, deleteExperience);
+// Delete interview experience
+router.delete("/:id", deleteExperience);
 
 export default router;

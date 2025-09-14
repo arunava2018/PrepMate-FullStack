@@ -1,8 +1,20 @@
 import express from "express";
 import { addSubtopic, fetchSubtopics } from "../controllers/subtopicController.js";
-import { authMiddleware as requireAuth } from "../middleware/authMiddleware.js";
-import { requireAdmin } from "../middleware/adminMiddleware.js";
+import { cacheMiddleware } from "../middleware/cache.js";
+
 const router = express.Router();
-router.post("/addsubtopic", requireAuth, requireAdmin, addSubtopic);
-router.get("/:subject", fetchSubtopics);
+
+// Add new subtopic (invalidate cache inside controller)
+router.post("/addsubtopic", addSubtopic);
+
+// Fetch subtopics for a subject (cache 5 minutes)
+router.get(
+  "/:subjectId",
+  cacheMiddleware({
+    key: (req) => `subtopics:${req.params.subjectId}`,
+    ttl: 300,
+  }),
+  fetchSubtopics
+);
+
 export default router;

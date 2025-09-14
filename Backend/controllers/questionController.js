@@ -1,54 +1,56 @@
 import { PrismaClient } from "@prisma/client";
+
 const prisma = new PrismaClient();
 
 /**
- * Add a new question
+ * ➕ Add a new question
  */
 export const addQuestion = async (req, res) => {
   try {
-    const { subject, subtopic, question_text, answer_text } = req.body;
+    const { subject_id, subtopic_id, question_text, answer_text } = req.body;
 
-    // 1. Find subject
+    if (!subject_id || !subtopic_id || !question_text || !answer_text) {
+      return res.status(400).json({ error: "All fields are required" });
+    }
+
+    // Validate subject
     const foundSubject = await prisma.subjects.findUnique({
-      where: { name: subject },
+      where: { id: subject_id },
     });
     if (!foundSubject) {
       return res.status(404).json({ error: "Subject not found" });
     }
 
-    // 2. Find subtopic under subject
+    // Validate subtopic belongs to subject
     const foundSubtopic = await prisma.subtopics.findFirst({
-      where: {
-        name: subtopic,
-        subject_id: foundSubject.id,
-      },
+      where: { id: subtopic_id, subject_id },
     });
     if (!foundSubtopic) {
-      return res.status(404).json({ error: "Subtopic not found" });
+      return res
+        .status(404)
+        .json({ error: "Subtopic not found in this subject" });
     }
 
-    // 3. Insert new question
+    // Create question
     const question = await prisma.questions.create({
-      data: {
-        subject_id: foundSubject.id,
-        subtopic_id: foundSubtopic.id,
-        question_text,
-        answer_text,
-      },
+      data: { subject_id, subtopic_id, question_text, answer_text },
     });
 
-    res.status(201).json(question);
+    res.status(201).json({
+      message: "Question added successfully",
+      question,
+    });
   } catch (err) {
-    console.error(err);
+    console.error("AddQuestion error:", err);
     if (err.code === "P2002") {
-      return res.status(400).json({ error: "Question or answer already exists" });
+      return res.status(400).json({ error: "Duplicate question or answer" });
     }
     res.status(500).json({ error: "Failed to add question" });
   }
 };
 
 /**
- * Fetch all questions for a subtopic
+ * 📖 Fetch all questions for a subtopic
  */
 export const fetchQuestions = async (req, res) => {
   try {
@@ -61,13 +63,13 @@ export const fetchQuestions = async (req, res) => {
 
     res.json(questions);
   } catch (err) {
-    console.error(err);
+    console.error("FetchQuestions error:", err);
     res.status(500).json({ error: "Failed to fetch questions" });
   }
 };
 
 /**
- * Update a question
+ * ✏️ Update a question
  */
 export const updateQuestion = async (req, res) => {
   try {
@@ -75,28 +77,23 @@ export const updateQuestion = async (req, res) => {
     const { question_text, answer_text } = req.body;
 
     if (!question_text || !answer_text) {
-      return res.status(400).json({
-        error: "Both question_text and answer_text are required",
-      });
+      return res
+        .status(400)
+        .json({ error: "Both question_text and answer_text are required" });
     }
 
     const updated = await prisma.questions.update({
       where: { id: questionId },
-      data: {
-        question_text,
-        answer_text,
-        updated_at: new Date(),
-      },
+      data: { question_text, answer_text, updated_at: new Date() },
     });
 
     res.json(updated);
   } catch (err) {
-    console.error(err);
+    console.error("UpdateQuestion error:", err);
     if (err.code === "P2002") {
-      return res.status(400).json({ error: "Question or answer already exists" });
+      return res.status(400).json({ error: "Duplicate question or answer" });
     }
     if (err.code === "P2025") {
-      // Record not found
       return res.status(404).json({ error: "Question not found" });
     }
     res.status(500).json({ error: "Failed to update question" });
@@ -104,19 +101,25 @@ export const updateQuestion = async (req, res) => {
 };
 
 /**
- * Delete a question
+ * ❌ Delete a question (with cleanup of related progress)
  */
 export const deleteQuestion = async (req, res) => {
   try {
     const { questionId } = req.params;
 
+    // Delete related user progress entries first
+    await prisma.user_question_progress.deleteMany({
+      where: { question_id: questionId },
+    });
+
+    // Delete the question itself
     await prisma.questions.delete({
       where: { id: questionId },
     });
 
     res.json({ message: "Question deleted successfully" });
   } catch (err) {
-    console.error(err);
+    console.error("DeleteQuestion error:", err);
     if (err.code === "P2025") {
       return res.status(404).json({ error: "Question not found" });
     }

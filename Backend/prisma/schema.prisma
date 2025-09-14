@@ -29,51 +29,44 @@ model interview_experiences {
 }
 
 model progress {
-  id         BigInt    @id @default(autoincrement())
+  id         Int       @id @default(autoincrement())
   user_id    String?   @db.Uuid
   subject_id String?   @db.Uuid
-  read_count BigInt?   @default(0)
-  subjects   subjects? @relation(fields: [subject_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  users      users?    @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
-
-  @@index([subject_id], map: "idx_progress_subject_id")
-  @@index([user_id], map: "idx_progress_user_id")
+  read_count Int?      @default(0)
+  created_at DateTime? @default(now()) @db.Timestamptz(6)
 }
 
 model questions {
-  id                     String                   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  subject_id             String?                  @db.Uuid
-  subtopic_id            String?                  @db.Uuid
-  question_text          String                   @unique
-  answer_text            String                   @unique
-  created_by             String?                  @db.Uuid
-  created_at             DateTime?                @default(now()) @db.Timestamptz(6)
-  updated_at             DateTime?                @default(now()) @db.Timestamptz(6)
-  users                  users?                   @relation(fields: [created_by], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  subjects               subjects?                @relation(fields: [subject_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  subtopics              subtopics?               @relation(fields: [subtopic_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  user_question_progress user_question_progress[]
+  id            String     @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  subject_id    String?    @db.Uuid
+  subtopic_id   String?    @db.Uuid
+  question_text String     @unique
+  answer_text   String     @unique
+  created_by    String?    @db.Uuid
+  created_at    DateTime?  @default(now()) @db.Timestamptz(6)
+  updated_at    DateTime?  @default(now()) @db.Timestamptz(6)
+  users         users?     @relation(fields: [created_by], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  subjects      subjects?  @relation(fields: [subject_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  subtopics     subtopics? @relation(fields: [subtopic_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
 
   @@index([subject_id], map: "idx_questions_subject_id")
   @@index([subtopic_id], map: "idx_questions_ubtopic_id")
 }
 
 model subjects {
-  id                     String                   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  name                   String                   @unique
-  description            String?
-  icon                   String?
-  created_at             DateTime?                @default(now()) @db.Timestamptz(6)
-  progress               progress[]
-  questions              questions[]
-  subtopics              subtopics[]
-  user_question_progress user_question_progress[]
+  id          String      @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name        String      @unique
+  description String?
+  icon        String?
+  created_at  DateTime?   @default(now()) @db.Timestamptz(6)
+  questions   questions[]
+  subtopics   subtopics[]
 }
 
 model subtopics {
   id         String      @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   subject_id String      @db.Uuid
-  name       String 
+  name       String
   created_at DateTime?   @default(now()) @db.Timestamptz(6)
   questions  questions[]
   subjects   subjects    @relation(fields: [subject_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
@@ -82,36 +75,28 @@ model subtopics {
 }
 
 model user_question_progress {
-  id          BigInt    @id @default(autoincrement())
+  id          Int       @id @default(autoincrement())
   user_id     String    @db.Uuid
   question_id String    @db.Uuid
   subject_id  String    @db.Uuid
-  is_read     Boolean   @default(false)
+  is_read     Boolean?  @default(false)
   read_at     DateTime? @default(now()) @db.Timestamptz(6)
-  questions   questions @relation(fields: [question_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  subjects    subjects  @relation(fields: [subject_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  users       users     @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
 
-  @@index([question_id], map: "idx_user_question_progress_question_id")
-  @@index([subject_id], map: "idx_user_question_progress_subject_id")
-  @@index([user_id], map: "idx_user_question_progress_user_id")
-  @@unique([user_id, question_id], name: "user_id_question_id")
+  @@unique([user_id, question_id], name: "user_id_question_id", map: "user_id_question_id")
 }
 
 model users {
-  id                     String                   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  email                  String                   @unique
-  password               String
-  full_name              String?
-  profile_photo          String?
-  college_name           String?
-  passout_year           Int?
-  role                   String?                  @default("user")
-  created_at             DateTime?                @default(now()) @db.Timestamptz(6)
-  updated_at             DateTime?                @default(now()) @db.Timestamptz(6)
-  admin_users            admin_users?
-  interview_experiences  interview_experiences[]
-  progress               progress[]
-  questions              questions[]
-  user_question_progress user_question_progress[]
+  id                    String                  @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  email                 String                  @unique
+  password              String
+  full_name             String?
+  profile_photo         String?
+  college_name          String?
+  passout_year          Int?
+  role                  String?                 @default("user")
+  created_at            DateTime?               @default(now()) @db.Timestamptz(6)
+  updated_at            DateTime?               @default(now()) @db.Timestamptz(6)
+  admin_users           admin_users?
+  interview_experiences interview_experiences[]
+  questions             questions[]
 }

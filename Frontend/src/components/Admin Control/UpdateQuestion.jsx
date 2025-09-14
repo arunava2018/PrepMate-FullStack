@@ -12,14 +12,14 @@ export default function UpdateQuestionPage() {
   const [subtopics, setSubtopics] = useState([]);
   const [questions, setQuestions] = useState([]);
 
-  const [selectedSubject, setSelectedSubject] = useState(null);
-  const [selectedSubtopic, setSelectedSubtopic] = useState(null);
+  const [selectedSubject, setSelectedSubject] = useState(null);   // subjectId
+  const [selectedSubtopic, setSelectedSubtopic] = useState(null); // subtopicId
 
   const [loading, setLoading] = useState(false);
   const [selectedQuestion, setSelectedQuestion] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  // Load subjects
+  // Load subjects once
   useEffect(() => {
     getSubjects()
       .then((res) => setSubjects(res))
@@ -35,7 +35,7 @@ export default function UpdateQuestionPage() {
     }
 
     setLoading(true);
-    fetchSubtopics({ subject: selectedSubject })
+    fetchSubtopics({ subjectId: selectedSubject }) // ✅ now using subjectId
       .then((res) => setSubtopics(res))
       .catch((err) => console.error("Error loading subtopics:", err))
       .finally(() => setLoading(false));
@@ -49,7 +49,7 @@ export default function UpdateQuestionPage() {
     }
 
     setLoading(true);
-    fetchQuestions(selectedSubtopic)
+    fetchQuestions(selectedSubtopic) // ✅ already using subtopicId
       .then((res) => setQuestions(res))
       .catch((err) => console.error("Error loading questions:", err))
       .finally(() => setLoading(false));
@@ -88,11 +88,17 @@ export default function UpdateQuestionPage() {
                   <select
                     value={selectedSubject ?? ""}
                     onChange={(e) => setSelectedSubject(e.target.value || null)}
-                    className="w-full appearance-none bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-xl px-4 py-3 pr-10 text-gray-700 dark:text-gray-300 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-transparent transition-all"
+                    className="w-full appearance-none 
+                               bg-white dark:bg-gray-800 
+                               border border-gray-300 dark:border-gray-600 
+                               rounded-xl px-4 py-3 pr-10 
+                               text-gray-700 dark:text-gray-300 
+                               focus:outline-none focus:ring-2 focus:ring-yellow-500 
+                               focus:border-transparent transition-all"
                   >
                     <option value="">Select Subject</option>
                     {subjects?.map((subj) => (
-                      <option key={subj.id} value={subj.name}>
+                      <option key={subj.id} value={subj.id}>
                         {subj.name}
                       </option>
                     ))}
@@ -112,7 +118,14 @@ export default function UpdateQuestionPage() {
                     value={selectedSubtopic ?? ""}
                     onChange={(e) => setSelectedSubtopic(e.target.value || null)}
                     disabled={!subtopics.length}
-                    className="w-full appearance-none bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-xl px-4 py-3 pr-10 text-gray-700 dark:text-gray-300 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-transparent transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="w-full appearance-none 
+                               bg-white dark:bg-gray-800 
+                               border border-gray-300 dark:border-gray-600 
+                               rounded-xl px-4 py-3 pr-10 
+                               text-gray-700 dark:text-gray-300 
+                               focus:outline-none focus:ring-2 focus:ring-yellow-500 
+                               focus:border-transparent transition-all 
+                               disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     <option value="">Select Subtopic</option>
                     {subtopics?.map((sub) => (
@@ -132,7 +145,7 @@ export default function UpdateQuestionPage() {
                 <div className="flex items-center gap-2">
                   <Search className="w-4 h-4 text-yellow-600" />
                   <span className="text-sm font-medium text-yellow-700 dark:text-yellow-300">
-                    Found {questions.length} question{questions.length !== 1 ? 's' : ''}
+                    Found {questions.length} question{questions.length !== 1 ? "s" : ""}
                   </span>
                 </div>
               </div>

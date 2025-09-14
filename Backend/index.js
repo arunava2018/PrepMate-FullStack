@@ -17,6 +17,9 @@ app.use(
   })
 );
 app.use(express.json());
+app.get("/", (req, res) => {
+  res.send("🚀 PrepMate backend is running...");
+});
 
 // Routes
 app.use("/auth", apiAuth);
@@ -27,8 +30,8 @@ app.use("/questions", apiQuestion);
 app.use("/interview", apiInterviewexperience);
 app.use("/progress", apiProgress);
 
-// Server
-const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => {
-  console.log(`✅ Server running on port ${PORT}`);
-});
+// // Server
+// const PORT = process.env.PORT || 5000;
+// app.listen(PORT, () => {
+//   console.log(`✅ Server running on port ${PORT}`);
+// });

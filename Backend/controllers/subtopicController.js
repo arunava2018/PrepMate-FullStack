@@ -1,55 +1,36 @@
 import { PrismaClient } from "@prisma/client";
+import { cacheClient } from "../utils/cacheClient.js";
+
 const prisma = new PrismaClient();
 
-// -------- Add Subtopics for a specific subject --------
-export const addSubtopic = async (req, res) => {
+export const fetchSubtopics = async (req, res) => {
   try {
-    const { subject, name } = req.body;
-
-    // 1. find subject
-    const foundSubject = await prisma.subjects.findUnique({
-      where: { name: subject },
+    const { subjectId } = req.params;
+    const subtopics = await prisma.subtopics.findMany({
+      where: { subject_id: subjectId },
     });
-
-    if (!foundSubject) {
-      return res.status(404).json({ error: "Subject not found" });
-    }
-
-    // 2. create subtopic
-    const subtopic = await prisma.subtopics.create({
-      data: {
-        name,
-        subject_id: foundSubject.id,
-      },
-    });
-
-    res.status(201).json(subtopic);
+    res.json(subtopics);
   } catch (err) {
-    console.error(err);
-    res.status(500).json({ message: "Failed to add subtopics" });
+    res.status(500).json({ error: "Failed to fetch subtopics" });
   }
 };
 
-// -------- Fetch Subtopics for a Subject --------
-export const fetchSubtopics = async (req, res) => {
+export const addSubtopic = async (req, res) => {
   try {
-    const { subject } = req.params; 
+    const { subject_id, name } = req.body;
 
-    const foundSubject = await prisma.subjects.findUnique({
-      where: { name: subject },
+    const subtopic = await prisma.subtopics.create({
+      data: { subject_id, name },
     });
 
-    if (!foundSubject) {
-      return res.status(404).json({ error: "Subject not found" });
-    }
+    // Invalidate caches
+    await Promise.all([
+      cacheClient.del(`subtopics:${subject_id}`),
+      cacheClient.del("subjects:all"), // subject list may depend on subtopic counts
+    ]);
 
-    const subtopics = await prisma.subtopics.findMany({
-      where: { subject_id: foundSubject.id },
-    });
-
-    res.json(subtopics);
+    res.status(201).json({ message: "Subtopic added successfully", subtopic });
   } catch (err) {
-    console.error(err);
-    res.status(500).json({ message: "Failed to fetch subtopics" });
+    res.status(500).json({ error: "Failed to add subtopic" });
   }
 };

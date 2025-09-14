@@ -1,5 +1,20 @@
 import { PrismaClient } from "@prisma/client";
+import { cacheClient } from "../utils/cacheClient.js";
+
 const prisma = new PrismaClient();
+
+/**
+ * Helper: Invalidate interview experience caches
+ */
+const invalidateInterviewExperienceCache = async () => {
+  try {
+    await cacheClient.del("interview:public");
+    await cacheClient.del("interview:unpublished");
+    console.log("Interview experience caches invalidated");
+  } catch (e) {
+    console.error("Cache invalidation error:", e?.message || e);
+  }
+};
 
 /**
  * Add Interview Experience
@@ -32,6 +47,8 @@ export const addInterviewExperience = async (req, res) => {
       },
     });
 
+    await invalidateInterviewExperienceCache();
+
     res.status(201).json(experience);
   } catch (err) {
     console.error(err);
@@ -56,18 +73,14 @@ export const fetchUnpublishedInterviewExperiences = async (req, res) => {
         role: true,
         offer_type: true,
         opportunity_type: true,
-        users: {
-          select: { full_name: true },
-        },
+        users: { select: { full_name: true } },
       },
     });
 
     res.json(experiences);
   } catch (err) {
     console.error(err);
-    res
-      .status(500)
-      .json({ error: "Failed to fetch unpublished interview experiences" });
+    res.status(500).json({ error: "Failed to fetch unpublished interview experiences" });
   }
 };
 
@@ -81,6 +94,8 @@ export const deleteExperience = async (req, res) => {
     const deleted = await prisma.interview_experiences.delete({
       where: { id },
     });
+
+    await invalidateInterviewExperienceCache();
 
     res.json(deleted);
   } catch (err) {
@@ -112,6 +127,8 @@ export const approveExperience = async (req, res) => {
       data: payload,
     });
 
+    await invalidateInterviewExperienceCache();
+
     res.json(updated);
   } catch (err) {
     console.error(err);
@@ -130,16 +147,12 @@ export const fetchPublicInterviewExperiences = async (req, res) => {
     const experiences = await prisma.interview_experiences.findMany({
       where: { is_public: true },
       orderBy: { company_name: "asc" },
-      include: {
-        users: { select: { full_name: true } },
-      },
+      include: { users: { select: { full_name: true } } },
     });
 
     res.json(experiences);
   } catch (err) {
     console.error(err);
-    res
-      .status(500)
-      .json({ error: "Failed to fetch public interview experiences" });
+    res.status(500).json({ error: "Failed to fetch public interview experiences" });
   }
 };
