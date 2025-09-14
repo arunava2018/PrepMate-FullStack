@@ -5,12 +5,40 @@ const prisma = new PrismaClient();
 
 export const getSubjects = async (req, res) => {
   try {
-    const subjects = await prisma.subjects.findMany();
-    res.json(subjects);
+    // 1. Fetch subjects
+    const subjects = await prisma.subjects.findMany({
+      select: {
+        id: true,
+        name: true,
+        description: true,
+        icon: true,
+        created_at: true,
+      },
+    });
+
+    // 2. Fetch question counts grouped by subject_id
+    const questionCounts = await prisma.questions.groupBy({
+      by: ["subject_id"],
+      _count: { id: true },
+    });
+
+    // 3. Merge counts into subjects
+    const formatted = subjects.map((s) => {
+      const match = questionCounts.find((qc) => qc.subject_id === s.id);
+      return {
+        ...s,
+        question_count: match ? match._count.id : 0,
+      };
+    });
+
+    res.json(formatted);
   } catch (err) {
+    console.error("Error fetching subjects:", err);
     res.status(500).json({ error: "Failed to fetch subjects" });
   }
 };
+
+
 
 export const getSubjectById = async (req, res) => {
   try {

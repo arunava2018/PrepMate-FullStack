@@ -16,6 +16,10 @@ router.get(
   cacheMiddleware({ key: "subjects:all", ttl: 1800 }),
   getSubjects
 );
+// router.get("/", async (req, res) => {
+//   res.json({ message: "✅ subjects route working" });
+// });
+
 
 // Cache each subject by ID
 router.get(
