@@ -32,8 +32,8 @@ app.use("/subtopics", apiSubtopic);
 app.use("/questions", apiQuestion);
 app.use("/interview", apiInterviewexperience);
 app.use("/progress", apiProgress);
-app.listen(5000, function(err){
-    if (err) console.log("Error in server setup")
-    console.log("Server listening on Port", 5000);
-})
+// app.listen(5000, function(err){
+//     if (err) console.log("Error in server setup")
+//     console.log("Server listening on Port", 5000);
+// })
 export default app;
