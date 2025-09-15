@@ -29,7 +29,7 @@ function Addsubtopic() {
     e.preventDefault();
     const res = await fnSubtopic(form); // ✅ form = { subjectId, name }
     if (res) {
-      setSuccessMsg(`Subtopic "${res.name}" has been successfully added.`);
+      setSuccessMsg(`Subtopic "${res.subtopic.name}" has been successfully added.`);
       setForm({ subjectId: "", name: "" }); // reset
     }
   };

@@ -12,7 +12,7 @@ export async function addSubtopic({ subjectId, name }) {
         "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
       },
-      body: JSON.stringify({ subjectId, name }), // use subjectId
+      body: JSON.stringify({ subject_id: subjectId, name }), // use subjectId
     });
 
     const data = await res.json();

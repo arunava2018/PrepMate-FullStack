@@ -31,6 +31,7 @@ export const addSubtopic = async (req, res) => {
 
     res.status(201).json({ message: "Subtopic added successfully", subtopic });
   } catch (err) {
+    console.error(err);
     res.status(500).json({ error: "Failed to add subtopic" });
   }
 };
