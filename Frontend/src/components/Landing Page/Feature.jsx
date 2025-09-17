@@ -5,56 +5,81 @@ import { motion } from "framer-motion";
 export default function Features() {
   const features = [
     {
-      icon: <BookOpen className="w-8 h-8 text-yellow-500" />,
+      icon: BookOpen,
       title: "Organized Learning",
-      desc: "Subjects and subtopics mapped for smooth and structured progression.",
+      desc: "Subjects and subtopics mapped for a smooth, structured progression.",
     },
     {
-      icon: <LayoutDashboard className="w-8 h-8 text-yellow-500" />,
+      icon: LayoutDashboard,
       title: "Smart Dashboard",
-      desc: "Track progress with subject-wise stats and question counts in real time.",
+      desc: "Track your progress with subject-wise insights and real-time stats.",
     },
     {
-      icon: <ShieldCheck className="w-8 h-8 text-yellow-500" />,
+      icon: ShieldCheck,
       title: "Reliable Content",
-      desc: "Every question is admin-curated and verified for clarity and accuracy.",
+      desc: "Every question is admin-curated and verified for accuracy and clarity.",
     },
     {
-      icon: <BarChart3 className="w-8 h-8 text-yellow-500" />,
-      title: "Simple & Elegant UI",
-      desc: "Distraction-free, responsive, and supports light/dark theme effortlessly.",
+      icon: BarChart3,
+      title: "Elegant UI",
+      desc: "Minimal, distraction-free design with responsive light/dark themes.",
     },
   ];
 
   return (
     <motion.section
       id="features"
-      className="px-10 py-20 bg-white dark:bg-[#000000]"
+      className="px-6 sm:px-10 py-20 bg-white dark:bg-black"
       initial={{ opacity: 0, y: 40 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-100px" }}
       transition={{ duration: 0.8 }}
     >
-      <h2 className="text-3xl md:text-4xl font-bold text-center mb-12 text-gray-900 dark:text-yellow-400">
-        Why Choose PrepMate?
-      </h2>
+      {/* Section Heading */}
+      <motion.h2
+        initial={{ opacity: 0, y: 20 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.6 }}
+        className="text-3xl md:text-4xl font-extrabold text-center mb-14 
+                   text-gray-900 dark:text-amber-400"
+      >
+        Why Choose <span className="text-amber-600 dark:text-amber-300">PrepMate?</span>
+      </motion.h2>
+
+      {/* Feature Cards */}
       <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8 max-w-6xl mx-auto">
-        {features.map((f, idx) => (
-          <Card
-            key={idx}
-            className="shadow-lg border-none rounded-2xl hover:scale-105 hover:shadow-2xl transition-all duration-300"
-          >
-            <CardHeader className="flex flex-col items-center">
-              {f.icon}
-              <CardTitle className="mt-4 text-lg font-semibold text-center">
-                {f.title}
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="text-center text-gray-600 dark:text-gray-300">
-              {f.desc}
-            </CardContent>
-          </Card>
-        ))}
+        {features.map((f, idx) => {
+          const Icon = f.icon;
+          return (
+            <motion.div
+              key={idx}
+              initial={{ opacity: 0, y: 40 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: idx * 0.15, duration: 0.6 }}
+            >
+              <Card
+                className="h-full shadow-md border border-gray-200/40 dark:border-gray-800/40 
+                           rounded-2xl hover:shadow-xl hover:scale-[1.03] 
+                           transition-all duration-300 bg-white dark:bg-neutral-950"
+              >
+                <CardHeader className="flex flex-col items-center pt-8">
+                  <div className="w-16 h-16 flex items-center justify-center rounded-full 
+                                  bg-gradient-to-br from-amber-400 to-yellow-500 text-white shadow-md">
+                    <Icon className="w-7 h-7" />
+                  </div>
+                  <CardTitle className="mt-5 text-lg font-semibold text-gray-900 dark:text-white text-center">
+                    {f.title}
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="px-6 pb-8 text-center text-gray-600 dark:text-gray-300 leading-relaxed">
+                  {f.desc}
+                </CardContent>
+              </Card>
+            </motion.div>
+          );
+        })}
       </div>
     </motion.section>
   );

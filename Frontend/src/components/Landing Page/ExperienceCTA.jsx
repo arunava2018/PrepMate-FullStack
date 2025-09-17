@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
-import { Share2, BookOpen, Loader2 } from "lucide-react";
+import { Share2, BookOpen, Loader2, Users, TrendingUp } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import Loader from "../Loader";
 
@@ -28,68 +28,132 @@ const ExperienceCTA = () => {
 
   return (
     <>
-      {/* Full screen loader when either button is clicked */}
+      {/* Full screen loader */}
       {(loadingState.share || loadingState.view) && <Loader />}
 
-      <section className="py-20 bg-gradient-to-br from-amber-50 via-yellow-50 to-orange-50 dark:from-neutral-950 dark:via-neutral-900 dark:to-neutral-800">
-        <div className="max-w-6xl mx-auto px-6 text-center">
-          <motion.h2
-            initial={{ opacity: 0, y: 20 }}
+      <section className="py-24 bg-gradient-to-br from-amber-50 via-yellow-50 to-orange-50 dark:from-neutral-950 dark:via-neutral-900 dark:to-neutral-800">
+        <div className="max-w-6xl mx-auto px-6">
+          <div className="text-center mb-16">
+            {/* Heading */}
+            <motion.h2
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6 }}
+              className="text-4xl sm:text-5xl md:text-6xl font-bold mb-6 tracking-tight"
+            >
+              Professional{" "}
+              <span className="bg-gradient-to-r from-amber-600 via-yellow-500 to-orange-500 bg-clip-text text-transparent">
+                Interview Insights
+              </span>
+            </motion.h2>
+
+            {/* Subtitle */}
+            <motion.p
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 1 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.2, duration: 0.6 }}
+              className="text-xl text-gray-700 dark:text-gray-300 max-w-4xl mx-auto mb-8 leading-relaxed font-medium"
+            >
+              Access authentic interview experiences from industry professionals across leading technology companies. 
+              Contribute your insights to build a comprehensive knowledge base for the developer community.
+            </motion.p>
+
+            {/* Stats */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.3, duration: 0.6 }}
+              className="flex justify-center gap-8 mb-12"
+            >
+              <div className="flex items-center gap-2 text-gray-600 dark:text-gray-400">
+                <Users className="w-5 h-5 text-amber-500" />
+                <span className="font-semibold">500+ Experiences</span>
+              </div>
+              <div className="flex items-center gap-2 text-gray-600 dark:text-gray-400">
+                <TrendingUp className="w-5 h-5 text-amber-500" />
+                <span className="font-semibold">Top Companies</span>
+              </div>
+            </motion.div>
+          </div>
+
+          {/* Action Cards */}
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-            className="text-3xl sm:text-4xl md:text-5xl font-extrabold mb-6"
+            transition={{ delay: 0.4, duration: 0.6 }}
+            className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto"
           >
-            Learn & Contribute with{" "}
-            <span className="bg-gradient-to-r from-amber-600 via-yellow-500 to-orange-500 bg-clip-text text-transparent">
-              Interview Experiences
-            </span>
-          </motion.h2>
-
-          <motion.p
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.2, duration: 0.6 }}
-            className="text-lg text-gray-600 dark:text-gray-300 max-w-3xl mx-auto mb-10 leading-relaxed"
-          >
-            Explore real interview stories from students & professionals across
-            top companies. Share your journey to help others and grow the
-            community.
-          </motion.p>
-
-          <div className="flex flex-col sm:flex-row justify-center gap-5">
-            <Button
-              onClick={handleShareClick}
-              disabled={loadingState.share || loadingState.view}
-              className="px-8 py-5 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 
-                         disabled:from-gray-400 disabled:to-gray-500 text-white font-semibold rounded-full shadow-md 
-                         transition-all flex items-center gap-2 disabled:cursor-not-allowed"
+            {/* Share Experience Card */}
+            <motion.div
+              whileHover={{ scale: 1.02, y: -4 }}
+              className="bg-white dark:bg-neutral-800 rounded-2xl p-8 shadow-lg border border-amber-100 dark:border-neutral-700 hover:shadow-xl transition-all"
             >
-              {loadingState.share ? (
-                <Loader2 className="w-5 h-5 animate-spin" />
-              ) : (
-                <Share2 className="w-5 h-5" />
-              )}
-              Share Experience
-            </Button>
+              <div className="flex items-center gap-3 mb-4">
+                <div className="p-3 bg-gradient-to-br from-amber-100 to-yellow-100 dark:from-amber-900/30 dark:to-yellow-900/30 rounded-xl">
+                  <Share2 className="w-6 h-6 text-amber-600 dark:text-amber-400" />
+                </div>
+                <h3 className="text-xl font-bold text-gray-900 dark:text-white">Share Your Experience</h3>
+              </div>
+              <p className="text-gray-600 dark:text-gray-300 mb-6 leading-relaxed">
+                Help fellow developers by sharing detailed insights from your interview process, including questions, 
+                preparation tips, and company culture observations.
+              </p>
+              <Button
+                onClick={handleShareClick}
+                disabled={loadingState.share || loadingState.view}
+                className="w-full px-8 py-4 bg-gradient-to-r from-amber-500 via-yellow-500 to-orange-500 
+                           hover:from-amber-600 hover:via-yellow-600 hover:to-orange-600 
+                           disabled:from-gray-400 disabled:to-gray-500 
+                           text-white font-semibold rounded-xl text-base shadow-md 
+                           hover:shadow-lg transition-all flex items-center justify-center gap-3 disabled:cursor-not-allowed"
+              >
+                {loadingState.share ? (
+                  <Loader2 className="w-5 h-5 animate-spin" />
+                ) : (
+                  <Share2 className="w-5 h-5" />
+                )}
+                Contribute Experience
+              </Button>
+            </motion.div>
 
-            <Button
-              variant="outline"
-              onClick={handleViewClick}
-              disabled={loadingState.share || loadingState.view}
-              className="px-8 py-5 rounded-full border-2 border-amber-500 text-amber-600 dark:text-amber-400 
-                         hover:bg-amber-50 dark:hover:bg-neutral-800 disabled:border-gray-400 disabled:text-gray-400
-                         disabled:hover:bg-transparent transition-all flex items-center gap-2 disabled:cursor-not-allowed"
+            {/* View Experiences Card */}
+            <motion.div
+              whileHover={{ scale: 1.02, y: -4 }}
+              className="bg-white dark:bg-neutral-800 rounded-2xl p-8 shadow-lg border border-amber-100 dark:border-neutral-700 hover:shadow-xl transition-all"
             >
-              {loadingState.view ? (
-                <Loader2 className="w-5 h-5 animate-spin" />
-              ) : (
-                <BookOpen className="w-5 h-5" />
-              )}
-              View Experiences
-            </Button>
-          </div>
+              <div className="flex items-center gap-3 mb-4">
+                <div className="p-3 bg-gradient-to-br from-amber-100 to-yellow-100 dark:from-amber-900/30 dark:to-yellow-900/30 rounded-xl">
+                  <BookOpen className="w-6 h-6 text-amber-600 dark:text-amber-400" />
+                </div>
+                <h3 className="text-xl font-bold text-gray-900 dark:text-white">Explore Experiences</h3>
+              </div>
+              <p className="text-gray-600 dark:text-gray-300 mb-6 leading-relaxed">
+                Browse comprehensive interview experiences from various companies and roles. 
+                Learn from others' journeys to better prepare for your own interviews.
+              </p>
+              <Button
+                variant="outline"
+                onClick={handleViewClick}
+                disabled={loadingState.share || loadingState.view}
+                className="w-full px-8 py-4 rounded-xl border-2 border-amber-500 
+                           text-amber-700 dark:text-amber-300 font-semibold
+                           hover:bg-amber-50 dark:hover:bg-amber-900/20 
+                           disabled:border-gray-400 disabled:text-gray-400
+                           transition-all flex items-center justify-center gap-3 disabled:cursor-not-allowed"
+              >
+                {loadingState.view ? (
+                  <Loader2 className="w-5 h-5 animate-spin" />
+                ) : (
+                  <BookOpen className="w-5 h-5" />
+                )}
+                Browse Insights
+              </Button>
+            </motion.div>
+          </motion.div>
         </div>
       </section>
     </>
