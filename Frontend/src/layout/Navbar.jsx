@@ -86,7 +86,7 @@ const Navbar = () => {
               <DropdownMenuContent align="end" className="w-56 p-1">
                 <DropdownMenuLabel className="px-3 py-2 flex items-center gap-3">{UserAvatar}<span>{user.full_name}</span></DropdownMenuLabel>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem asChild><Link to="/profile" className="flex items-center gap-3 px-3 py-2 rounded-md"><Settings className="w-4 h-4" />Profile</Link></DropdownMenuItem>
+                <DropdownMenuItem asChild><Link to={`/profile/${user.id}`} className="flex items-center gap-3 px-3 py-2 rounded-md"><Settings className="w-4 h-4" />Profile</Link></DropdownMenuItem>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem onClick={handleLogout} disabled={loading} className="flex items-center gap-3 px-3 py-2 rounded-md text-red-600">{loading ? "Signing out..." : <><LogOut className="w-4 h-4" /> Sign Out</>}</DropdownMenuItem>
               </DropdownMenuContent>
