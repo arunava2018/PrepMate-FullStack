@@ -31,8 +31,8 @@ const ExperienceCTA = () => {
       {/* Full screen loader */}
       {(loadingState.share || loadingState.view) && <Loader />}
 
-      <section className="py-24 bg-gradient-to-br from-amber-50 via-yellow-50 to-orange-50 dark:from-neutral-950 dark:via-neutral-900 dark:to-neutral-800">
-        <div className="max-w-6xl mx-auto px-6">
+      <section className="py-24 text-center px-6 ">
+        <div className="max-w-4xl mx-auto px-6">
           <div className="text-center mb-16">
             {/* Heading */}
             <motion.h2

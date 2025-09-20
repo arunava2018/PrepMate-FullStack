@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import {
-  Sun, Moon, Menu, X, LogOut, User, Settings, Shield, Home,
+  Sun, Moon, Menu, X, LogOut, User, Settings, Shield, Home, GraduationCap
 } from "lucide-react";
 import { useTheme } from "../theme/Themeprovides";
 import { motion, AnimatePresence } from "framer-motion";
@@ -89,11 +89,9 @@ const Navbar = () => {
         {/* Logo */}
         <Link
           to="/"
-          className="flex items-center gap-2 text-2xl font-bold 
-          bg-gradient-to-r from-yellow-500 to-yellow-600 bg-clip-text text-transparent"
+          className="flex items-center gap-2 text-2xl font-bold  text-yellow-600 dark:text-yellow-400"
         >
-          <Home className="w-6 h-6" />
-          <img src={logo} alt="PrepMate Logo" className="h-8 w-8 rounded-full" />
+          <GraduationCap className="h-8 w-8 rounded-full" />
           PrepMate
         </Link>
 

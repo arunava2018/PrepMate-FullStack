@@ -5,14 +5,20 @@ import { TypeAnimation } from "react-type-animation";
 import { motion } from "framer-motion";
 
 // React Icons
-import { FaLightbulb, FaRocket, FaStar, FaCheckCircle, FaBookOpen, FaArrowRight } from "react-icons/fa";
+import {
+  FaLightbulb,
+  FaRocket,
+  FaStar,
+  FaCheckCircle,
+  FaBookOpen,
+  FaArrowRight,
+} from "react-icons/fa";
 
 export default function HeroSection() {
   const [typingDone, setTypingDone] = useState(false);
 
   return (
-    <section className="relative min-h-screen flex flex-col justify-center items-center text-center px-6 bg-gradient-to-br from-yellow-50 via-amber-50 to-yellow-100 dark:from-black dark:via-neutral-950 dark:to-neutral-900 overflow-hidden">
-
+    <section className="min-h-screen flex flex-col justify-center items-center text-center px-6  dark:bg-black overflow-hidden">
       {/* Background Blobs */}
       <div className="absolute top-10 left-10 w-32 h-32 bg-yellow-200 rounded-full opacity-25 dark:hidden animate-pulse-slow"></div>
       <div className="absolute bottom-20 right-20 w-48 h-48 bg-yellow-300 rounded-full opacity-20 dark:hidden animate-pulse-slow"></div>
@@ -56,8 +62,11 @@ export default function HeroSection() {
           className="max-w-2xl mx-auto text-lg sm:text-xl text-gray-700 dark:text-gray-200 mb-6 leading-relaxed"
         >
           Unlock your potential with{" "}
-          <span className="font-semibold text-amber-600 dark:text-amber-400">PrepMate</span>{" "}
-          — expertly curated CS questions designed for efficient and effective interview preparation.
+          <span className="font-semibold text-amber-600 dark:text-amber-400">
+            PrepMate
+          </span>{" "}
+          — expertly curated CS questions designed for efficient and effective
+          interview preparation.
         </motion.p>
 
         {/* Features */}
@@ -68,13 +77,13 @@ export default function HeroSection() {
           className="max-w-lg mx-auto text-center mb-8 space-y-3"
         >
           <p className="text-lg text-amber-600 dark:text-amber-300 font-medium flex items-center justify-center gap-2">
-            <FaStar className="text-amber-500" /> Sharpen your skills with curated questions
+            Sharpen your skills with curated questions
           </p>
           <p className="text-lg text-yellow-600 dark:text-yellow-300 font-medium flex items-center justify-center gap-2">
-            <FaRocket className="text-yellow-500" /> Land your dream job faster
+            Land your dream job faster
           </p>
           <p className="text-lg text-orange-600 dark:text-orange-300 font-medium flex items-center justify-center gap-2">
-            <FaLightbulb className="text-orange-500" /> Prep smart, not hard
+            Prep smart, not hard
           </p>
         </motion.div>
 
@@ -87,8 +96,13 @@ export default function HeroSection() {
         >
           <span>
             Save time, sharpen skills, and build confidence to{" "}
-            <span className="font-medium text-amber-600 dark:text-amber-400">stand out</span> and{" "}
-            <span className="font-medium text-amber-600 dark:text-amber-400">succeed</span>
+            <span className="font-medium text-amber-600 dark:text-amber-400">
+              stand out
+            </span>{" "}
+            and{" "}
+            <span className="font-medium text-amber-600 dark:text-amber-400">
+              succeed
+            </span>
           </span>
           <FaCheckCircle className="text-green-500" />
         </motion.p>
@@ -102,7 +116,10 @@ export default function HeroSection() {
         >
           {/* Primary CTA */}
           <Link to="/dashboard">
-            <motion.div whileHover={{ scale: 1.05, y: -2 }} whileTap={{ scale: 0.97 }}>
+            <motion.div
+              whileHover={{ scale: 1.05, y: -2 }}
+              whileTap={{ scale: 0.97 }}
+            >
               <Button
                 className="relative bg-gradient-to-r from-amber-500 via-yellow-500 to-amber-600
                            hover:from-amber-600 hover:via-yellow-600 hover:to-amber-700
@@ -121,7 +138,10 @@ export default function HeroSection() {
 
           {/* Secondary CTA */}
           <Link to="/features">
-            <motion.div whileHover={{ scale: 1.02, y: -1 }} whileTap={{ scale: 0.98 }}>
+            <motion.div
+              whileHover={{ scale: 1.02, y: -1 }}
+              whileTap={{ scale: 0.98 }}
+            >
               <Button
                 variant="outline"
                 className="border-amber-500 text-amber-700 dark:border-amber-400 dark:text-amber-300 
