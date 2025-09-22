@@ -9,6 +9,7 @@ import {
 } from "react-icons/fa";
 import { IoWarning } from "react-icons/io5";
 import ProfileAction from "./profileActions";
+import UserExperiences from "@/components/Users Profile/UserExperinces.jsx"
 
 function ProfileInfo() {
   const { user } = UrlState();
@@ -76,7 +77,7 @@ function ProfileInfo() {
         {/* Grid Layout */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Profile Information - 2/3 on desktop */}
-          <div className="lg:col-span-2 sm:h-[470px] md:h-[350px] lg:h-1/2 bg-white dark:bg-[#111111] rounded-2xl shadow-sm border border-gray-200 dark:border-gray-700">
+          <div className="lg:col-span-2 bg-white dark:bg-[#111111] rounded-2xl shadow-sm border border-gray-200 dark:border-gray-700">
             {/* Header */}
             <div className="flex items-center gap-3 px-6 py-4 border-b border-gray-200 dark:border-gray-700">
               <div className="h-10 w-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl flex items-center justify-center">
@@ -138,6 +139,9 @@ function ProfileInfo() {
             </div>
           </div>
         </div>
+
+        {/* User Interview Experiences Section */}
+        <UserExperiences userId={user?.id} /> {/* ✅ added here */}
       </div>
     </div>
   );

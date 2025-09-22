@@ -2,7 +2,6 @@ const BASE_URL = import.meta.env.VITE_BACKEND_URL + "/interview";
 
 // -------- Add interview experience (requires auth) --------
 export async function addInterviewExperience({
-  userId,
   company_name,
   role,
   linkedin_url,
@@ -23,7 +22,6 @@ export async function addInterviewExperience({
         Authorization: `Bearer ${token}`,
       },
       body: JSON.stringify({
-        userId,
         company_name,
         role,
         linkedin_url,
@@ -43,14 +41,17 @@ export async function addInterviewExperience({
   }
 }
 
-// -------- Fetch unpublished interview experiences (admin only) --------
+// -------- Fetch unpublished interview experiences (requires auth) --------
 export async function fetchUnpublishedInterviewExperiences() {
   try {
     const token = localStorage.getItem("token");
     if (!token) throw new Error("Not authenticated");
 
     const res = await fetch(`${BASE_URL}/unpublished`, {
-      headers: { Authorization: `Bearer ${token}` },
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
     });
 
     const data = await res.json();
@@ -61,7 +62,30 @@ export async function fetchUnpublishedInterviewExperiences() {
   }
 }
 
-// -------- Delete interview experience (admin only) --------
+// -------- Update unpublished interview experience (requires auth) --------
+export async function updateExperience(id, updatedData) {
+  try {
+    const token = localStorage.getItem("token");
+    if (!token) throw new Error("Not authenticated");
+
+    const res = await fetch(`${BASE_URL}/update/${id}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify(updatedData),
+    });
+
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || "Failed to update experience");
+    return data;
+  } catch (err) {
+    throw err;
+  }
+}
+
+// -------- Delete interview experience (requires auth) --------
 export async function deleteExperience(id) {
   try {
     const token = localStorage.getItem("token");
@@ -80,7 +104,7 @@ export async function deleteExperience(id) {
   }
 }
 
-// -------- Approve interview experience (admin only) --------
+// -------- Approve interview experience (admin only, requires auth) --------
 export async function approveExperience(id, updatedData) {
   try {
     const token = localStorage.getItem("token");
@@ -110,21 +134,32 @@ export async function approveExperience(id, updatedData) {
   }
 }
 
-// -------- Fetch public interview experiences  --------
+// -------- Fetch public interview experiences (no auth required) --------
 export async function fetchPublicInterviewExperiences() {
   try {
-    const token = localStorage.getItem("token");
-    if (!token) throw new Error("Not authenticated");
-    const res = await fetch(`${BASE_URL}/public`,{
-      method:"GET",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
+    const res = await fetch(`${BASE_URL}/public`, {
+      method: "GET",
+      headers: { "Content-Type": "application/json" },
     });
-    const data = await res.json();
 
+    const data = await res.json();
     if (!res.ok) throw new Error(data.error || "Failed to fetch public experiences");
+    return data;
+  } catch (err) {
+    throw err;
+  }
+}
+
+// -------- Fetch interview experiences of a specific user (no auth required) --------
+export async function fetchUserInterviewExperiences(userId) {
+  try {
+    const res = await fetch(`${BASE_URL}/user/${userId}`, {
+      method: "GET",
+      headers: { "Content-Type": "application/json" },
+    });
+
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || "Failed to fetch user experiences");
     return data;
   } catch (err) {
     throw err;
