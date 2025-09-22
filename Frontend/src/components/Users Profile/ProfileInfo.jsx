@@ -13,7 +13,7 @@ import UserExperiences from "@/components/Users Profile/UserExperinces.jsx"
 
 function ProfileInfo() {
   const { user } = UrlState();
-
+  let profileAvatar = user?.full_name?.split(" ").map((n) => n[0]).join("") || "U";
   const profileFields = [
     {
       key: "Full Name",
@@ -59,13 +59,13 @@ function ProfileInfo() {
           <div className="flex flex-col items-center space-y-2 justify-center">
             {/* Avatar */}
             <div className="h-12 w-12 sm:h-16 sm:w-16 lg:h-20 lg:w-20 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center text-white font-bold text-lg sm:text-xl lg:text-2xl shadow-lg">
-              {user?.full_name?.charAt(0)?.toUpperCase() || "U"}
+              {profileAvatar}
             </div>
 
             {/* Text */}
             <div>
               <h1 className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white">
-                Welcome, {user?.full_name?.split(" ")[0] || "User"}!
+                Welcome, {user?.full_name?.split(" ")[0] || "User"}
               </h1>
               <p className="text-sm sm:text-base text-gray-600 dark:text-gray-400 mt-1">
                 Manage your profile information and settings

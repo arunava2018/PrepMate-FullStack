@@ -47,12 +47,12 @@ export default function Footer() {
             <li>
               {!isAuthenticated ? <Link
                 to="/auth/signup"
-                className="inline-block px-4 py-2 text-white font-medium hover:underline hover:text-yellow-500"
+                className="inline-block px-4 py-2 dark:text-white font-medium hover:underline"
               >
                 Get Started
               </Link> : <Link
                 to="/"
-                className="inline-block px-4 py-2 text-white font-medium hover:underline hover:text-yellow-500"
+                className="inline-block px-4 py-2 dark:text-white font-medium hover:underline"
               >
                 Get Started
               </Link> }

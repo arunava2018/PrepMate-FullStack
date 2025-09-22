@@ -64,7 +64,7 @@ export default function UserExperiences({ userId }) {
           <FileText className="text-white text-lg" />
         </div>
         <div>
-          <h2 className="text-2xl font-bold text-white">Interview Experiences</h2>
+          <h2 className="text-2xl font-bold dark:text-white">Interview Experiences</h2>
           <p className="text-gray-400 text-sm">Manage your shared experiences</p>
         </div>
       </div>
@@ -76,12 +76,12 @@ export default function UserExperiences({ userId }) {
           <p className="text-gray-500 text-sm">Share your first interview experience to help others!</p>
         </div>
       ) : (
-        <div className="bg-neutral-900 rounded-xl border border-neutral-700 overflow-hidden">
+        <div className="dark:bg-neutral-900 rounded-xl border border-neutral-700 overflow-hidden">
           {/* Table Header (desktop only) */}
-          <div className="hidden lg:grid grid-cols-12 px-6 py-3 bg-neutral-800/50 border-b border-neutral-700 text-sm font-semibold text-gray-300 uppercase">
+          <div className="hidden lg:grid grid-cols-12 px-6 py-3 dark:bg-neutral-800/50 border-b border-neutral-700 text-sm font-semibold dark:text-gray-300 uppercase">
             <div className="col-span-3">Title</div>
             <div className="col-span-2">Status</div>
-            <div className="col-span-2">Company</div>
+            <div className="col-span-2">Company</div> 
             <div className="col-span-2">Date</div>
             <div className="col-span-3 text-center">Actions</div>
           </div>
@@ -91,12 +91,12 @@ export default function UserExperiences({ userId }) {
             {experiences.map((exp) => (
               <div
                 key={exp.id}
-                className="grid grid-cols-1 lg:grid-cols-12 gap-4 p-6 hover:bg-neutral-800/30 transition"
+                className="grid grid-cols-1 lg:grid-cols-12 gap-4 p-6 transition"
               >
                 {/* Title */}
                 <div className="lg:col-span-3 flex items-center">
                   <FileText className="h-5 w-5 text-blue-400 mr-2" />
-                  <span className="text-white font-medium">{exp.company_name} Interview</span>
+                  <span className="dark:text-white font-medium">{exp.company_name} Interview</span>
                 </div>
 
                 {/* Status */}
@@ -118,13 +118,13 @@ export default function UserExperiences({ userId }) {
                 </div>
 
                 {/* Company */}
-                <div className="lg:col-span-2 flex items-center text-gray-300 text-sm">
-                  <Building className="h-4 w-4 mr-1 text-gray-500" /> {exp.company_name}
+                <div className="lg:col-span-2 flex items-center dark:text-gray-300 text-black text-sm">
+                  <Building className="h-4 w-4 mr-1 dark:text-gray-500 text-black" /> {exp.company_name}
                 </div>
 
                 {/* Date */}
-                <div className="lg:col-span-2 flex items-center text-gray-300 text-sm">
-                  <Calendar className="h-4 w-4 mr-1 text-gray-500" />
+                <div className="lg:col-span-2 flex items-center dark:text-gray-300 text-sm">
+                  <Calendar className="h-4 w-4 mr-1 dark:text-gray-500" />
                   {new Date(exp.created_at).toLocaleDateString("en-US", {
                     year: "numeric",
                     month: "short",
@@ -182,7 +182,7 @@ export default function UserExperiences({ userId }) {
                       </AlertDialog>
                     </>
                   ) : (
-                    <span className="text-gray-500 text-sm italic">No actions</span>
+                    <span className="text-gray-500 text-sm italic mr-20">No actions</span>
                   )}
                 </div>
               </div>

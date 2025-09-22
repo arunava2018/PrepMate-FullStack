@@ -61,7 +61,7 @@ export const addInterviewExperience = async (req, res) => {
  */
 export const fetchUnpublishedInterviewExperiences = async (req, res) => {
   try {
-    const { id, isAdmin } = req.user; // ✅ consistent with middleware
+    const { id, isAdmin } = req.user;
 
     const whereClause = {
       is_public: false,
