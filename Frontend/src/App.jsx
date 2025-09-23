@@ -21,6 +21,11 @@ import InterviewExperience from "./pages/InterviewExperience";
 import ViewInterviewExperience from "./pages/ViewInterviewExperience";
 import ScrollToTop from "./ScrollToTop";
 import ApproveInterviewExperiences from "./pages/ApproveInterviewExperiences";
+import ExperienceDetails from "./components/Interview Experiences/ExperienceDetails";
+
+// ✅ Import Sonner toaster
+import { Toaster } from "sonner";
+
 const LayoutWithScroll = () => (
   <>
     <ScrollToTop />
@@ -111,13 +116,21 @@ const router = createBrowserRouter([
         ),
       },
       {
+        path: "/view-interview-experiences/:experienceId",
+        element: (
+          <RequireAuth>
+            <ExperienceDetails />
+          </RequireAuth>
+        ),
+      },
+      {
         path: "/admin/approveExperiences",
         element: (
           <RequireAdmin>
-            <ApproveInterviewExperiences/>
+            <ApproveInterviewExperiences />
           </RequireAdmin>
         ),
-      }
+      },
     ],
   },
 ]);
@@ -127,6 +140,9 @@ function App() {
     <UrlProvider>
       <ThemeProvider>
         <RouterProvider router={router} />
+
+        {/* ✅ Global Toaster (Sonner) */}
+        <Toaster richColors position="top-right" />
       </ThemeProvider>
     </UrlProvider>
   );

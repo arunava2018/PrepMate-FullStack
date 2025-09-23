@@ -62,6 +62,28 @@ export async function fetchUnpublishedInterviewExperiences() {
   }
 }
 
+// -------- Fetch a single interview experience by ID (requires auth) --------
+export async function fetchExperienceById(id) {
+  try {
+    const token = localStorage.getItem("token");
+    if (!token) throw new Error("Not authenticated");
+
+    const res = await fetch(`${BASE_URL}/${id}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || "Failed to fetch interview experience");
+    return data;
+  } catch (err) {
+    throw err;
+  }
+}
+
 // -------- Update unpublished interview experience (requires auth) --------
 export async function updateExperience(id, updatedData) {
   try {

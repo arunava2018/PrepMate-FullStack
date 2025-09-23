@@ -2,6 +2,7 @@ import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert";
 import { CheckCircle2, X, Clock, Shield } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 
 const SuccessMessage = ({ showSuccess, onClose }) => {
   const [progress, setProgress] = useState(100);
@@ -25,7 +26,6 @@ const SuccessMessage = ({ showSuccess, onClose }) => {
           return newProgress;
         });
       }, interval);
-
       return () => clearInterval(timer);
     }
   }, [showSuccess, onClose]);

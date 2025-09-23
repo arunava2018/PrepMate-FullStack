@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import { fetchUserInterviewExperiences, deleteExperience } from "@/db/apiInterviewExperience";
-import { Edit3, Trash2, Calendar, Building, FileText } from "lucide-react";
+import { Edit3, Trash2, Calendar, Building, FileText, Eye } from "lucide-react";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -12,6 +13,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
+import { Button } from "../ui/button";
 
 export default function UserExperiences({ userId }) {
   const [experiences, setExperiences] = useState([]);
@@ -65,7 +67,7 @@ export default function UserExperiences({ userId }) {
         </div>
         <div>
           <h2 className="text-2xl font-bold dark:text-white">Interview Experiences</h2>
-          <p className="text-gray-400 text-sm">Manage your shared experiences</p>
+          <p className="text-gray-400 text-sm">Manage and track your shared experiences</p>
         </div>
       </div>
 
@@ -73,30 +75,37 @@ export default function UserExperiences({ userId }) {
         <div className="text-center py-12 bg-neutral-900/50 rounded-xl border border-neutral-800">
           <FileText className="h-10 w-10 text-gray-500 mx-auto mb-3" />
           <p className="text-lg text-gray-400 mb-1">No experiences yet</p>
-          <p className="text-gray-500 text-sm">Share your first interview experience to help others!</p>
+          <p className="text-gray-500 text-sm mb-4">
+            Share your first interview experience to help others in their journey.
+          </p>
+          <Link to="/share-experience">
+            <Button className="bg-blue-600 hover:bg-blue-700 text-white cursor-pointer">+ Add Experience</Button>
+          </Link>
         </div>
       ) : (
         <div className="dark:bg-neutral-900 rounded-xl border border-neutral-700 overflow-hidden">
-          {/* Table Header (desktop only) */}
+          {/* Table Header */}
           <div className="hidden lg:grid grid-cols-12 px-6 py-3 dark:bg-neutral-800/50 border-b border-neutral-700 text-sm font-semibold dark:text-gray-300 uppercase">
             <div className="col-span-3">Title</div>
             <div className="col-span-2">Status</div>
-            <div className="col-span-2">Company</div> 
+            <div className="col-span-2">Company</div>
             <div className="col-span-2">Date</div>
-            <div className="col-span-3 text-center">Actions</div>
+            <div className="col-span-3 text-right">Actions</div>
           </div>
 
           {/* Rows */}
-          <div className="divide-y divide-neutral-700/50">
-            {experiences.map((exp) => (
+          <div className="divide-y divide-neutral-700/40">
+            {experiences.map((exp, idx) => (
               <div
                 key={exp.id}
-                className="grid grid-cols-1 lg:grid-cols-12 gap-4 p-6 transition"
+                className={`grid grid-cols-1 lg:grid-cols-12 gap-4 p-6 transition ${
+                  idx % 2 === 0 ? "bg-neutral-800/20" : "bg-transparent"
+                }`}
               >
                 {/* Title */}
-                <div className="lg:col-span-3 flex items-center">
+                <div className="lg:col-span-3 flex items-center font-medium text-gray-200">
                   <FileText className="h-5 w-5 text-blue-400 mr-2" />
-                  <span className="dark:text-white font-medium">{exp.company_name} Interview</span>
+                  {exp.company_name} Interview
                 </div>
 
                 {/* Status */}
@@ -118,13 +127,13 @@ export default function UserExperiences({ userId }) {
                 </div>
 
                 {/* Company */}
-                <div className="lg:col-span-2 flex items-center dark:text-gray-300 text-black text-sm">
-                  <Building className="h-4 w-4 mr-1 dark:text-gray-500 text-black" /> {exp.company_name}
+                <div className="lg:col-span-2 flex items-center text-gray-300 text-sm">
+                  <Building className="h-4 w-4 mr-1 text-gray-500" /> {exp.company_name}
                 </div>
 
                 {/* Date */}
-                <div className="lg:col-span-2 flex items-center dark:text-gray-300 text-sm">
-                  <Calendar className="h-4 w-4 mr-1 dark:text-gray-500" />
+                <div className="lg:col-span-2 flex items-center text-gray-300 text-sm">
+                  <Calendar className="h-4 w-4 mr-1 text-gray-500" />
                   {new Date(exp.created_at).toLocaleDateString("en-US", {
                     year: "numeric",
                     month: "short",
@@ -133,30 +142,33 @@ export default function UserExperiences({ userId }) {
                 </div>
 
                 {/* Actions */}
-                <div className="lg:col-span-3 flex flex-wrap gap-2 justify-end">
+                <div className="lg:col-span-3 flex gap-2 justify-end">
                   {!exp.is_public ? (
                     <>
-                      <button
+                      <Button
+                        variant="outline"
+                        size="sm"
                         onClick={() => handleEdit(exp)}
-                        className="flex items-center px-3 py-1.5 bg-blue-600/20 text-blue-400 border border-blue-500/30 rounded-lg hover:bg-blue-600/30 transition"
+                        className="flex items-center gap-1 border-blue-500/30 text-blue-400 hover:bg-blue-600/20"
                       >
-                        <Edit3 className="h-4 w-4 mr-1" /> Edit
-                      </button>
+                        <Edit3 className="h-4 w-4" /> Edit
+                      </Button>
 
-                      {/* Shadcn Delete Modal */}
                       <AlertDialog>
                         <AlertDialogTrigger asChild>
-                          <button
-                            className="flex items-center px-3 py-1.5 bg-red-600/20 text-red-400 border border-red-500/30 rounded-lg hover:bg-red-600/30 transition disabled:opacity-50"
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            className="flex items-center gap-1 border-red-500/30 text-red-400 hover:bg-red-600/20 disabled:opacity-50"
                             disabled={deleting === exp.id}
                           >
                             {deleting === exp.id ? (
-                              <div className="animate-spin h-4 w-4 border-2 border-red-400 border-t-transparent rounded-full mr-1" />
+                              <div className="animate-spin h-4 w-4 border-2 border-red-400 border-t-transparent rounded-full" />
                             ) : (
-                              <Trash2 className="h-4 w-4 mr-1" />
+                              <Trash2 className="h-4 w-4" />
                             )}
                             Delete
-                          </button>
+                          </Button>
                         </AlertDialogTrigger>
                         <AlertDialogContent className="bg-neutral-900 border border-neutral-700 text-white">
                           <AlertDialogHeader>
@@ -182,7 +194,15 @@ export default function UserExperiences({ userId }) {
                       </AlertDialog>
                     </>
                   ) : (
-                    <span className="text-gray-500 text-sm italic mr-20">No actions</span>
+                    <Link to={`/view-interview-experiences/${exp.id}`}>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        className="flex items-center gap-1 border-blue-500/30 text-blue-400 hover:bg-blue-600/20"
+                      >
+                        <Eye className="h-4 w-4" /> View
+                      </Button>
+                    </Link>
                   )}
                 </div>
               </div>

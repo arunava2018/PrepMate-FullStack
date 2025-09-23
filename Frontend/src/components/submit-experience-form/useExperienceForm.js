@@ -231,7 +231,8 @@ export const useExperienceForm = () => {
       setTimeout(() => {
         setShowSuccess(false);
       }, 5000);
-
+      //redirect to home page after submission
+      window.location.href = "/";
     } catch (error) {
       console.error("Submission error:", error);
       setErrors({ submit: "Failed to submit experience. Please try again." });

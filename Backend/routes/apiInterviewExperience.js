@@ -7,6 +7,7 @@ import {
   fetchPublicInterviewExperiences,
   fetchUserInterviewExperiences,
   updateExperience,
+  fetchExperienceById,
 } from "../controllers/interviewexperienceController.js";
 import { cacheMiddleware } from "../middleware/cache.js";
 import { authMiddleware } from "../middleware/authMiddleware.js";
@@ -32,6 +33,11 @@ router.get(
 
 // -------- User-specific interview experiences (Published + In Review) --------
 router.get("/user/:userId", fetchUserInterviewExperiences);
+
+// -------- Single experience by ID --------
+// Public → any authenticated user can view
+// Private → only owner or admin
+router.get("/:id", authMiddleware, fetchExperienceById); 
 
 // -------- Add new interview experience --------
 router.post("/add", authMiddleware, addInterviewExperience);

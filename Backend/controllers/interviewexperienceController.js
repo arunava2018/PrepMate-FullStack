@@ -17,7 +17,7 @@ const invalidateInterviewExperienceCache = async () => {
 };
 
 /**
- * Add Interview Experience
+ * ➕ Add Interview Experience
  */
 export const addInterviewExperience = async (req, res) => {
   try {
@@ -49,13 +49,55 @@ export const addInterviewExperience = async (req, res) => {
     await invalidateInterviewExperienceCache();
     res.status(201).json(experience);
   } catch (err) {
-    console.error(err);
+    console.error("Error adding experience:", err);
     res.status(500).json({ error: "Failed to add Interview Experience" });
   }
 };
 
 /**
- * Fetch unpublished interview experiences
+ * 👁️ Fetch a single interview experience by ID
+ * - Public: any authenticated user can view
+ * - Private: only owner or admin can view
+ */
+export const fetchExperienceById = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const experience = await prisma.interview_experiences.findUnique({
+      where: { id },
+      include: {
+        users: { select: { full_name: true } },
+      },
+    });
+
+    if (!experience) {
+      return res.status(404).json({ error: "Experience not found" });
+    }
+
+    if (experience.is_public) {
+      // ✅ any authenticated user can view
+      if (!req.user) {
+        return res.status(401).json({ error: "Authentication required" });
+      }
+    } else {
+      // 🔒 private: only owner or admin
+      if (
+        !req.user ||
+        (String(experience.user_id) !== String(req.user.id) && !req.user.isAdmin)
+      ) {
+        return res.status(403).json({ error: "Unauthorized to view this experience" });
+      }
+    }
+
+    res.json(experience);
+  } catch (err) {
+    console.error("Error fetching experience by ID:", err);
+    res.status(500).json({ error: "Failed to fetch experience" });
+  }
+};
+
+/**
+ * 📥 Fetch unpublished interview experiences
  * - Admins: see all
  * - Users: see only their own
  */
@@ -84,7 +126,7 @@ export const fetchUnpublishedInterviewExperiences = async (req, res) => {
 };
 
 /**
- * Delete interview experience
+ * ❌ Delete interview experience
  */
 export const deleteExperience = async (req, res) => {
   try {
@@ -96,12 +138,6 @@ export const deleteExperience = async (req, res) => {
       return res.status(404).json({ error: "Experience not found" });
     }
 
-    // console.log("DEBUG DELETE", {
-    //   expUserId: exp.user_id,
-    //   requestUserId: userId,
-    //   isAdmin,
-    // });
-
     if (String(exp.user_id) !== String(userId) && !isAdmin) {
       return res.status(403).json({ error: "Unauthorized to delete this experience" });
     }
@@ -110,7 +146,7 @@ export const deleteExperience = async (req, res) => {
     await invalidateInterviewExperienceCache();
     res.json(deleted);
   } catch (err) {
-    console.error(err);
+    console.error("Error deleting experience:", err);
     if (err.code === "P2025") {
       return res.status(404).json({ error: "Experience not found" });
     }
@@ -119,7 +155,9 @@ export const deleteExperience = async (req, res) => {
 };
 
 /**
- * Update interview experience
+ * ✏️ Update interview experience
+ * - Only owner or admin can update
+ * - Published experiences cannot be edited
  */
 export const updateExperience = async (req, res) => {
   try {
@@ -148,13 +186,13 @@ export const updateExperience = async (req, res) => {
     await invalidateInterviewExperienceCache();
     res.json(updated);
   } catch (err) {
-    console.error(err);
+    console.error("Error updating experience:", err);
     res.status(500).json({ error: "Failed to update interview experience" });
   }
 };
 
 /**
- * Approve interview experience (set is_public = true)
+ * ✅ Approve interview experience (set is_public = true)
  */
 export const approveExperience = async (req, res) => {
   try {
@@ -176,7 +214,7 @@ export const approveExperience = async (req, res) => {
     await invalidateInterviewExperienceCache();
     res.json(updated);
   } catch (err) {
-    console.error(err);
+    console.error("Error approving experience:", err);
     if (err.code === "P2025") {
       return res.status(404).json({ error: "Experience not found" });
     }
@@ -185,7 +223,7 @@ export const approveExperience = async (req, res) => {
 };
 
 /**
- * Fetch public interview experiences
+ * 🌍 Fetch all public interview experiences
  */
 export const fetchPublicInterviewExperiences = async (req, res) => {
   try {
@@ -197,23 +235,20 @@ export const fetchPublicInterviewExperiences = async (req, res) => {
 
     res.json(experiences);
   } catch (err) {
-    console.error(err);
+    console.error("Error fetching public experiences:", err);
     res.status(500).json({ error: "Failed to fetch public interview experiences" });
   }
 };
 
 /**
- * Fetch interview experiences for a specific user
+ * 👤 Fetch interview experiences for a specific user
  */
 export const fetchUserInterviewExperiences = async (req, res) => {
   try {
     const { userId } = req.params;
 
     const experiences = await prisma.interview_experiences.findMany({
-      where: {
-        user_id: userId,
-        OR: [{ is_public: true }, { is_public: false }],
-      },
+      where: { user_id: userId },
       orderBy: { created_at: "desc" },
       include: {
         users: { select: { full_name: true } },
