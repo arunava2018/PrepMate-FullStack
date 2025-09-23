@@ -4,13 +4,7 @@ import { Badge } from "../ui/badge";
 import { Briefcase, Eye, User } from "lucide-react";
 
 function ExperienceCard({ experience, index }) {
-  const {
-    id,
-    role,
-    offer_type,
-    users,
-  } = experience;
-
+  const { id, role, offer_type, users } = experience;
   const userName = users?.full_name || "Anonymous User";
 
   // Badge style and text by offer type
@@ -42,8 +36,7 @@ function ExperienceCard({ experience, index }) {
   const badgeConfig = getOfferBadgeConfig(offer_type);
 
   return (
-    <div className="w-full border border-gray-200 dark:border-slate-600/30 rounded-xl bg-white dark:bg-slate-800/50 shadow-lg hover:shadow-xl transition-shadow duration-200 mb-4 backdrop-blur-sm p-6 flex items-center justify-between">
-      
+    <div className="w-full border border-gray-200 dark:border-slate-600/30 rounded-xl bg-white dark:bg-slate-800/50 shadow-sm hover:shadow-md transition-all duration-200 mb-4 backdrop-blur-sm p-5 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
       {/* Left side - User info */}
       <div className="flex items-center gap-4 min-w-0 flex-1">
         {/* Index circle */}
@@ -56,7 +49,7 @@ function ExperienceCard({ experience, index }) {
           <div className="flex items-center gap-2 mb-1">
             <User className="w-4 h-4 text-orange-500 dark:text-orange-400 flex-shrink-0" />
             <h3
-              className="text-lg font-semibold text-gray-900 dark:text-white truncate"
+              className="text-base sm:text-lg font-semibold text-gray-900 dark:text-white truncate"
               title={userName}
             >
               {userName}
@@ -76,17 +69,17 @@ function ExperienceCard({ experience, index }) {
       </div>
 
       {/* Right side - Actions */}
-      <div className="flex items-center gap-3 flex-shrink-0">
+      <div className="flex flex-wrap items-center gap-3 sm:justify-end">
         {offer_type && (
           <Badge
-            className={`px-3 py-1 text-xs font-medium transition-colors duration-200 ${badgeConfig.className}`}
+            className={`px-3 py-1 text-xs sm:text-sm font-medium transition-colors duration-200 ${badgeConfig.className}`}
           >
             {badgeConfig.text}
           </Badge>
         )}
         <Link
           to={`/view-interview-experiences/${id}`}
-          className="flex items-center gap-1 text-sm text-blue-600 dark:text-blue-400 hover:underline transition-colors"
+          className="flex items-center gap-1 text-sm sm:text-base text-blue-600 dark:text-blue-400 hover:underline transition-colors"
         >
           <Eye className="w-4 h-4" />
           View
