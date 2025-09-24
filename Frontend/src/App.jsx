@@ -22,7 +22,7 @@ import ViewInterviewExperience from "./pages/ViewInterviewExperience";
 import ScrollToTop from "./ScrollToTop";
 import ApproveInterviewExperiences from "./pages/ApproveInterviewExperiences";
 import ExperienceDetails from "./components/Interview Experiences/ExperienceDetails";
-import AboutUs from "./pages/Aboutus";
+import AboutUs from "./pages/AboutUs";
 import CookiePolicy from "./pages/CookiePolicy";
 import TermsOfService from "./pages/TermsOfService";
 import ContactUs from "./pages/ContactUs";
