@@ -29,7 +29,7 @@ export default function Features() {
   return (
     <motion.section
       id="features"
-      className="px-6 sm:px-10 py-20 bg-white dark:bg-black"
+      className="px-6 sm:px-10 py-20 bg-background text-foreground"
       initial={{ opacity: 0, y: 40 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-100px" }}
@@ -41,10 +41,12 @@ export default function Features() {
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
         transition={{ duration: 0.6 }}
-        className="text-3xl md:text-4xl font-extrabold text-center mb-14 
-                   text-gray-900 dark:text-amber-400"
+        className="text-3xl md:text-4xl font-extrabold text-center mb-14"
       >
-        Why Choose <span className="text-amber-600 dark:text-amber-300">PrepMate?</span>
+        Why Choose{" "}
+        <span className="bg-gradient-to-r from-primary to-primary/80 bg-clip-text text-transparent">
+          PrepMate?
+        </span>
       </motion.h2>
 
       {/* Feature Cards */}
@@ -60,20 +62,20 @@ export default function Features() {
               transition={{ delay: idx * 0.15, duration: 0.6 }}
             >
               <Card
-                className="h-full shadow-md border border-gray-200/40 dark:border-gray-800/40 
+                className="h-full shadow-md border border-border 
                            rounded-2xl hover:shadow-xl hover:scale-[1.03] 
-                           transition-all duration-300 bg-white dark:bg-neutral-950"
+                           transition-all duration-300 bg-card text-card-foreground"
               >
                 <CardHeader className="flex flex-col items-center pt-8">
                   <div className="w-16 h-16 flex items-center justify-center rounded-full 
-                                  bg-gradient-to-br from-amber-400 to-yellow-500 text-white shadow-md">
+                                  bg-primary text-primary-foreground shadow-md">
                     <Icon className="w-7 h-7" />
                   </div>
-                  <CardTitle className="mt-5 text-lg font-semibold text-gray-900 dark:text-white text-center">
+                  <CardTitle className="mt-5 text-lg font-semibold text-foreground text-center">
                     {f.title}
                   </CardTitle>
                 </CardHeader>
-                <CardContent className="px-6 pb-8 text-center text-gray-600 dark:text-gray-300 leading-relaxed">
+                <CardContent className="px-6 pb-8 text-center text-muted-foreground leading-relaxed">
                   {f.desc}
                 </CardContent>
               </Card>

@@ -22,8 +22,11 @@ import ViewInterviewExperience from "./pages/ViewInterviewExperience";
 import ScrollToTop from "./ScrollToTop";
 import ApproveInterviewExperiences from "./pages/ApproveInterviewExperiences";
 import ExperienceDetails from "./components/Interview Experiences/ExperienceDetails";
-
-// ✅ Import Sonner toaster
+import AboutUs from "./pages/Aboutus";
+import CookiePolicy from "./pages/CookiePolicy";
+import TermsOfService from "./pages/TermsOfService";
+import ContactUs from "./pages/ContactUs";
+import PrivacyPolicy from "./pages/PrivacyPolicy";
 import { Toaster } from "sonner";
 
 const LayoutWithScroll = () => (
@@ -131,6 +134,36 @@ const router = createBrowserRouter([
           </RequireAdmin>
         ),
       },
+      {
+        path: "/about-us",
+        element: (
+          <AboutUs />
+        ),
+      },
+      {
+        path: "/cookies",
+        element: (
+          <CookiePolicy />
+        ),
+      },
+      {
+        path: "/terms",
+        element: (
+          <TermsOfService />
+        ),
+      },
+      {
+        path: "/contact-us",
+        element: (
+          <ContactUs />
+        ),
+      },
+      {
+        path: "/privacy-policy",
+        element: (
+          <PrivacyPolicy />
+        ),
+      }
     ],
   },
 ]);

@@ -15,7 +15,6 @@ import { UrlState } from "../context";
 import { signout } from "@/db/apiAuth";
 import useFetch from "@/hooks/useFetch";
 import { isAdminUser } from "@/db/apiAdmin";
-import logo from "@/assets/logo.jpg";
 
 const Navbar = () => {
   const navigate = useNavigate();
@@ -49,12 +48,12 @@ const Navbar = () => {
   const ThemeButton = (
     <button
       onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-      className="inline-flex items-center justify-center h-10 w-10 rounded-lg border border-neutral-200 dark:border-neutral-700 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-all duration-200"
+      className="inline-flex items-center justify-center h-10 w-10 rounded-lg border border-border hover:bg-muted transition-all duration-200"
       aria-label="Toggle theme"
     >
       {theme === "dark"
-        ? <Sun size={18} className="text-yellow-500" />
-        : <Moon size={18} className="text-neutral-600" />}
+        ? <Sun size={18} className="text-primary" />
+        : <Moon size={18} className="text-muted-foreground" />}
     </button>
   );
 
@@ -81,7 +80,7 @@ const Navbar = () => {
   return (
     <nav
       className={`sticky top-0 w-full z-50 backdrop-blur-md transition-all duration-300 
-      bg-white/85 dark:bg-neutral-900/85 border-b border-neutral-200/50 dark:border-neutral-700/50 
+      bg-background/85 border-b border-border 
       ${scrolled ? "shadow-lg" : "shadow-sm"}`}
     >
       <div className="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
@@ -89,7 +88,7 @@ const Navbar = () => {
         {/* Logo */}
         <Link
           to="/"
-          className="flex items-center gap-2 text-2xl font-bold  text-yellow-600 dark:text-yellow-400"
+          className="flex items-center gap-2 text-2xl font-bold text-primary"
         >
           <GraduationCap className="h-8 w-8 rounded-full" />
           PrepMate
@@ -102,8 +101,7 @@ const Navbar = () => {
               key={link.to}
               to={link.to}
               className="flex items-center gap-2 px-4 py-2 rounded-lg 
-              text-neutral-700 dark:text-neutral-300 
-              hover:text-yellow-600 dark:hover:text-yellow-400 transition-colors"
+              text-muted-foreground hover:text-primary transition-colors"
             >
               {link.icon} {link.name}
             </Link>
@@ -114,12 +112,12 @@ const Navbar = () => {
             <>
               <Link
                 to="/auth/login"
-                className="px-4 py-2 rounded-lg text-neutral-700 dark:text-neutral-300 hover:text-yellow-600 dark:hover:text-yellow-400"
+                className="px-4 py-2 rounded-lg text-muted-foreground hover:text-primary"
               >
                 Login
               </Link>
               <Link to="/auth/signup">
-                <Button className="bg-yellow-500 hover:bg-yellow-600 text-white rounded-lg px-6 py-2">
+                <Button className="bg-primary hover:bg-primary/90 text-primary-foreground rounded-lg px-6 py-2">
                   Sign Up
                 </Button>
               </Link>
@@ -128,7 +126,7 @@ const Navbar = () => {
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <button
-                  className="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-neutral-100 dark:hover:bg-neutral-800"
+                  className="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-muted"
                 >
                   {UserAvatar}
                   <span className="hidden lg:block">{user.full_name}</span>
@@ -151,7 +149,7 @@ const Navbar = () => {
                 <DropdownMenuItem
                   onClick={handleLogout}
                   disabled={loading}
-                  className="flex items-center gap-3 px-3 py-2 rounded-md text-red-600"
+                  className="flex items-center gap-3 px-3 py-2 rounded-md text-destructive"
                 >
                   {loading ? "Signing out..." : <><LogOut className="w-4 h-4" /> Sign Out</>}
                 </DropdownMenuItem>
@@ -164,7 +162,7 @@ const Navbar = () => {
 
         {/* Mobile Menu Toggle */}
         <button
-          className="md:hidden h-10 w-10 rounded-lg hover:bg-neutral-100 dark:hover:bg-neutral-800"
+          className="md:hidden h-10 w-10 rounded-lg hover:bg-muted"
           onClick={() => setMenuOpen(prev => !prev)}
           aria-label="Toggle menu"
         >
@@ -180,14 +178,14 @@ const Navbar = () => {
             animate={{ opacity: 1, height: "auto" }}
             exit={{ opacity: 0, height: 0 }}
             transition={{ duration: 0.2 }}
-            className="md:hidden bg-white/95 dark:bg-neutral-900/95 backdrop-blur-md border-t border-neutral-200 dark:border-neutral-800"
+            className="md:hidden bg-background/95 backdrop-blur-md border-t border-border"
           >
             <div className="px-6 py-6 space-y-2">
               {commonLinks.map(link => (
                 <Link
                   key={link.to}
                   to={link.to}
-                  className="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-neutral-100 dark:hover:bg-neutral-800"
+                  className="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-muted"
                   onClick={() => setMenuOpen(false)}
                 >
                   {link.icon} {link.name}
@@ -198,13 +196,13 @@ const Navbar = () => {
                 <>
                   <Link
                     to="/auth/login"
-                    className="block px-4 py-3 rounded-lg hover:bg-neutral-100 dark:hover:bg-neutral-800"
+                    className="block px-4 py-3 rounded-lg hover:bg-muted"
                     onClick={() => setMenuOpen(false)}
                   >
                     Login
                   </Link>
                   <Link to="/auth/signup" onClick={() => setMenuOpen(false)}>
-                    <Button className="w-full bg-yellow-500 hover:bg-yellow-600 text-white rounded-lg py-3">
+                    <Button className="w-full bg-primary hover:bg-primary/90 text-primary-foreground rounded-lg py-3">
                       Sign Up
                     </Button>
                   </Link>
@@ -213,7 +211,7 @@ const Navbar = () => {
                 <>
                   <Link
                     to={`/profile/${user.id}`}
-                    className="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-neutral-100 dark:hover:bg-neutral-800"
+                    className="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-muted"
                     onClick={() => setMenuOpen(false)}
                   >
                     <Settings className="w-5 h-5" /> Profile
@@ -221,14 +219,14 @@ const Navbar = () => {
                   <button
                     onClick={handleLogout}
                     disabled={loading}
-                    className="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-red-50 dark:hover:bg-red-900/20 text-red-600 w-full"
+                    className="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-destructive/10 text-destructive w-full"
                   >
                     {loading ? "Signing out..." : <><LogOut className="w-5 h-5" /> Sign Out</>}
                   </button>
                 </>
               )}
 
-              <div className="border-t border-neutral-200 dark:border-neutral-700 pt-4 mt-4">
+              <div className="border-t border-border pt-4 mt-4">
                 {ThemeButton}
               </div>
             </div>
