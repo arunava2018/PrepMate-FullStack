@@ -1,4 +1,15 @@
-import { BookOpen, HelpCircle, TrendingUp, Target, LayoutDashboard, ShieldCheck, BarChart3, CheckCircle2, Users2} from "lucide-react";
+import {
+  BookOpen,
+  HelpCircle,
+  TrendingUp,
+  Target,
+  LayoutDashboard,
+  ShieldCheck,
+  BarChart3,
+  CheckCircle2,
+  Users2,
+  Twitter, Github, Linkedin, Mail
+} from "lucide-react";
 export const getStats = ({
   totalSubjects,
   totalQuestions,
@@ -43,7 +54,6 @@ export const getStats = ({
     isProgress: true,
   },
 ];
-
 
 export const testimonials = [
   {
@@ -124,42 +134,63 @@ export const faqs = [
 ];
 
 export const features = [
-    {
-      icon: BookOpen,
-      title: "Organized Learning",
-      desc: "Subjects and subtopics mapped for a smooth, structured progression.",
-    },
-    {
-      icon: LayoutDashboard,
-      title: "Smart Dashboard",
-      desc: "Track your progress with subject-wise insights and real-time stats.",
-    },
-    {
-      icon: ShieldCheck,
-      title: "Reliable Content",
-      desc: "Every question is admin-curated and verified for accuracy and clarity.",
-    },
-    {
-      icon: BarChart3,
-      title: "Elegant UI",
-      desc: "Minimal, distraction-free design with responsive light/dark themes.",
-    },
-  ];
+  {
+    icon: BookOpen,
+    title: "Organized Learning",
+    desc: "Subjects and subtopics mapped for a smooth, structured progression.",
+  },
+  {
+    icon: LayoutDashboard,
+    title: "Smart Dashboard",
+    desc: "Track your progress with subject-wise insights and real-time stats.",
+  },
+  {
+    icon: ShieldCheck,
+    title: "Reliable Content",
+    desc: "Every question is admin-curated and verified for accuracy and clarity.",
+  },
+  {
+    icon: BarChart3,
+    title: "Elegant UI",
+    desc: "Minimal, distraction-free design with responsive light/dark themes.",
+  },
+];
 
-  export const coreValues = [
+export const coreValues = [
   {
     icon: CheckCircle2,
     title: "Quality First",
-    description: "Every question and resource is carefully curated and verified by industry professionals"
+    description:
+      "Every question and resource is carefully curated and verified by industry professionals",
   },
   {
     icon: Users2,
-    title: "Community Driven", 
-    description: "Real experiences from real people who've successfully navigated their interview journey"
+    title: "Community Driven",
+    description:
+      "Real experiences from real people who've successfully navigated their interview journey",
   },
   {
     icon: Target,
     title: "Results Focused",
-    description: "Practical preparation tools designed to help you succeed in interviews and exams"
-  }
-  ]
+    description:
+      "Practical preparation tools designed to help you succeed in interviews and exams",
+  },
+];
+
+export const socialLinks = [
+  {
+    href: "https://x.com/Arunava17818355",
+    icon: Twitter,
+    label: "Twitter",
+  },
+  {
+    href: "https://github.com/arunava2018",
+    icon: Github,
+    label: "GitHub",
+  },
+  {
+    href: "https://www.linkedin.com/in/arunava-banerjee1/",
+    icon: Linkedin,
+    label: "LinkedIn",
+  },
+];
