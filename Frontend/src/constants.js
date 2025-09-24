@@ -1,0 +1,45 @@
+import { BookOpen, HelpCircle, TrendingUp, Target} from "lucide-react";
+export const getStats = ({
+  totalSubjects,
+  totalQuestions,
+  completedQuestions,
+  avgProgressPercentage,
+}) => [
+  {
+    title: "Total Subjects",
+    value: totalSubjects,
+    icon: BookOpen,
+    description: "Available learning paths",
+    gradient: "from-blue-400 to-blue-500",
+    bgColor: "bg-blue-100/70 dark:bg-blue-900/30",
+    borderColor: "border-blue-200/50 dark:border-blue-800/30",
+  },
+  {
+    title: "Total Questions",
+    value: totalQuestions.toLocaleString(),
+    icon: HelpCircle,
+    description: "Practice questions available",
+    gradient: "from-purple-400 to-purple-500",
+    bgColor: "bg-purple-100/70 dark:bg-purple-900/30",
+    borderColor: "border-purple-200/50 dark:border-purple-800/30",
+  },
+  {
+    title: "Questions Completed",
+    value: completedQuestions.toLocaleString(),
+    icon: Target,
+    description: "Successfully answered",
+    gradient: "from-green-400 to-green-500",
+    bgColor: "bg-green-100/70 dark:bg-green-900/30",
+    borderColor: "border-green-200/50 dark:border-green-800/30",
+  },
+  {
+    title: "Average Progress",
+    value: `${avgProgressPercentage}%`,
+    icon: TrendingUp,
+    description: "Overall completion rate",
+    gradient: "from-yellow-400 to-yellow-500",
+    bgColor: "bg-yellow-100/70 dark:bg-yellow-900/30",
+    borderColor: "border-yellow-200/50 dark:border-yellow-800/30",
+    isProgress: true,
+  },
+];
