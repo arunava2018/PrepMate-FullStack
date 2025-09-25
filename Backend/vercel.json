@@ -1,6 +1,5 @@
 {
   "version": 2,
-  "buildCommand": "npx prisma generate",
   "routes": [
     {
       "src": "/(.*)",
