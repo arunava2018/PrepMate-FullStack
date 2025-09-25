@@ -57,7 +57,7 @@ const DashboardPage = () => {
 
   return (
     <div className="p-6">
-      <h1 className="text-3xl font-bold md:mb-1 mb-5">DashboardPage</h1>
+      <h1 className="text-3xl font-bold md:mb-1 mb-5">Dashboard</h1>
 
       <DashboardInfo />
 
