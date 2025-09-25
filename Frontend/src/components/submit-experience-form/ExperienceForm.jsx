@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import "../../styles/experience-editor.css";
 import { Button } from "@/components/ui/button";
 import SuccessMessage from "./SuccessMessage";
+import { UrlState } from "@/context";
 import FormHeader from "./FormHeader";
 import MarkdownEditor from "./MarkdownEditor";
 import { useExperienceForm } from "./useExperienceForm";
@@ -22,7 +23,7 @@ import {
 const ExperienceForm = () => {
   const editorRef = useRef(null);
   const navigate = useNavigate();
-
+  const {user} = UrlState();
   // preference state
   const [showPreferenceDialog, setShowPreferenceDialog] = useState(true);
   const [isAnonymous, setIsAnonymous] = useState(null);
@@ -53,11 +54,16 @@ const ExperienceForm = () => {
   // apply anonymous preference once chosen
   const handlePreferenceSelect = (anonymous) => {
     setIsAnonymous(anonymous);
-
     if (anonymous) {
       setFormData((prev) => ({
         ...prev,
-        username: "Anonymous User",
+        user_name: "Anonymous User",
+        linkedin: "",
+      }));
+    }else{
+      setFormData((prev) => ({
+        ...prev,
+        user_name: user?.full_name || "",
         linkedin: "",
       }));
     }
@@ -161,24 +167,24 @@ const ExperienceForm = () => {
                   <input
                     type="text"
                     name="username"
-                    value={formData.username}
+                    value={formData.user_name}
                     onChange={handleChange}
                     placeholder="Your Name"
                     disabled={isAnonymous}
                     className={getInputClasses(
-                      getFieldStatus("username", formData.username)
+                      getFieldStatus("username", formData.user_name)
                     )}
                   />
                   <div className="absolute inset-y-0 right-0 pr-3 flex items-center">
                     {getStatusIcon(
-                      getFieldStatus("username", formData.username)
+                      getFieldStatus("username", formData.user_name)
                     )}
                   </div>
                 </div>
                 {errors.username && (
                   <p className="text-destructive text-xs mt-1 flex items-center gap-1">
                     <AlertCircle className="w-3 h-3" />
-                    {errors.username}
+                    {errors.user_name}
                   </p>
                 )}
               </div>

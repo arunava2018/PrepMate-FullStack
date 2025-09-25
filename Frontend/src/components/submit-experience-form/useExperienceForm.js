@@ -7,6 +7,7 @@ export const useExperienceForm = () => {
   const { user } = UrlState();
 
   const [formData, setFormData] = useState({
+    user_name: user?.name || "",
     company: "",
     offer_type: "",
     opportunity_type: "",
