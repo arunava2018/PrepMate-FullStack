@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "buildCommand": "npm install && npx prisma generate",
+  "buildCommand": "npx prisma generate",
   "routes": [
     {
       "src": "/(.*)",
