@@ -31,6 +31,22 @@ const MarkdownEditor = forwardRef(
           ],
         });
 
+        // Apply theme styles after EasyMDE mounts
+        const cmWrapper = editorRef.current.codemirror.getWrapperElement();
+        if (cmWrapper) {
+          cmWrapper.classList.add(
+            "rounded-lg",
+            "border",
+            "border-border",
+            "bg-input",
+            "text-foreground",
+            "focus-within:ring-2",
+            "focus-within:ring-primary/30",
+            "transition"
+          );
+        }
+
+        // Update value on change
         editorRef.current.codemirror.on("change", () => {
           onChange(editorRef.current.value());
         });
@@ -47,13 +63,13 @@ const MarkdownEditor = forwardRef(
     return (
       <div className="space-y-1">
         {label && (
-          <label className="text-sm font-medium text-gray-600 dark:text-gray-300">
+          <label className="text-sm font-medium text-muted-foreground">
             {label}
           </label>
         )}
         <textarea ref={textareaRef} />
         {error && (
-          <p className="text-red-600 dark:text-red-400 text-xs mt-1">{error}</p>
+          <p className="text-destructive text-xs mt-1">{error}</p>
         )}
       </div>
     );

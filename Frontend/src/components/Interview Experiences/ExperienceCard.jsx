@@ -4,8 +4,12 @@ import { Badge } from "../ui/badge";
 import { Briefcase, Eye, User } from "lucide-react";
 
 function ExperienceCard({ experience, index }) {
-  const { id, role, offer_type, users } = experience;
-  const userName = users?.full_name || "Anonymous User";
+  const { id, role, offer_type, users, is_anonymous } = experience;
+
+  // Respect anonymity
+  const userName = is_anonymous
+    ? "Anonymous User"
+    : users?.full_name || "Unknown User";
 
   // Badge style and text by offer type
   const getOfferBadgeConfig = (type) => {

@@ -30,11 +30,12 @@ export const addInterviewExperience = async (req, res) => {
       offer_type,
       opportunity_type,
       is_public = false,
+      is_anonymous = false,
     } = req.body;
 
     const experience = await prisma.interview_experiences.create({
       data: {
-        user_id: req.user.id, // ✅ always trust token, not body
+        user_id: req.user.id, // ✅ always trust token
         company_name,
         role,
         linkedin_url,
@@ -43,10 +44,20 @@ export const addInterviewExperience = async (req, res) => {
         offer_type,
         opportunity_type,
         is_public,
+        is_anonymous,
+      },
+      include: {
+        users: { select: { full_name: true } },
       },
     });
 
     await invalidateInterviewExperienceCache();
+
+    // Mask if anonymous
+    if (experience.is_anonymous) {
+      experience.users.full_name = "Anonymous";
+    }
+
     res.status(201).json(experience);
   } catch (err) {
     console.error("Error adding experience:", err);
@@ -56,8 +67,6 @@ export const addInterviewExperience = async (req, res) => {
 
 /**
  * 👁️ Fetch a single interview experience by ID
- * - Public: any authenticated user can view
- * - Private: only owner or admin can view
  */
 export const fetchExperienceById = async (req, res) => {
   try {
@@ -74,19 +83,23 @@ export const fetchExperienceById = async (req, res) => {
       return res.status(404).json({ error: "Experience not found" });
     }
 
+    // Auth checks for public/private
     if (experience.is_public) {
-      // ✅ any authenticated user can view
       if (!req.user) {
         return res.status(401).json({ error: "Authentication required" });
       }
     } else {
-      // 🔒 private: only owner or admin
       if (
         !req.user ||
         (String(experience.user_id) !== String(req.user.id) && !req.user.isAdmin)
       ) {
         return res.status(403).json({ error: "Unauthorized to view this experience" });
       }
+    }
+
+    // Mask name if anonymous
+    if (experience.is_anonymous) {
+      experience.users.full_name = "Anonymous";
     }
 
     res.json(experience);
@@ -98,8 +111,6 @@ export const fetchExperienceById = async (req, res) => {
 
 /**
  * 📥 Fetch unpublished interview experiences
- * - Admins: see all
- * - Users: see only their own
  */
 export const fetchUnpublishedInterviewExperiences = async (req, res) => {
   try {
@@ -116,6 +127,11 @@ export const fetchUnpublishedInterviewExperiences = async (req, res) => {
       include: {
         users: { select: { full_name: true } },
       },
+    });
+
+    // Mask names for anonymous ones
+    experiences.forEach((exp) => {
+      if (exp.is_anonymous) exp.users.full_name = "Anonymous";
     });
 
     res.json(experiences);
@@ -156,8 +172,6 @@ export const deleteExperience = async (req, res) => {
 
 /**
  * ✏️ Update interview experience
- * - Only owner or admin can update
- * - Published experiences cannot be edited
  */
 export const updateExperience = async (req, res) => {
   try {
@@ -181,9 +195,16 @@ export const updateExperience = async (req, res) => {
     const updated = await prisma.interview_experiences.update({
       where: { id },
       data: updatedData,
+      include: { users: { select: { full_name: true } } },
     });
 
     await invalidateInterviewExperienceCache();
+
+    // Mask if anonymous
+    if (updated.is_anonymous) {
+      updated.users.full_name = "Anonymous";
+    }
+
     res.json(updated);
   } catch (err) {
     console.error("Error updating experience:", err);
@@ -192,7 +213,7 @@ export const updateExperience = async (req, res) => {
 };
 
 /**
- * ✅ Approve interview experience (set is_public = true)
+ * ✅ Approve interview experience
  */
 export const approveExperience = async (req, res) => {
   try {
@@ -209,9 +230,15 @@ export const approveExperience = async (req, res) => {
     const updated = await prisma.interview_experiences.update({
       where: { id },
       data: payload,
+      include: { users: { select: { full_name: true } } },
     });
 
     await invalidateInterviewExperienceCache();
+
+    if (updated.is_anonymous) {
+      updated.users.full_name = "Anonymous";
+    }
+
     res.json(updated);
   } catch (err) {
     console.error("Error approving experience:", err);
@@ -231,6 +258,10 @@ export const fetchPublicInterviewExperiences = async (req, res) => {
       where: { is_public: true },
       orderBy: { company_name: "asc" },
       include: { users: { select: { full_name: true } } },
+    });
+
+    experiences.forEach((exp) => {
+      if (exp.is_anonymous) exp.users.full_name = "Anonymous";
     });
 
     res.json(experiences);
@@ -253,6 +284,10 @@ export const fetchUserInterviewExperiences = async (req, res) => {
       include: {
         users: { select: { full_name: true } },
       },
+    });
+
+    experiences.forEach((exp) => {
+      if (exp.is_anonymous) exp.users.full_name = "Anonymous";
     });
 
     res.json(experiences);

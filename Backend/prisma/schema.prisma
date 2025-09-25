@@ -27,6 +27,7 @@ model interview_experiences {
   github_url       String?
   content          String
   is_public        Boolean?  @default(true)
+  is_anonymous     Boolean   @default(false)
   created_at       DateTime? @default(now()) @db.Timestamptz(6)
   role             String
   opportunity_type String?

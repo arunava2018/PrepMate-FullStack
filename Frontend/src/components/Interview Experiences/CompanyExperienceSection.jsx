@@ -31,15 +31,15 @@ function CompanyExperienceSection({ company, experiences }) {
             </div>
           </div>
         </AccordionTrigger>
+
         <AccordionContent className="px-6 pb-6">
           <div className="pt-2">
             <div className="h-px bg-gradient-to-r from-transparent via-amber-200 dark:via-gray-700 to-transparent mb-4" />
-            
-            {/* Nested Accordion for Individual Experiences */}
+
+            {/* Experience cards */}
             <Accordion type="multiple" className="space-y-3">
               {experiences.map((exp, index) => (
                 <div key={exp.id} className="flex items-center justify-between">
-                  {/* Candidate + ExperienceCard */}
                   <ExperienceCard experience={exp} index={index} />
                 </div>
               ))}

@@ -10,6 +10,7 @@ export async function addInterviewExperience({
   offer_type,
   opportunity_type,
   is_public = false,
+  is_anonymous = false,
 }) {
   try {
     const token = localStorage.getItem("token");
@@ -30,6 +31,7 @@ export async function addInterviewExperience({
         offer_type,
         opportunity_type,
         is_public,
+        is_anonymous,
       }),
     });
 
@@ -96,7 +98,7 @@ export async function updateExperience(id, updatedData) {
         "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
       },
-      body: JSON.stringify(updatedData),
+      body: JSON.stringify(updatedData), // ✅ can include is_anonymous
     });
 
     const data = await res.json();
@@ -135,7 +137,7 @@ export async function approveExperience(id, updatedData) {
     const payload = {
       ...updatedData,
       content: updatedData.content || updatedData.experience || "",
-      is_public: true,
+      is_public: true, // ✅ approval means publish
     };
     delete payload.experience;
 

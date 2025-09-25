@@ -49,7 +49,7 @@ export default function ExperienceDetails() {
   if (loading) {
     return (
       <div className="max-w-5xl mx-auto px-6 py-10 space-y-6">
-        {/* Header skeleton */}
+        {/* Skeleton */}
         <div className="flex items-center justify-between">
           <div className="space-y-3">
             <Skeleton className="h-6 w-40" />
@@ -58,7 +58,6 @@ export default function ExperienceDetails() {
           <Skeleton className="h-9 w-20 rounded-md" />
         </div>
 
-        {/* Author row skeleton */}
         <div className="flex items-center justify-between border rounded-lg px-4 py-3 bg-white dark:bg-neutral-900">
           <div className="flex items-center gap-3">
             <Skeleton className="w-10 h-10 rounded-full" />
@@ -67,7 +66,6 @@ export default function ExperienceDetails() {
           <Skeleton className="h-4 w-28" />
         </div>
 
-        {/* Content skeleton */}
         <div className="bg-white dark:bg-gray-900 rounded-xl p-6 border shadow-sm space-y-3">
           <Skeleton className="h-5 w-2/3" />
           <Skeleton className="h-4 w-full" />
@@ -86,8 +84,7 @@ export default function ExperienceDetails() {
           Experience Not Found
         </h2>
         <p className="text-gray-600 dark:text-gray-400">
-          The interview experience you're looking for doesn't exist or has been
-          removed.
+          The interview experience you're looking for doesn't exist or has been removed.
         </p>
       </div>
     );
@@ -101,10 +98,12 @@ export default function ExperienceDetails() {
     github_url,
     company_name,
     created_at,
+    is_anonymous,
   } = experience;
 
-  const userName = users?.full_name || "Anonymous User";
-  const avatarInitials = getInitials(userName);
+  // Anonymity check
+  const userName = is_anonymous ? "Anonymous User" : users?.full_name || "Unknown User";
+  const avatarInitials = is_anonymous ? "A" : getInitials(userName);
 
   const createdDate = created_at
     ? new Date(created_at).toLocaleDateString("en-US", {
@@ -145,7 +144,7 @@ export default function ExperienceDetails() {
         </div>
 
         {/* Author Row */}
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 px-4 py-3 bg-white dark:bg-black">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 px-4 py-3">
           {/* Left: avatar + name + socials */}
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-full bg-gradient-to-br from-amber-400 to-orange-500 flex items-center justify-center text-white font-semibold">
@@ -155,7 +154,7 @@ export default function ExperienceDetails() {
               <span className="font-medium text-gray-900 dark:text-gray-100">
                 {userName}
               </span>
-              {linkedin_url && (
+              {!is_anonymous && linkedin_url && (
                 <a
                   href={linkedin_url}
                   target="_blank"
@@ -166,7 +165,7 @@ export default function ExperienceDetails() {
                   <Linkedin className="w-5 h-5" />
                 </a>
               )}
-              {github_url && (
+              {!is_anonymous && github_url && (
                 <a
                   href={github_url}
                   target="_blank"

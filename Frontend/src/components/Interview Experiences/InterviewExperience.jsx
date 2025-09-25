@@ -81,7 +81,7 @@ function InterviewExperience() {
               <CompanyExperienceSection
                 key={normalizedName}
                 company={displayName}
-                experiences={experiences}
+                experiences={experiences} // anonymity handled inside children
               />
             ))}
         </div>
