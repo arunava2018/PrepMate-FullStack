@@ -7,7 +7,7 @@
   "scripts": {
     "dev": "nodemon index.js",
     "start": "node index.js",
-    "build": "prisma generate",
+    "build": "echo 'Build complete - Prisma generated via postinstall'",
     "postinstall": "prisma generate"
   },
   "keywords": [],
@@ -26,9 +26,6 @@
     "prisma": "^5.7.1"
   },
   "devDependencies": {
-    "@mermaid-js/mermaid-cli": "^10.6.1",
-    "nodemon": "^3.0.2",
-    "prisma-erd-generator": "^1.11.0",
-    "puppeteer": "^21.6.1"
+    "nodemon": "^3.0.2"
   }
 }

@@ -11,6 +11,5 @@
       "src": "/(.*)",
       "dest": "index.js"
     }
-  ],
-  "buildCommand": "prisma generate && npm run build"
+  ]
 }
