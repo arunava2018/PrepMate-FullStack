@@ -35,7 +35,7 @@ export const addInterviewExperience = async (req, res) => {
 
     const experience = await prisma.interview_experiences.create({
       data: {
-        user_id: req.user.id, // ✅ always trust token
+        user_id: req.user.id,
         company_name,
         role,
         linkedin_url,

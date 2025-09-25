@@ -41,10 +41,10 @@ export default function AdminApprovalForm({ initialData, onClose, fetchData }) {
       setLoading(true);
       setAction("approve");
 
-      // ✅ preserve is_anonymous from initial data
       await approveExperience(initialData.id, {
         ...formData,
-        is_anonymous: initialData.is_anonymous,
+        is_anonymous: initialData.is_anonymous, // preserve
+        is_public: true, // set to public
       });
 
       await fetchData();
@@ -61,7 +61,9 @@ export default function AdminApprovalForm({ initialData, onClose, fetchData }) {
     try {
       setLoading(true);
       setAction("delete");
+
       await deleteExperience(initialData.id);
+
       await fetchData();
       onClose();
     } catch (err) {

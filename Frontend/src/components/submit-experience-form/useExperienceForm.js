@@ -201,7 +201,7 @@ export const useExperienceForm = () => {
         offer_type: formData.offer_type,
         opportunity_type: formData.opportunity_type,
         content: experience,
-        is_public: !isAnonymous,      // post with name = public
+        is_public: false,   // always false on submit
         is_anonymous: isAnonymous,    // direct from dialog
       });
 
