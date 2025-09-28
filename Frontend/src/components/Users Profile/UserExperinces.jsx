@@ -122,7 +122,8 @@ export default function UserExperiences({ userId }) {
           </Link>
         </div>
       ) : (
-        <div className="bg-white dark:bg-neutral-900 rounded-xl border border-gray-200 dark:border-neutral-700 overflow-hidden shadow-sm">
+        <div>
+          <div className="bg-white dark:bg-neutral-900 rounded-xl border border-gray-200 dark:border-neutral-700 overflow-hidden shadow-sm">
           {/* Table Header */}
           <div className="hidden lg:grid grid-cols-12 px-6 py-3 bg-gray-50 dark:bg-neutral-800/50 border-b border-gray-200 dark:border-neutral-700 text-sm font-semibold text-gray-700 dark:text-gray-300 uppercase">
             <div className="col-span-3">Title</div>
@@ -251,6 +252,15 @@ export default function UserExperiences({ userId }) {
                 </div>
               </div>
             ))}
+          </div>
+        </div>
+          <div className="mt-4 text-right">
+            <Link to={"/share-experience"}
+              className="inline-block">
+              <Button variant="secondary">
+                + Add New Experience
+              </Button>
+            </Link>
           </div>
         </div>
       )}
