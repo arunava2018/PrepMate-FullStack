@@ -1,8 +1,11 @@
-import { cacheClient } from "../utils/cacheClient.js";
+import { cacheClient } from '../utils/cacheClient.js';
 export const cacheMiddleware = ({ ttl = 3600, key } = {}) => {
   return async (req, res, next) => {
     try {
-      const cacheKey = typeof key === "function" ? key(req) : key ?? `${req.method}:${req.originalUrl}`;
+      const cacheKey =
+        typeof key === 'function'
+          ? key(req)
+          : (key ?? `${req.method}:${req.originalUrl}`);
 
       if (!cacheKey) return next();
 
@@ -18,14 +21,14 @@ export const cacheMiddleware = ({ ttl = 3600, key } = {}) => {
           await cacheClient.set(cacheKey, body, ttl);
         } catch (e) {
           // swallow cache errors, still respond
-          console.error("Cache set error:", e?.message || e);
+          console.error('Cache set error:', e?.message || e);
         }
         return originalJson(body);
       };
 
       next();
     } catch (err) {
-      console.error("Cache middleware error:", err);
+      console.error('Cache middleware error:', err);
       next(); // don't break the request if cache fails
     }
   };

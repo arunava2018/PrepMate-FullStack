@@ -1,5 +1,5 @@
-import { PrismaClient } from "@prisma/client";
-import { cacheClient } from "../utils/cacheClient.js";
+import { PrismaClient } from '@prisma/client';
+import { cacheClient } from '../utils/cacheClient.js';
 
 const prisma = new PrismaClient();
 
@@ -18,7 +18,7 @@ export const getSubjects = async (req, res) => {
 
     // 2. Fetch question counts grouped by subject_id
     const questionCounts = await prisma.questions.groupBy({
-      by: ["subject_id"],
+      by: ['subject_id'],
       _count: { id: true },
     });
 
@@ -33,22 +33,20 @@ export const getSubjects = async (req, res) => {
 
     res.json(formatted);
   } catch (err) {
-    console.error("Error fetching subjects:", err);
-    res.status(500).json({ error: "Failed to fetch subjects" });
+    console.error('Error fetching subjects:', err);
+    res.status(500).json({ error: 'Failed to fetch subjects' });
   }
 };
-
-
 
 export const getSubjectById = async (req, res) => {
   try {
     const subject = await prisma.subjects.findUnique({
       where: { id: req.params.id },
     });
-    if (!subject) return res.status(404).json({ error: "Subject not found" });
+    if (!subject) return res.status(404).json({ error: 'Subject not found' });
     res.json(subject);
   } catch (err) {
-    res.status(500).json({ error: "Failed to fetch subject" });
+    res.status(500).json({ error: 'Failed to fetch subject' });
   }
 };
 
@@ -58,10 +56,10 @@ export const addSubject = async (req, res) => {
     const subject = await prisma.subjects.create({ data: { name } });
 
     // Invalidate subject caches
-    await cacheClient.del("subjects:all");
+    await cacheClient.del('subjects:all');
 
-    res.status(201).json({ message: "Subject added successfully", subject });
+    res.status(201).json({ message: 'Subject added successfully', subject });
   } catch (err) {
-    res.status(500).json({ error: "Failed to add subject" });
+    res.status(500).json({ error: 'Failed to add subject' });
   }
 };

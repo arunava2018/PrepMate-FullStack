@@ -1,4 +1,4 @@
-import { PrismaClient } from "@prisma/client";
+import { PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();
 
@@ -10,7 +10,7 @@ export const addQuestion = async (req, res) => {
     const { subject_id, subtopic_id, question_text, answer_text } = req.body;
 
     if (!subject_id || !subtopic_id || !question_text || !answer_text) {
-      return res.status(400).json({ error: "All fields are required" });
+      return res.status(400).json({ error: 'All fields are required' });
     }
 
     // Validate subject
@@ -18,7 +18,7 @@ export const addQuestion = async (req, res) => {
       where: { id: subject_id },
     });
     if (!foundSubject) {
-      return res.status(404).json({ error: "Subject not found" });
+      return res.status(404).json({ error: 'Subject not found' });
     }
 
     // Validate subtopic belongs to subject
@@ -28,7 +28,7 @@ export const addQuestion = async (req, res) => {
     if (!foundSubtopic) {
       return res
         .status(404)
-        .json({ error: "Subtopic not found in this subject" });
+        .json({ error: 'Subtopic not found in this subject' });
     }
 
     // Create question
@@ -37,15 +37,15 @@ export const addQuestion = async (req, res) => {
     });
 
     res.status(201).json({
-      message: "Question added successfully",
+      message: 'Question added successfully',
       question,
     });
   } catch (err) {
-    console.error("AddQuestion error:", err);
-    if (err.code === "P2002") {
-      return res.status(400).json({ error: "Duplicate question or answer" });
+    console.error('AddQuestion error:', err);
+    if (err.code === 'P2002') {
+      return res.status(400).json({ error: 'Duplicate question or answer' });
     }
-    res.status(500).json({ error: "Failed to add question" });
+    res.status(500).json({ error: 'Failed to add question' });
   }
 };
 
@@ -58,13 +58,13 @@ export const fetchQuestions = async (req, res) => {
 
     const questions = await prisma.questions.findMany({
       where: { subtopic_id: subtopicId },
-      orderBy: { created_at: "asc" },
+      orderBy: { created_at: 'asc' },
     });
 
     res.json(questions);
   } catch (err) {
-    console.error("FetchQuestions error:", err);
-    res.status(500).json({ error: "Failed to fetch questions" });
+    console.error('FetchQuestions error:', err);
+    res.status(500).json({ error: 'Failed to fetch questions' });
   }
 };
 
@@ -79,7 +79,7 @@ export const updateQuestion = async (req, res) => {
     if (!question_text || !answer_text) {
       return res
         .status(400)
-        .json({ error: "Both question_text and answer_text are required" });
+        .json({ error: 'Both question_text and answer_text are required' });
     }
 
     const updated = await prisma.questions.update({
@@ -89,14 +89,14 @@ export const updateQuestion = async (req, res) => {
 
     res.json(updated);
   } catch (err) {
-    console.error("UpdateQuestion error:", err);
-    if (err.code === "P2002") {
-      return res.status(400).json({ error: "Duplicate question or answer" });
+    console.error('UpdateQuestion error:', err);
+    if (err.code === 'P2002') {
+      return res.status(400).json({ error: 'Duplicate question or answer' });
     }
-    if (err.code === "P2025") {
-      return res.status(404).json({ error: "Question not found" });
+    if (err.code === 'P2025') {
+      return res.status(404).json({ error: 'Question not found' });
     }
-    res.status(500).json({ error: "Failed to update question" });
+    res.status(500).json({ error: 'Failed to update question' });
   }
 };
 
@@ -117,12 +117,12 @@ export const deleteQuestion = async (req, res) => {
       where: { id: questionId },
     });
 
-    res.json({ message: "Question deleted successfully" });
+    res.json({ message: 'Question deleted successfully' });
   } catch (err) {
-    console.error("DeleteQuestion error:", err);
-    if (err.code === "P2025") {
-      return res.status(404).json({ error: "Question not found" });
+    console.error('DeleteQuestion error:', err);
+    if (err.code === 'P2025') {
+      return res.status(404).json({ error: 'Question not found' });
     }
-    res.status(500).json({ error: "Failed to delete question" });
+    res.status(500).json({ error: 'Failed to delete question' });
   }
 };

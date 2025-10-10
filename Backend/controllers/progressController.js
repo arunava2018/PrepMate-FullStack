@@ -1,4 +1,4 @@
-import { PrismaClient } from "@prisma/client";
+import { PrismaClient } from '@prisma/client';
 const prisma = new PrismaClient();
 
 /**
@@ -9,7 +9,9 @@ export const getProgress = async (req, res) => {
     const { userId, subjectId } = req.params;
 
     if (!userId || !subjectId) {
-      return res.status(400).json({ error: "userId and subjectId are required" });
+      return res
+        .status(400)
+        .json({ error: 'userId and subjectId are required' });
     }
 
     // Fetch completed questions
@@ -30,8 +32,8 @@ export const getProgress = async (req, res) => {
 
     res.json({ completedQ, totalQ, progress, completed_questions });
   } catch (err) {
-    console.error("Error fetching progress:", err);
-    res.status(500).json({ error: "Failed to fetch progress" });
+    console.error('Error fetching progress:', err);
+    res.status(500).json({ error: 'Failed to fetch progress' });
   }
 };
 
@@ -43,7 +45,9 @@ export const markQuestionAsRead = async (req, res) => {
     const { userId, subjectId, questionId } = req.body;
 
     if (!userId || !subjectId || !questionId) {
-      return res.status(400).json({ error: "userId, subjectId, and questionId are required" });
+      return res
+        .status(400)
+        .json({ error: 'userId, subjectId, and questionId are required' });
     }
 
     const result = await prisma.user_question_progress.upsert({
@@ -51,13 +55,18 @@ export const markQuestionAsRead = async (req, res) => {
         user_id_question_id: { user_id: userId, question_id: questionId }, // ✅ uses composite unique
       },
       update: { is_read: true, read_at: new Date() },
-      create: { user_id: userId, subject_id: subjectId, question_id: questionId, is_read: true },
+      create: {
+        user_id: userId,
+        subject_id: subjectId,
+        question_id: questionId,
+        is_read: true,
+      },
     });
 
     res.json(result);
   } catch (err) {
-    console.error("Error marking question as read:", err);
-    res.status(500).json({ error: "Failed to mark question as read" });
+    console.error('Error marking question as read:', err);
+    res.status(500).json({ error: 'Failed to mark question as read' });
   }
 };
 
@@ -69,17 +78,23 @@ export const unmarkQuestion = async (req, res) => {
     const { userId, subjectId, questionId } = req.body;
 
     if (!userId || !subjectId || !questionId) {
-      return res.status(400).json({ error: "userId, subjectId, and questionId are required" });
+      return res
+        .status(400)
+        .json({ error: 'userId, subjectId, and questionId are required' });
     }
 
     const result = await prisma.user_question_progress.updateMany({
-      where: { user_id: userId, subject_id: subjectId, question_id: questionId },
+      where: {
+        user_id: userId,
+        subject_id: subjectId,
+        question_id: questionId,
+      },
       data: { is_read: false },
     });
 
     res.json(result);
   } catch (err) {
-    console.error("Error unmarking question:", err);
-    res.status(500).json({ error: "Failed to unmark question" });
+    console.error('Error unmarking question:', err);
+    res.status(500).json({ error: 'Failed to unmark question' });
   }
 };

@@ -1,5 +1,5 @@
-import { PrismaClient } from "@prisma/client";
-import { cacheClient } from "../utils/cacheClient.js";
+import { PrismaClient } from '@prisma/client';
+import { cacheClient } from '../utils/cacheClient.js';
 
 const prisma = new PrismaClient();
 
@@ -11,7 +11,7 @@ export const fetchSubtopics = async (req, res) => {
     });
     res.json(subtopics);
   } catch (err) {
-    res.status(500).json({ error: "Failed to fetch subtopics" });
+    res.status(500).json({ error: 'Failed to fetch subtopics' });
   }
 };
 
@@ -26,12 +26,12 @@ export const addSubtopic = async (req, res) => {
     // Invalidate caches
     await Promise.all([
       cacheClient.del(`subtopics:${subject_id}`),
-      cacheClient.del("subjects:all"), // subject list may depend on subtopic counts
+      cacheClient.del('subjects:all'), // subject list may depend on subtopic counts
     ]);
 
-    res.status(201).json({ message: "Subtopic added successfully", subtopic });
+    res.status(201).json({ message: 'Subtopic added successfully', subtopic });
   } catch (err) {
     console.error(err);
-    res.status(500).json({ error: "Failed to add subtopic" });
+    res.status(500).json({ error: 'Failed to add subtopic' });
   }
 };

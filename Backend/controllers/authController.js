@@ -5,9 +5,9 @@
    - get user by id
 */
 
-import jwt from "jsonwebtoken";
-import bcrypt from "bcrypt";
-import { PrismaClient } from "@prisma/client";
+import jwt from 'jsonwebtoken';
+import bcrypt from 'bcrypt';
+import { PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();
 const JWT_SECRET = process.env.JWT_SECRET;
@@ -20,7 +20,7 @@ export const signup = async (req, res) => {
     // Check if user already exists
     const existingUser = await prisma.users.findUnique({ where: { email } });
     if (existingUser) {
-      return res.status(400).json({ error: "User already exists" });
+      return res.status(400).json({ error: 'User already exists' });
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
@@ -33,7 +33,7 @@ export const signup = async (req, res) => {
         full_name,
         college_name,
         passout_year,
-        role: "user", // enforced
+        role: 'user', // enforced
       },
     });
 
@@ -43,11 +43,11 @@ export const signup = async (req, res) => {
     const token = jwt.sign(
       { userId: user.id, email: user.email, role: user.role, isAdmin },
       JWT_SECRET,
-      { expiresIn: "1h" }
+      { expiresIn: '1h' }
     );
 
     res.status(201).json({
-      message: "User created successfully",
+      message: 'User created successfully',
       token,
       user: {
         id: user.id,
@@ -61,10 +61,10 @@ export const signup = async (req, res) => {
       },
     });
   } catch (err) {
-    console.error("Signup error:", err);
+    console.error('Signup error:', err);
     res
       .status(500)
-      .json({ error: "Something went wrong. Please try again later." });
+      .json({ error: 'Something went wrong. Please try again later.' });
   }
 };
 
@@ -74,10 +74,10 @@ export const login = async (req, res) => {
     const { email, password } = req.body;
 
     const user = await prisma.users.findUnique({ where: { email } });
-    if (!user) return res.status(400).json({ error: "Invalid credentials" });
+    if (!user) return res.status(400).json({ error: 'Invalid credentials' });
 
     const isValid = await bcrypt.compare(password, user.password);
-    if (!isValid) return res.status(400).json({ error: "Invalid credentials" });
+    if (!isValid) return res.status(400).json({ error: 'Invalid credentials' });
 
     // 🔎 Check if this user is in admin_users
     const adminRecord = await prisma.admin_users.findUnique({
@@ -95,11 +95,11 @@ export const login = async (req, res) => {
         isAdmin,
       },
       JWT_SECRET,
-      { expiresIn: "1h" }
+      { expiresIn: '1h' }
     );
 
     res.json({
-      message: "Login successful",
+      message: 'Login successful',
       token,
       user: {
         id: user.id,
@@ -113,8 +113,8 @@ export const login = async (req, res) => {
       },
     });
   } catch (err) {
-    console.error("Login error:", err);
-    res.status(500).json({ error: "Login error. Please try again later." });
+    console.error('Login error:', err);
+    res.status(500).json({ error: 'Login error. Please try again later.' });
   }
 };
 
@@ -122,7 +122,7 @@ export const login = async (req, res) => {
 export const me = async (req, res) => {
   try {
     if (!req.user) {
-      return res.status(401).json({ error: "Unauthorized" });
+      return res.status(401).json({ error: 'Unauthorized' });
     }
 
     const user = await prisma.users.findUnique({
@@ -140,7 +140,7 @@ export const me = async (req, res) => {
     });
 
     if (!user) {
-      return res.status(404).json({ error: "User not found" });
+      return res.status(404).json({ error: 'User not found' });
     }
 
     res.json({
@@ -148,8 +148,8 @@ export const me = async (req, res) => {
       isAdmin: req.user.isAdmin || false,
     });
   } catch (err) {
-    console.error("Me endpoint error:", err);
-    res.status(401).json({ error: "Unauthorized" });
+    console.error('Me endpoint error:', err);
+    res.status(401).json({ error: 'Unauthorized' });
   }
 };
 
@@ -171,7 +171,7 @@ export const getUserById = async (req, res) => {
       },
     });
 
-    if (!user) return res.status(404).json({ error: "User not found" });
+    if (!user) return res.status(404).json({ error: 'User not found' });
 
     // Also check if this user is admin
     const adminRecord = await prisma.admin_users.findUnique({
@@ -183,7 +183,7 @@ export const getUserById = async (req, res) => {
       isAdmin: !!adminRecord,
     });
   } catch (err) {
-    console.error("Get user by ID error:", err);
-    res.status(500).json({ error: "Could not fetch user" });
+    console.error('Get user by ID error:', err);
+    res.status(500).json({ error: 'Could not fetch user' });
   }
 };

@@ -8,7 +8,9 @@
     "dev": "nodemon index.js",
     "start": "node index.js",
     "build": "echo 'Build complete - Prisma generated via postinstall'",
-    "postinstall": "prisma generate"
+    "postinstall": "prisma generate",
+    "prettier:write": "prettier --config .prettierrc --write .",
+    "prettier:check": "prettier --config .prettierrc --check ."
   },
   "keywords": [],
   "author": "",
@@ -26,6 +28,7 @@
     "prisma": "^5.7.1"
   },
   "devDependencies": {
-    "nodemon": "^3.0.2"
+    "nodemon": "^3.0.2",
+    "prettier": "3.6.2"
   }
 }
