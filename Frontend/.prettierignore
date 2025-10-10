@@ -1,0 +1,25 @@
+# dependencies
+node_modules/
+
+# build outputs
+dist/
+.vite/
+
+# logs
+*.log
+
+# tests & coverage
+coverage/
+
+# cache & temp
+.cache/
+tmp/
+temp/
+
+# env files
+.env*
+!.env.example
+
+# misc
+*.min.js
+*.min.css

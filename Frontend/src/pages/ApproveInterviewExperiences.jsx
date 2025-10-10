@@ -1,11 +1,11 @@
-import ApproveExperiences from '@/components/Admin Control/Interview Experiences Approval/ApproveExperiences'
-import React from 'react'
+import ApproveExperiences from '@/components/Admin Control/Interview Experiences Approval/ApproveExperiences';
+import React from 'react';
 function ApproveInterviewExperiences() {
   return (
     <div>
-      <ApproveExperiences/>
+      <ApproveExperiences />
     </div>
-  )
+  );
 }
 
-export default ApproveInterviewExperiences
+export default ApproveInterviewExperiences;

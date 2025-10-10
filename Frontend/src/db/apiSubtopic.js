@@ -3,13 +3,13 @@ const BASE_URL = import.meta.env.VITE_BACKEND_URL;
 //  Add Subtopic with subjectId
 export async function addSubtopic({ subjectId, name }) {
   try {
-    const token = localStorage.getItem("token");
-    if (!token) throw new Error("Not authenticated");
+    const token = localStorage.getItem('token');
+    if (!token) throw new Error('Not authenticated');
 
     const res = await fetch(`${BASE_URL}/subtopics/addsubtopic`, {
-      method: "POST",
+      method: 'POST',
       headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
         Authorization: `Bearer ${token}`,
       },
       body: JSON.stringify({ subject_id: subjectId, name }), // use subjectId
@@ -17,7 +17,7 @@ export async function addSubtopic({ subjectId, name }) {
 
     const data = await res.json();
     if (!res.ok) {
-      throw new Error(data.error || "Failed to add subtopic");
+      throw new Error(data.error || 'Failed to add subtopic');
     }
     return data;
   } catch (err) {
@@ -31,7 +31,7 @@ export async function fetchSubtopics({ subjectId }) {
     const res = await fetch(`${BASE_URL}/subtopics/${subjectId}`);
     if (!res.ok) {
       const errorData = await res.json();
-      throw new Error(errorData.message || "Failed to fetch subtopics");
+      throw new Error(errorData.message || 'Failed to fetch subtopics');
     }
     const data = await res.json();
     return data;

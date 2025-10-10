@@ -1,19 +1,27 @@
-import { createContext, useContext, useLayoutEffect, useMemo, useState } from "react";
+import {
+  createContext,
+  useContext,
+  useLayoutEffect,
+  useMemo,
+  useState,
+} from 'react';
 
-const ThemeContext = createContext({ theme: "light", setTheme: () => {} });
+const ThemeContext = createContext({ theme: 'light', setTheme: () => {} });
 
-const THEME_KEY = "prepmate-theme";
+const THEME_KEY = 'prepmate-theme';
 
 function getInitialTheme() {
   try {
     const stored = localStorage.getItem(THEME_KEY);
-    if (stored === "light" || stored === "dark") return stored;
+    if (stored === 'light' || stored === 'dark') return stored;
   } catch {}
   // Fallback to system preference
-  if (typeof window !== "undefined" && window.matchMedia) {
-    return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+  if (typeof window !== 'undefined' && window.matchMedia) {
+    return window.matchMedia('(prefers-color-scheme: dark)').matches
+      ? 'dark'
+      : 'light';
   }
-  return "light";
+  return 'light';
 }
 
 export function ThemeProvider({ children }) {
@@ -23,7 +31,7 @@ export function ThemeProvider({ children }) {
   useLayoutEffect(() => {
     const root = document.documentElement;
     // Remove both, then add the current one
-    root.classList.remove("light", "dark");
+    root.classList.remove('light', 'dark');
     root.classList.add(theme);
 
     // Helps native UI (scrollbars, form controls) match theme
@@ -36,7 +44,9 @@ export function ThemeProvider({ children }) {
 
   const value = useMemo(() => ({ theme, setTheme }), [theme]);
 
-  return <ThemeContext.Provider value={value}>{children}</ThemeContext.Provider>;
+  return (
+    <ThemeContext.Provider value={value}>{children}</ThemeContext.Provider>
+  );
 }
 
 export const useTheme = () => useContext(ThemeContext);

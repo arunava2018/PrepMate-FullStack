@@ -1,4 +1,4 @@
-const BASE_URL = import.meta.env.VITE_BACKEND_URL + "/interview";
+const BASE_URL = import.meta.env.VITE_BACKEND_URL + '/interview';
 
 // -------- Add interview experience (requires auth) --------
 export async function addInterviewExperience({
@@ -13,13 +13,13 @@ export async function addInterviewExperience({
   is_anonymous = false,
 }) {
   try {
-    const token = localStorage.getItem("token");
-    if (!token) throw new Error("Not authenticated");
+    const token = localStorage.getItem('token');
+    if (!token) throw new Error('Not authenticated');
 
     const res = await fetch(`${BASE_URL}/add`, {
-      method: "POST",
+      method: 'POST',
       headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
         Authorization: `Bearer ${token}`,
       },
       body: JSON.stringify({
@@ -36,7 +36,8 @@ export async function addInterviewExperience({
     });
 
     const data = await res.json();
-    if (!res.ok) throw new Error(data.error || "Failed to add interview experience");
+    if (!res.ok)
+      throw new Error(data.error || 'Failed to add interview experience');
     return data;
   } catch (err) {
     throw err;
@@ -46,18 +47,19 @@ export async function addInterviewExperience({
 // -------- Fetch unpublished interview experiences (requires auth) --------
 export async function fetchUnpublishedInterviewExperiences() {
   try {
-    const token = localStorage.getItem("token");
-    if (!token) throw new Error("Not authenticated");
+    const token = localStorage.getItem('token');
+    if (!token) throw new Error('Not authenticated');
 
     const res = await fetch(`${BASE_URL}/unpublished`, {
       headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
         Authorization: `Bearer ${token}`,
       },
     });
 
     const data = await res.json();
-    if (!res.ok) throw new Error(data.error || "Failed to fetch unpublished experiences");
+    if (!res.ok)
+      throw new Error(data.error || 'Failed to fetch unpublished experiences');
     return data;
   } catch (err) {
     throw err;
@@ -67,19 +69,20 @@ export async function fetchUnpublishedInterviewExperiences() {
 // -------- Fetch a single interview experience by ID (requires auth) --------
 export async function fetchExperienceById(id) {
   try {
-    const token = localStorage.getItem("token");
-    if (!token) throw new Error("Not authenticated");
+    const token = localStorage.getItem('token');
+    if (!token) throw new Error('Not authenticated');
 
     const res = await fetch(`${BASE_URL}/${id}`, {
-      method: "GET",
+      method: 'GET',
       headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
         Authorization: `Bearer ${token}`,
       },
     });
 
     const data = await res.json();
-    if (!res.ok) throw new Error(data.error || "Failed to fetch interview experience");
+    if (!res.ok)
+      throw new Error(data.error || 'Failed to fetch interview experience');
     return data;
   } catch (err) {
     throw err;
@@ -89,20 +92,20 @@ export async function fetchExperienceById(id) {
 // -------- Update unpublished interview experience (requires auth) --------
 export async function updateExperience(id, updatedData) {
   try {
-    const token = localStorage.getItem("token");
-    if (!token) throw new Error("Not authenticated");
+    const token = localStorage.getItem('token');
+    if (!token) throw new Error('Not authenticated');
 
     const res = await fetch(`${BASE_URL}/update/${id}`, {
-      method: "PUT",
+      method: 'PUT',
       headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
         Authorization: `Bearer ${token}`,
       },
       body: JSON.stringify(updatedData), // ✅ can include is_anonymous
     });
 
     const data = await res.json();
-    if (!res.ok) throw new Error(data.error || "Failed to update experience");
+    if (!res.ok) throw new Error(data.error || 'Failed to update experience');
     return data;
   } catch (err) {
     throw err;
@@ -112,16 +115,16 @@ export async function updateExperience(id, updatedData) {
 // -------- Delete interview experience (requires auth) --------
 export async function deleteExperience(id) {
   try {
-    const token = localStorage.getItem("token");
-    if (!token) throw new Error("Not authenticated");
+    const token = localStorage.getItem('token');
+    if (!token) throw new Error('Not authenticated');
 
     const res = await fetch(`${BASE_URL}/${id}`, {
-      method: "DELETE",
+      method: 'DELETE',
       headers: { Authorization: `Bearer ${token}` },
     });
 
     const data = await res.json();
-    if (!res.ok) throw new Error(data.error || "Failed to delete experience");
+    if (!res.ok) throw new Error(data.error || 'Failed to delete experience');
     return data;
   } catch (err) {
     throw err;
@@ -131,27 +134,27 @@ export async function deleteExperience(id) {
 // -------- Approve interview experience (admin only, requires auth) --------
 export async function approveExperience(id, updatedData) {
   try {
-    const token = localStorage.getItem("token");
-    if (!token) throw new Error("Not authenticated");
+    const token = localStorage.getItem('token');
+    if (!token) throw new Error('Not authenticated');
 
     const payload = {
       ...updatedData,
-      content: updatedData.content || updatedData.experience || "",
+      content: updatedData.content || updatedData.experience || '',
       is_public: true, // ✅ approval means publish
     };
     delete payload.experience;
 
     const res = await fetch(`${BASE_URL}/approve/${id}`, {
-      method: "PUT",
+      method: 'PUT',
       headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
         Authorization: `Bearer ${token}`,
       },
       body: JSON.stringify(payload),
     });
 
     const data = await res.json();
-    if (!res.ok) throw new Error(data.error || "Failed to approve experience");
+    if (!res.ok) throw new Error(data.error || 'Failed to approve experience');
     return data;
   } catch (err) {
     throw err;
@@ -162,12 +165,13 @@ export async function approveExperience(id, updatedData) {
 export async function fetchPublicInterviewExperiences() {
   try {
     const res = await fetch(`${BASE_URL}/public`, {
-      method: "GET",
-      headers: { "Content-Type": "application/json" },
+      method: 'GET',
+      headers: { 'Content-Type': 'application/json' },
     });
 
     const data = await res.json();
-    if (!res.ok) throw new Error(data.error || "Failed to fetch public experiences");
+    if (!res.ok)
+      throw new Error(data.error || 'Failed to fetch public experiences');
     return data;
   } catch (err) {
     throw err;
@@ -178,12 +182,13 @@ export async function fetchPublicInterviewExperiences() {
 export async function fetchUserInterviewExperiences(userId) {
   try {
     const res = await fetch(`${BASE_URL}/user/${userId}`, {
-      method: "GET",
-      headers: { "Content-Type": "application/json" },
+      method: 'GET',
+      headers: { 'Content-Type': 'application/json' },
     });
 
     const data = await res.json();
-    if (!res.ok) throw new Error(data.error || "Failed to fetch user experiences");
+    if (!res.ok)
+      throw new Error(data.error || 'Failed to fetch user experiences');
     return data;
   } catch (err) {
     throw err;

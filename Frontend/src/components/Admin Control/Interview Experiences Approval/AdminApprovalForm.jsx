@@ -1,33 +1,33 @@
-import { useState } from "react";
-import { Button } from "@/components/ui/button";
-import { Linkedin, Github, Briefcase, FileText } from "lucide-react";
+import { useState } from 'react';
+import { Button } from '@/components/ui/button';
+import { Linkedin, Github, Briefcase, FileText } from 'lucide-react';
 import {
   approveExperience,
   deleteExperience,
-} from "@/db/apiInterviewExperience";
-import MarkdownEditor from "@/components/submit-experience-form/MarkdownEditor";
+} from '@/db/apiInterviewExperience';
+import MarkdownEditor from '@/components/submit-experience-form/MarkdownEditor';
 
 export default function AdminApprovalForm({ initialData, onClose, fetchData }) {
   const [formData, setFormData] = useState({
-    role: initialData.role || "",
-    offer_type: initialData.offer_type || "",
-    opportunity_type: initialData.opportunity_type || "",
-    linkedin_url: initialData.linkedin_url || "",
-    github_url: initialData.github_url || "",
-    content: initialData.content || "",
+    role: initialData.role || '',
+    offer_type: initialData.offer_type || '',
+    opportunity_type: initialData.opportunity_type || '',
+    linkedin_url: initialData.linkedin_url || '',
+    github_url: initialData.github_url || '',
+    content: initialData.content || '',
   });
   const [loading, setLoading] = useState(false);
   const [action, setAction] = useState(null);
 
   const offerTypes = [
-    { value: "internship", label: "Internship" },
-    { value: "full_time", label: "Full Time" },
-    { value: "internship_ppo", label: "Internship + PPO" },
+    { value: 'internship', label: 'Internship' },
+    { value: 'full_time', label: 'Full Time' },
+    { value: 'internship_ppo', label: 'Internship + PPO' },
   ];
 
   const opportunityTypes = [
-    { value: "on", label: "On Campus" },
-    { value: "off", label: "Off Campus" },
+    { value: 'on', label: 'On Campus' },
+    { value: 'off', label: 'Off Campus' },
   ];
 
   const handleChange = (e) =>
@@ -39,7 +39,7 @@ export default function AdminApprovalForm({ initialData, onClose, fetchData }) {
   const handleApprove = async () => {
     try {
       setLoading(true);
-      setAction("approve");
+      setAction('approve');
 
       await approveExperience(initialData.id, {
         ...formData,
@@ -50,7 +50,7 @@ export default function AdminApprovalForm({ initialData, onClose, fetchData }) {
       await fetchData();
       onClose();
     } catch (err) {
-      console.error("Error approving:", err);
+      console.error('Error approving:', err);
     } finally {
       setLoading(false);
       setAction(null);
@@ -60,14 +60,14 @@ export default function AdminApprovalForm({ initialData, onClose, fetchData }) {
   const handleDelete = async () => {
     try {
       setLoading(true);
-      setAction("delete");
+      setAction('delete');
 
       await deleteExperience(initialData.id);
 
       await fetchData();
       onClose();
     } catch (err) {
-      console.error("Error deleting:", err);
+      console.error('Error deleting:', err);
     } finally {
       setLoading(false);
       setAction(null);
@@ -100,8 +100,7 @@ export default function AdminApprovalForm({ initialData, onClose, fetchData }) {
           name="offer_type"
           value={formData.offer_type}
           onChange={handleChange}
-          className="w-full p-2 rounded-lg border border-border bg-input text-foreground focus:ring-2 focus:ring-primary/30"
-        >
+          className="w-full p-2 rounded-lg border border-border bg-input text-foreground focus:ring-2 focus:ring-primary/30">
           <option value="">Select Offer Type</option>
           {offerTypes.map((opt) => (
             <option key={opt.value} value={opt.value}>
@@ -120,8 +119,7 @@ export default function AdminApprovalForm({ initialData, onClose, fetchData }) {
           name="opportunity_type"
           value={formData.opportunity_type}
           onChange={handleChange}
-          className="w-full p-2 rounded-lg border border-border bg-input text-foreground focus:ring-2 focus:ring-primary/30"
-        >
+          className="w-full p-2 rounded-lg border border-border bg-input text-foreground focus:ring-2 focus:ring-primary/30">
           <option value="">Select Opportunity Type</option>
           {opportunityTypes.map((opt) => (
             <option key={opt.value} value={opt.value}>
@@ -177,30 +175,28 @@ export default function AdminApprovalForm({ initialData, onClose, fetchData }) {
           className="cursor-pointer flex items-center justify-center gap-2 w-full sm:w-auto"
           variant="destructive"
           disabled={loading}
-          onClick={handleDelete}
-        >
-          {loading && action === "delete" ? (
+          onClick={handleDelete}>
+          {loading && action === 'delete' ? (
             <>
               <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></span>
               Deleting...
             </>
           ) : (
-            "Delete"
+            'Delete'
           )}
         </Button>
 
         <Button
           className="bg-primary text-primary-foreground hover:bg-primary/90 font-medium cursor-pointer flex items-center justify-center gap-2 w-full sm:w-auto"
           disabled={loading}
-          onClick={handleApprove}
-        >
-          {loading && action === "approve" ? (
+          onClick={handleApprove}>
+          {loading && action === 'approve' ? (
             <>
               <span className="w-4 h-4 border-2 border-primary-foreground border-t-transparent rounded-full animate-spin"></span>
               Approving...
             </>
           ) : (
-            "Approve"
+            'Approve'
           )}
         </Button>
       </div>

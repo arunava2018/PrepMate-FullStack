@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState } from 'react';
 import {
   Card,
   CardContent,
@@ -6,32 +6,32 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { BeatLoader } from "react-spinners";
-import { Eye, EyeOff } from "lucide-react";
-import { useNavigate, useLocation } from "react-router-dom";
-import * as Yup from "yup";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { UrlState } from "@/context";
+} from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
+import { BeatLoader } from 'react-spinners';
+import { Eye, EyeOff } from 'lucide-react';
+import { useNavigate, useLocation } from 'react-router-dom';
+import * as Yup from 'yup';
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import { UrlState } from '@/context';
 
 // ✅ Validation Schema
 const signupSchema = Yup.object().shape({
-  name: Yup.string().required("Full name is required"),
-  email: Yup.string().email("Invalid email").required("Email is required"),
-  college: Yup.string().required("College name is required"),
+  name: Yup.string().required('Full name is required'),
+  email: Yup.string().email('Invalid email').required('Email is required'),
+  college: Yup.string().required('College name is required'),
   passoutYear: Yup.number()
-    .typeError("Passout year must be a number")
-    .min(2000, "Enter a valid year")
-    .max(new Date().getFullYear() + 10, "Year too far")
-    .required("Passout year is required"),
+    .typeError('Passout year must be a number')
+    .min(2000, 'Enter a valid year')
+    .max(new Date().getFullYear() + 10, 'Year too far')
+    .required('Passout year is required'),
   password: Yup.string()
-    .min(6, "Password must be at least 6 characters")
-    .required("Password is required"),
+    .min(6, 'Password must be at least 6 characters')
+    .required('Password is required'),
   confirmPassword: Yup.string()
-    .oneOf([Yup.ref("password"), null], "Passwords must match")
-    .required("Confirm password is required"),
+    .oneOf([Yup.ref('password'), null], 'Passwords must match')
+    .required('Confirm password is required'),
 });
 
 function Signup() {
@@ -40,15 +40,15 @@ function Signup() {
   const { signup } = UrlState(); // ✅ use signup from context
 
   // redirect to the page user originally wanted, or dashboard
-  const from = location.state?.from?.pathname || "/dashboard";
+  const from = location.state?.from?.pathname || '/dashboard';
 
   const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    college: "",
-    passoutYear: "",
-    password: "",
-    confirmPassword: "",
+    name: '',
+    email: '',
+    college: '',
+    passoutYear: '',
+    password: '',
+    confirmPassword: '',
   });
 
   const [errors, setErrors] = useState({});
@@ -172,7 +172,7 @@ function Signup() {
           <div className="space-y-1 relative">
             <Input
               name="password"
-              type={showPassword ? "text" : "password"}
+              type={showPassword ? 'text' : 'password'}
               placeholder="Password"
               value={formData.password}
               onChange={handleInputChange}
@@ -180,8 +180,7 @@ function Signup() {
             <button
               type="button"
               onClick={() => setShowPassword((prev) => !prev)}
-              className="absolute right-3 top-2.5 text-gray-500 hover:text-gray-700"
-            >
+              className="absolute right-3 top-2.5 text-gray-500 hover:text-gray-700">
               {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
             </button>
             {errors.password && (
@@ -193,7 +192,7 @@ function Signup() {
           <div className="space-y-1 relative">
             <Input
               name="confirmPassword"
-              type={showConfirmPassword ? "text" : "password"}
+              type={showConfirmPassword ? 'text' : 'password'}
               placeholder="Confirm Password"
               value={formData.confirmPassword}
               onChange={handleInputChange}
@@ -201,8 +200,7 @@ function Signup() {
             <button
               type="button"
               onClick={() => setShowConfirmPassword((prev) => !prev)}
-              className="absolute right-3 top-2.5 text-gray-500 hover:text-gray-700"
-            >
+              className="absolute right-3 top-2.5 text-gray-500 hover:text-gray-700">
               {showConfirmPassword ? <EyeOff size={18} /> : <Eye size={18} />}
             </button>
             {errors.confirmPassword && (
@@ -219,19 +217,17 @@ function Signup() {
           <Button
             type="submit"
             disabled={loading}
-            className="w-full mt-2 bg-yellow-600"
-          >
-            {loading ? <BeatLoader size={10} color="#fff" /> : "Signup"}
+            className="w-full mt-2 bg-yellow-600">
+            {loading ? <BeatLoader size={10} color="#fff" /> : 'Signup'}
           </Button>
         </CardFooter>
       </form>
 
       <p className="mx-auto mt-2">
-        Already have an account?{" "}
+        Already have an account?{' '}
         <span
-          onClick={() => navigate("/auth/login")}
-          className="text-yellow-400 underline cursor-pointer"
-        >
+          onClick={() => navigate('/auth/login')}
+          className="text-yellow-400 underline cursor-pointer">
           Login
         </span>
       </p>

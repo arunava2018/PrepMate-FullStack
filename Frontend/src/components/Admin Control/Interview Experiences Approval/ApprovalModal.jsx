@@ -3,12 +3,17 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
-} from "@/components/ui/dialog";
-import { Badge } from "@/components/ui/badge";
-import { Building2, User } from "lucide-react";
-import AdminApprovalForm from "./AdminApprovalForm";
+} from '@/components/ui/dialog';
+import { Badge } from '@/components/ui/badge';
+import { Building2, User } from 'lucide-react';
+import AdminApprovalForm from './AdminApprovalForm';
 
-export default function ApprovalModal({ open, onClose, experience, fetchData }) {
+export default function ApprovalModal({
+  open,
+  onClose,
+  experience,
+  fetchData,
+}) {
   if (!experience) return null;
 
   return (
@@ -24,25 +29,28 @@ export default function ApprovalModal({ open, onClose, experience, fetchData }) 
 
           <div className="flex flex-wrap gap-3">
             {/* Company */}
-            <Badge variant="secondary" className="flex items-center gap-1 px-3 py-1">
+            <Badge
+              variant="secondary"
+              className="flex items-center gap-1 px-3 py-1">
               <Building2 className="w-4 h-4" />
               {experience.company_name}
             </Badge>
 
             {/* Respect anonymity */}
-            <Badge variant="secondary" className="flex items-center gap-1 px-3 py-1">
+            <Badge
+              variant="secondary"
+              className="flex items-center gap-1 px-3 py-1">
               <User className="w-4 h-4" />
               {experience.is_anonymous
-                ? "Anonymous User"
-                : experience.users?.full_name || "Unknown User"}
+                ? 'Anonymous User'
+                : experience.users?.full_name || 'Unknown User'}
             </Badge>
 
             {/* Date */}
             {experience.created_at && (
               <Badge
                 variant="outline"
-                className="border-border text-muted-foreground px-3 py-1"
-              >
+                className="border-border text-muted-foreground px-3 py-1">
                 Submitted {new Date(experience.created_at).toLocaleDateString()}
               </Badge>
             )}

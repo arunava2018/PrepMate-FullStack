@@ -1,13 +1,13 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect } from 'react';
 import {
   Card,
   CardContent,
   CardHeader,
   CardTitle,
   CardDescription,
-} from "@/components/ui/card";
-import { motion, AnimatePresence } from "framer-motion";
-import { testimonials } from "@/constants.js";
+} from '@/components/ui/card';
+import { motion, AnimatePresence } from 'framer-motion';
+import { testimonials } from '@/constants.js';
 
 export default function Testimonials() {
   const [current, setCurrent] = useState(0);
@@ -34,8 +34,7 @@ export default function Testimonials() {
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: -100 }}
             transition={{ duration: 0.8 }}
-            className="absolute w-full flex justify-center"
-          >
+            className="absolute w-full flex justify-center">
             <Card className="shadow-lg rounded-2xl border border-border bg-card text-card-foreground p-6 text-center w-11/12 sm:w-3/4 md:w-2/3">
               <CardHeader>
                 <CardTitle className="text-lg font-semibold">
@@ -58,7 +57,7 @@ export default function Testimonials() {
             <button
               key={idx}
               className={`w-3 h-3 rounded-full transition ${
-                idx === current ? "bg-primary" : "bg-muted"
+                idx === current ? 'bg-primary' : 'bg-muted'
               }`}
               onClick={() => setCurrent(idx)}
             />

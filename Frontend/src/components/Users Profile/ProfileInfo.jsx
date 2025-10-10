@@ -1,43 +1,47 @@
-import React from "react";
-import { UrlState } from "@/context";
+import React from 'react';
+import { UrlState } from '@/context';
 import {
   FaUser,
   FaEnvelope,
   FaUniversity,
   FaCalendarAlt,
   FaBolt,
-} from "react-icons/fa";
-import { IoWarning } from "react-icons/io5";
-import ProfileAction from "./profileActions";
-import UserExperiences from "@/components/Users Profile/UserExperinces.jsx"
+} from 'react-icons/fa';
+import { IoWarning } from 'react-icons/io5';
+import ProfileAction from './profileActions';
+import UserExperiences from '@/components/Users Profile/UserExperinces.jsx';
 
 function ProfileInfo() {
   const { user } = UrlState();
-  let profileAvatar = user?.full_name?.split(" ").map((n) => n[0]).join("") || "U";
+  let profileAvatar =
+    user?.full_name
+      ?.split(' ')
+      .map((n) => n[0])
+      .join('') || 'U';
   const profileFields = [
     {
-      key: "Full Name",
+      key: 'Full Name',
       value: user?.full_name,
       icon: <FaUser className="text-blue-500 dark:text-blue-400" />,
-      placeholder: "Enter your full name",
+      placeholder: 'Enter your full name',
     },
     {
-      key: "Email",
+      key: 'Email',
       value: user?.email,
       icon: <FaEnvelope className="text-emerald-500 dark:text-emerald-400" />,
-      placeholder: "Enter your email address",
+      placeholder: 'Enter your email address',
     },
     {
-      key: "College Name",
+      key: 'College Name',
       value: user?.college_name,
       icon: <FaUniversity className="text-purple-500 dark:text-purple-400" />,
-      placeholder: "Enter your college name",
+      placeholder: 'Enter your college name',
     },
     {
-      key: "Passout Year",
+      key: 'Passout Year',
       value: user?.passout_year,
       icon: <FaCalendarAlt className="text-amber-500 dark:text-amber-400" />,
-      placeholder: "Enter graduation year",
+      placeholder: 'Enter graduation year',
     },
   ];
 
@@ -53,7 +57,6 @@ function ProfileInfo() {
             </span>
           </div>
         </div>
-
         {/* Welcome Header */}
         <div className="text-center rounded-2xl p-4 sm:p-6">
           <div className="flex flex-col items-center space-y-2 justify-center">
@@ -65,7 +68,7 @@ function ProfileInfo() {
             {/* Text */}
             <div>
               <h1 className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white">
-                Welcome, {user?.full_name?.split(" ")[0] || "User"}
+                Welcome, {user?.full_name?.split(' ')[0] || 'User'}
               </h1>
               <p className="text-sm sm:text-base text-gray-600 dark:text-gray-400 mt-1">
                 Manage your profile information and settings
@@ -73,7 +76,6 @@ function ProfileInfo() {
             </div>
           </div>
         </div>
-
         {/* Grid Layout */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Profile Information - 2/3 on desktop */}
@@ -139,7 +141,6 @@ function ProfileInfo() {
             </div>
           </div>
         </div>
-
         {/* User Interview Experiences Section */}
         <UserExperiences userId={user?.id} /> {/* ✅ added here */}
       </div>

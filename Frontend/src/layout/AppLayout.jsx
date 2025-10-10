@@ -1,8 +1,8 @@
-import React from "react";
-import { Outlet, Link } from "react-router-dom";
-import { Github, Linkedin, Twitter } from "lucide-react";
-import Navbar from "@/layout/Navbar";
-import Footer from "./Footer";
+import React from 'react';
+import { Outlet, Link } from 'react-router-dom';
+import { Github, Linkedin, Twitter } from 'lucide-react';
+import Navbar from '@/layout/Navbar';
+import Footer from './Footer';
 
 const AppLayout = () => {
   return (
@@ -16,7 +16,7 @@ const AppLayout = () => {
       </main>
 
       {/* Footer */}
-      <Footer/>
+      <Footer />
     </div>
   );
 };

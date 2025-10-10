@@ -1,6 +1,6 @@
-import React from "react";
-import { Badge } from "../ui/badge";
-import { Building2, FileText } from "lucide-react";
+import React from 'react';
+import { Badge } from '../ui/badge';
+import { Building2, FileText } from 'lucide-react';
 
 function ExperienceStats({ totalCompanies, totalExperiences }) {
   return (

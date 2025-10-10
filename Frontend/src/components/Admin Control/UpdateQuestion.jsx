@@ -1,18 +1,25 @@
-import { useState, useEffect } from "react";
-import { getSubjects } from "@/db/apiSubjects";
-import { fetchSubtopics } from "@/db/apiSubtopic";
-import { fetchQuestions } from "@/db/apiQuestion";
-import Loader from "@/components/Loader";
-import UpdateQuestionModal from "@/components/Admin Control/UpdateQuestionModal";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { ChevronDown, BookOpen, Edit3, Search, Filter, FileText } from "lucide-react";
+import { useState, useEffect } from 'react';
+import { getSubjects } from '@/db/apiSubjects';
+import { fetchSubtopics } from '@/db/apiSubtopic';
+import { fetchQuestions } from '@/db/apiQuestion';
+import Loader from '@/components/Loader';
+import UpdateQuestionModal from '@/components/Admin Control/UpdateQuestionModal';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import {
+  ChevronDown,
+  BookOpen,
+  Edit3,
+  Search,
+  Filter,
+  FileText,
+} from 'lucide-react';
 
 export default function UpdateQuestionPage() {
   const [subjects, setSubjects] = useState([]);
   const [subtopics, setSubtopics] = useState([]);
   const [questions, setQuestions] = useState([]);
 
-  const [selectedSubject, setSelectedSubject] = useState(null);   // subjectId
+  const [selectedSubject, setSelectedSubject] = useState(null); // subjectId
   const [selectedSubtopic, setSelectedSubtopic] = useState(null); // subtopicId
 
   const [loading, setLoading] = useState(false);
@@ -23,7 +30,7 @@ export default function UpdateQuestionPage() {
   useEffect(() => {
     getSubjects()
       .then((res) => setSubjects(res))
-      .catch((err) => console.error("Error loading subjects:", err));
+      .catch((err) => console.error('Error loading subjects:', err));
   }, []);
 
   // Load subtopics when subject changes
@@ -37,7 +44,7 @@ export default function UpdateQuestionPage() {
     setLoading(true);
     fetchSubtopics({ subjectId: selectedSubject }) // ✅ now using subjectId
       .then((res) => setSubtopics(res))
-      .catch((err) => console.error("Error loading subtopics:", err))
+      .catch((err) => console.error('Error loading subtopics:', err))
       .finally(() => setLoading(false));
   }, [selectedSubject]);
 
@@ -51,7 +58,7 @@ export default function UpdateQuestionPage() {
     setLoading(true);
     fetchQuestions(selectedSubtopic) // ✅ already using subtopicId
       .then((res) => setQuestions(res))
-      .catch((err) => console.error("Error loading questions:", err))
+      .catch((err) => console.error('Error loading questions:', err))
       .finally(() => setLoading(false));
   }, [selectedSubtopic]);
 
@@ -86,7 +93,7 @@ export default function UpdateQuestionPage() {
                 </label>
                 <div className="relative">
                   <select
-                    value={selectedSubject ?? ""}
+                    value={selectedSubject ?? ''}
                     onChange={(e) => setSelectedSubject(e.target.value || null)}
                     className="w-full appearance-none 
                                bg-white dark:bg-gray-800 
@@ -94,8 +101,7 @@ export default function UpdateQuestionPage() {
                                rounded-xl px-4 py-3 pr-10 
                                text-gray-700 dark:text-gray-300 
                                focus:outline-none focus:ring-2 focus:ring-yellow-500 
-                               focus:border-transparent transition-all"
-                  >
+                               focus:border-transparent transition-all">
                     <option value="">Select Subject</option>
                     {subjects?.map((subj) => (
                       <option key={subj.id} value={subj.id}>
@@ -115,8 +121,10 @@ export default function UpdateQuestionPage() {
                 </label>
                 <div className="relative">
                   <select
-                    value={selectedSubtopic ?? ""}
-                    onChange={(e) => setSelectedSubtopic(e.target.value || null)}
+                    value={selectedSubtopic ?? ''}
+                    onChange={(e) =>
+                      setSelectedSubtopic(e.target.value || null)
+                    }
                     disabled={!subtopics.length}
                     className="w-full appearance-none 
                                bg-white dark:bg-gray-800 
@@ -125,8 +133,7 @@ export default function UpdateQuestionPage() {
                                text-gray-700 dark:text-gray-300 
                                focus:outline-none focus:ring-2 focus:ring-yellow-500 
                                focus:border-transparent transition-all 
-                               disabled:opacity-50 disabled:cursor-not-allowed"
-                  >
+                               disabled:opacity-50 disabled:cursor-not-allowed">
                     <option value="">Select Subtopic</option>
                     {subtopics?.map((sub) => (
                       <option key={sub.id} value={sub.id}>
@@ -145,7 +152,8 @@ export default function UpdateQuestionPage() {
                 <div className="flex items-center gap-2">
                   <Search className="w-4 h-4 text-yellow-600" />
                   <span className="text-sm font-medium text-yellow-700 dark:text-yellow-300">
-                    Found {questions.length} question{questions.length !== 1 ? "s" : ""}
+                    Found {questions.length} question
+                    {questions.length !== 1 ? 's' : ''}
                   </span>
                 </div>
               </div>
@@ -174,8 +182,7 @@ export default function UpdateQuestionPage() {
                 {questions.map((q, index) => (
                   <div
                     key={q.id}
-                    className="flex items-center justify-between p-4 bg-gray-50 dark:bg-gray-800/50 rounded-xl border border-gray-200 dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-700/50 transition-all group"
-                  >
+                    className="flex items-center justify-between p-4 bg-gray-50 dark:bg-gray-800/50 rounded-xl border border-gray-200 dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-700/50 transition-all group">
                     <div className="flex items-start gap-3 flex-1 min-w-0">
                       <span className="flex-shrink-0 w-8 h-8 bg-yellow-100 dark:bg-yellow-900/30 text-yellow-700 dark:text-yellow-300 rounded-full flex items-center justify-center text-sm font-semibold">
                         {index + 1}
@@ -191,8 +198,7 @@ export default function UpdateQuestionPage() {
                         setSelectedQuestion(q);
                         setIsModalOpen(true);
                       }}
-                      className="flex items-center gap-2 px-4 py-2 bg-yellow-500 hover:bg-yellow-600 text-white rounded-lg font-medium transition-all transform hover:scale-105 shadow-md hover:shadow-lg"
-                    >
+                      className="flex items-center gap-2 px-4 py-2 bg-yellow-500 hover:bg-yellow-600 text-white rounded-lg font-medium transition-all transform hover:scale-105 shadow-md hover:shadow-lg">
                       <Edit3 className="w-4 h-4" />
                       Edit
                     </button>
@@ -229,7 +235,8 @@ export default function UpdateQuestionPage() {
                 Get Started
               </h3>
               <p className="text-yellow-700 dark:text-yellow-300">
-                Select a subject from the dropdown above to view available subtopics and questions.
+                Select a subject from the dropdown above to view available
+                subtopics and questions.
               </p>
             </CardContent>
           </Card>

@@ -1,21 +1,20 @@
-import React from "react";
-import { 
+import React from 'react';
+import {
   Accordion,
   AccordionItem,
   AccordionTrigger,
   AccordionContent,
-} from "../ui/accordion";
-import { Badge } from "../ui/badge";
-import { Building2 } from "lucide-react";
-import ExperienceCard from "./ExperienceCard";
+} from '../ui/accordion';
+import { Badge } from '../ui/badge';
+import { Building2 } from 'lucide-react';
+import ExperienceCard from './ExperienceCard';
 
 function CompanyExperienceSection({ company, experiences }) {
   return (
     <Accordion type="multiple" className="w-full">
       <AccordionItem
         value={company}
-        className="border border-amber-200 dark:border-gray-700 rounded-xl bg-gradient-to-r from-orange-50 to-amber-50 dark:from-gray-800 dark:to-gray-900 shadow-sm hover:shadow-md transition-shadow duration-200"
-      >
+        className="border border-amber-200 dark:border-gray-700 rounded-xl bg-gradient-to-r from-orange-50 to-amber-50 dark:from-gray-800 dark:to-gray-900 shadow-sm hover:shadow-md transition-shadow duration-200">
         <AccordionTrigger className="px-6 py-4 hover:no-underline group">
           <div className="flex items-center gap-3 text-left">
             <div className="p-2 bg-amber-100 dark:bg-amber-900/30 rounded-lg group-hover:bg-amber-200 dark:group-hover:bg-amber-900/50 transition-colors">
@@ -26,7 +25,8 @@ function CompanyExperienceSection({ company, experiences }) {
                 {company}
               </h2>
               <Badge className="mt-1 bg-orange-100 text-orange-800 dark:bg-orange-900/30 dark:text-orange-200 text-sm">
-                {experiences.length} experience{experiences.length > 1 ? "s" : ""}
+                {experiences.length} experience
+                {experiences.length > 1 ? 's' : ''}
               </Badge>
             </div>
           </div>

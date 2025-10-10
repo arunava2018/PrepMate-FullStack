@@ -1,25 +1,25 @@
-import React, { useState, useEffect } from "react";
-import { motion } from "framer-motion";
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import React, { useState, useEffect } from 'react';
+import { motion } from 'framer-motion';
+import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 
-import useFetch from "@/hooks/useFetch";
-import { getSubjects } from "@/db/apiSubjects";
-import { fetchSubtopics } from "@/db/apiSubtopic";
-import { addQuestion } from "@/db/apiQuestion";
-import MarkdownEditor from "../submit-experience-form/MarkdownEditor";
+import useFetch from '@/hooks/useFetch';
+import { getSubjects } from '@/db/apiSubjects';
+import { fetchSubtopics } from '@/db/apiSubtopic';
+import { addQuestion } from '@/db/apiQuestion';
+import MarkdownEditor from '../submit-experience-form/MarkdownEditor';
 
 export default function AddQuestion() {
   const [form, setForm] = useState({
-    subjectId: "",
-    subtopicId: "",
-    question: "",
-    answer: "",
+    subjectId: '',
+    subtopicId: '',
+    question: '',
+    answer: '',
   });
 
-  const [successMsg, setSuccessMsg] = useState("");
-  const [errorMsg, setErrorMsg] = useState("");
+  const [successMsg, setSuccessMsg] = useState('');
+  const [errorMsg, setErrorMsg] = useState('');
   const [submitting, setSubmitting] = useState(false);
 
   const { data: subjects, fn: fnSubjects } = useFetch(getSubjects);
@@ -34,7 +34,7 @@ export default function AddQuestion() {
   useEffect(() => {
     if (form.subjectId) {
       fnSubtopics({ subjectId: form.subjectId });
-      setForm((prev) => ({ ...prev, subtopicId: "" }));
+      setForm((prev) => ({ ...prev, subtopicId: '' }));
     }
   }, [form.subjectId]);
 
@@ -42,8 +42,8 @@ export default function AddQuestion() {
   useEffect(() => {
     if (successMsg || errorMsg) {
       const timer = setTimeout(() => {
-        setSuccessMsg("");
-        setErrorMsg("");
+        setSuccessMsg('');
+        setErrorMsg('');
       }, 3000);
       return () => clearTimeout(timer);
     }
@@ -63,10 +63,10 @@ export default function AddQuestion() {
         question: form.question,
         answer: form.answer,
       });
-      setSuccessMsg("Question has been successfully added.");
-      setForm({ subjectId: "", subtopicId: "", question: "", answer: "" });
+      setSuccessMsg('Question has been successfully added.');
+      setForm({ subjectId: '', subtopicId: '', question: '', answer: '' });
     } catch (err) {
-      setErrorMsg(err.message || "Something went wrong!");
+      setErrorMsg(err.message || 'Something went wrong!');
     } finally {
       setSubmitting(false);
     }
@@ -77,8 +77,7 @@ export default function AddQuestion() {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4 }}
-      className="max-w-full sm:max-w-2xl mx-auto mt-6 sm:mt-10 px-4 sm:px-6"
-    >
+      className="max-w-full sm:max-w-2xl mx-auto mt-6 sm:mt-10 px-4 sm:px-6">
       <Card className="shadow-lg bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 p-4 sm:p-6">
         <CardHeader>
           <CardTitle className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-gray-100 text-center">
@@ -101,8 +100,7 @@ export default function AddQuestion() {
                   className="w-full p-2 sm:p-3 border rounded-lg 
              bg-gray-50 text-gray-900 
              dark:bg-gray-800 dark:text-gray-100 
-             focus:ring-2 focus:ring-yellow-400 transition"
-                >
+             focus:ring-2 focus:ring-yellow-400 transition">
                   <option value="">Select Subject</option>
                   {Array.isArray(subjects) &&
                     subjects.map(({ id, name }) => (
@@ -124,8 +122,7 @@ export default function AddQuestion() {
                   className="w-full p-2 sm:p-3 border rounded-lg 
              bg-gray-50 text-gray-900 
              dark:bg-gray-800 dark:text-gray-100 
-             focus:ring-2 focus:ring-yellow-400 transition"
-                >
+             focus:ring-2 focus:ring-yellow-400 transition">
                   <option value="">Select Subtopic</option>
                   {Array.isArray(subtopics) &&
                     subtopics.map(({ id, name }) => (
@@ -173,9 +170,8 @@ export default function AddQuestion() {
             <Button
               type="submit"
               disabled={submitting}
-              className="w-full bg-yellow-500 hover:bg-yellow-600 text-white font-semibold px-4 py-2 rounded-lg"
-            >
-              {submitting ? "Adding Question..." : "Add Question"}
+              className="w-full bg-yellow-500 hover:bg-yellow-600 text-white font-semibold px-4 py-2 rounded-lg">
+              {submitting ? 'Adding Question...' : 'Add Question'}
             </Button>
           </form>
         </CardContent>

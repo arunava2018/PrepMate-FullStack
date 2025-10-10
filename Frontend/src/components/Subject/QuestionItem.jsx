@@ -1,24 +1,24 @@
 // src/components/Subject/QuestionItem.jsx
-import { motion, AnimatePresence } from "framer-motion";
-import { ChevronDown, CheckCircle, Circle } from "lucide-react";
+import { motion, AnimatePresence } from 'framer-motion';
+import { ChevronDown, CheckCircle, Circle } from 'lucide-react';
 import {
   markQuestionAsRead,
   unmarkQuestion,
   getProgress,
-} from "@/db/apiProgress";
-import { useState } from "react";
-import MarkdownRenderer from "@/components/MarkdownRenderer";
+} from '@/db/apiProgress';
+import { useState } from 'react';
+import MarkdownRenderer from '@/components/MarkdownRenderer';
 
 const accordionVariants = {
   closed: {
     height: 0,
     opacity: 0,
-    transition: { duration: 0.3, ease: "easeInOut" },
+    transition: { duration: 0.3, ease: 'easeInOut' },
   },
   open: {
-    height: "auto",
+    height: 'auto',
     opacity: 1,
-    transition: { duration: 0.4, ease: "easeInOut" },
+    transition: { duration: 0.4, ease: 'easeInOut' },
   },
 };
 
@@ -56,8 +56,7 @@ export default function QuestionItem({
       {/* Question Header */}
       <motion.button
         onClick={() => setOpen(!open)}
-        className="w-full px-4 sm:px-5 py-3 sm:py-4 text-left flex items-center justify-between transition-colors duration-200"
-      >
+        className="w-full px-4 sm:px-5 py-3 sm:py-4 text-left flex items-center justify-between transition-colors duration-200">
         <div className="flex items-center gap-2 sm:gap-3">
           {isRead ? (
             <CheckCircle className="w-5 h-5 text-green-500 shrink-0" />
@@ -70,8 +69,7 @@ export default function QuestionItem({
         </div>
         <motion.div
           animate={{ rotate: open ? 180 : 0 }}
-          transition={{ duration: 0.3 }}
-        >
+          transition={{ duration: 0.3 }}>
           <ChevronDown className="w-4 h-4 text-gray-500 dark:text-gray-400" />
         </motion.div>
       </motion.button>
@@ -84,8 +82,7 @@ export default function QuestionItem({
             initial="closed"
             animate="open"
             exit="closed"
-            className="overflow-hidden px-4 sm:px-5 pb-4 sm:pb-5"
-          >
+            className="overflow-hidden px-4 sm:px-5 pb-4 sm:pb-5">
             <div className="bg-white dark:bg-gray-800 rounded-lg p-4 sm:p-5 shadow-sm dark:shadow-none">
               {/* Use shared MarkdownRenderer */}
               <MarkdownRenderer content={question.answer_text} />
@@ -95,15 +92,13 @@ export default function QuestionItem({
                 {!isRead ? (
                   <motion.button
                     className="flex items-center gap-2 bg-green-500 hover:bg-green-600 text-white text-sm sm:text-base px-3 py-1.5 rounded cursor-pointer"
-                    onClick={handleMark}
-                  >
+                    onClick={handleMark}>
                     <CheckCircle className="w-4 h-4" /> Mark as Read
                   </motion.button>
                 ) : (
                   <motion.button
                     className="flex items-center gap-2 border border-gray-400 px-3 py-1.5 rounded hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer text-sm sm:text-base"
-                    onClick={handleUnmark}
-                  >
+                    onClick={handleUnmark}>
                     <CheckCircle className="w-4 h-4 text-green-500" /> Unmark
                   </motion.button>
                 )}

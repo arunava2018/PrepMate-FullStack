@@ -1,33 +1,33 @@
-import React from "react";
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import AppLayout from "./layout/AppLayout";
-import Landing from "./pages/Landing";
-import Auth from "./pages/Auth";
-import Subject from "./pages/Subject";
-import { ThemeProvider } from "./theme/Themeprovides";
-import Dashboard from "./pages/Dashboard";
-import Addquestion from "./components/Admin Control/Addquestion";
-import UrlProvider from "./context";
-import Profile from "./pages/Profile";
-import RequireAuth from "./components/Route Control/RequireAuth";
-import Admin from "./pages/Admin";
-import RequireAdmin from "./components/Route Control/RequireAdmin";
-import Addsubject from "./components/Admin Control/Addsubject";
-import Addsubtopic from "./components/Admin Control/Addsubtopic";
-import Features from "./components/Landing Page/Feature";
-import UpdateQuestion from "./components/Admin Control/UpdateQuestion";
-import DeletQuestionPage from "./components/Admin Control/DeleteQuestion";
-import InterviewExperience from "./pages/InterviewExperience";
-import ViewInterviewExperience from "./pages/ViewInterviewExperience";
-import ScrollToTop from "./ScrollToTop";
-import ApproveInterviewExperiences from "./pages/ApproveInterviewExperiences";
-import ExperienceDetails from "./components/Interview Experiences/ExperienceDetails";
-import AboutUs from "./pages/AboutUs";
-import CookiePolicy from "./pages/CookiePolicy";
-import TermsOfService from "./pages/TermsOfService";
-import ContactUs from "./pages/ContactUs";
-import PrivacyPolicy from "./pages/PrivacyPolicy";
-import { Toaster } from "sonner";
+import React from 'react';
+import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import AppLayout from './layout/AppLayout';
+import Landing from './pages/Landing';
+import Auth from './pages/Auth';
+import Subject from './pages/Subject';
+import { ThemeProvider } from './theme/Themeprovides';
+import Dashboard from './pages/Dashboard';
+import Addquestion from './components/Admin Control/Addquestion';
+import UrlProvider from './context';
+import Profile from './pages/Profile';
+import RequireAuth from './components/Route Control/RequireAuth';
+import Admin from './pages/Admin';
+import RequireAdmin from './components/Route Control/RequireAdmin';
+import Addsubject from './components/Admin Control/Addsubject';
+import Addsubtopic from './components/Admin Control/Addsubtopic';
+import Features from './components/Landing Page/Feature';
+import UpdateQuestion from './components/Admin Control/UpdateQuestion';
+import DeletQuestionPage from './components/Admin Control/DeleteQuestion';
+import InterviewExperience from './pages/InterviewExperience';
+import ViewInterviewExperience from './pages/ViewInterviewExperience';
+import ScrollToTop from './ScrollToTop';
+import ApproveInterviewExperiences from './pages/ApproveInterviewExperiences';
+import ExperienceDetails from './components/Interview Experiences/ExperienceDetails';
+import AboutUs from './pages/AboutUs';
+import CookiePolicy from './pages/CookiePolicy';
+import TermsOfService from './pages/TermsOfService';
+import ContactUs from './pages/ContactUs';
+import PrivacyPolicy from './pages/PrivacyPolicy';
+import { Toaster } from 'sonner';
 
 const LayoutWithScroll = () => (
   <>
@@ -40,22 +40,22 @@ const router = createBrowserRouter([
   {
     element: <LayoutWithScroll />,
     children: [
-      { path: "/", element: <Landing /> },
-      { path: "/auth/:mode", element: <Auth /> },
-      { path: "/dashboard", element: <Dashboard /> },
-      { path: "/features", element: <Features /> },
-      { path: "/add-question", element: <Addquestion /> },
+      { path: '/', element: <Landing /> },
+      { path: '/auth/:mode', element: <Auth /> },
+      { path: '/dashboard', element: <Dashboard /> },
+      { path: '/features', element: <Features /> },
+      { path: '/add-question', element: <Addquestion /> },
       {
-        path: "/subject/:slug/:id",
+        path: '/subject/:slug/:id',
         element: (
           <RequireAuth>
             <Subject />
           </RequireAuth>
         ),
       },
-      { path: "/profile/:id", element: <Profile /> },
+      { path: '/profile/:id', element: <Profile /> },
       {
-        path: "/admin",
+        path: '/admin',
         element: (
           <RequireAdmin>
             <Admin />
@@ -63,7 +63,7 @@ const router = createBrowserRouter([
         ),
       },
       {
-        path: "/admin/addQuestion",
+        path: '/admin/addQuestion',
         element: (
           <RequireAdmin>
             <Addquestion />
@@ -71,7 +71,7 @@ const router = createBrowserRouter([
         ),
       },
       {
-        path: "/admin/addSubject",
+        path: '/admin/addSubject',
         element: (
           <RequireAdmin>
             <Addsubject />
@@ -79,7 +79,7 @@ const router = createBrowserRouter([
         ),
       },
       {
-        path: "/admin/addSubtopic",
+        path: '/admin/addSubtopic',
         element: (
           <RequireAdmin>
             <Addsubtopic />
@@ -87,7 +87,7 @@ const router = createBrowserRouter([
         ),
       },
       {
-        path: "/admin/updateQuestion",
+        path: '/admin/updateQuestion',
         element: (
           <RequireAdmin>
             <UpdateQuestion />
@@ -95,7 +95,7 @@ const router = createBrowserRouter([
         ),
       },
       {
-        path: "/admin/deleteQuestion",
+        path: '/admin/deleteQuestion',
         element: (
           <RequireAdmin>
             <DeletQuestionPage />
@@ -103,7 +103,7 @@ const router = createBrowserRouter([
         ),
       },
       {
-        path: "/share-experience",
+        path: '/share-experience',
         element: (
           <RequireAuth>
             <InterviewExperience />
@@ -111,7 +111,7 @@ const router = createBrowserRouter([
         ),
       },
       {
-        path: "/view-interview-experiences",
+        path: '/view-interview-experiences',
         element: (
           <RequireAuth>
             <ViewInterviewExperience />
@@ -119,7 +119,7 @@ const router = createBrowserRouter([
         ),
       },
       {
-        path: "/view-interview-experiences/:experienceId",
+        path: '/view-interview-experiences/:experienceId',
         element: (
           <RequireAuth>
             <ExperienceDetails />
@@ -127,7 +127,7 @@ const router = createBrowserRouter([
         ),
       },
       {
-        path: "/admin/approveExperiences",
+        path: '/admin/approveExperiences',
         element: (
           <RequireAdmin>
             <ApproveInterviewExperiences />
@@ -135,35 +135,25 @@ const router = createBrowserRouter([
         ),
       },
       {
-        path: "/about-us",
-        element: (
-          <AboutUs />
-        ),
+        path: '/about-us',
+        element: <AboutUs />,
       },
       {
-        path: "/cookies",
-        element: (
-          <CookiePolicy />
-        ),
+        path: '/cookies',
+        element: <CookiePolicy />,
       },
       {
-        path: "/terms",
-        element: (
-          <TermsOfService />
-        ),
+        path: '/terms',
+        element: <TermsOfService />,
       },
       {
-        path: "/contact-us",
-        element: (
-          <ContactUs />
-        ),
+        path: '/contact-us',
+        element: <ContactUs />,
       },
       {
-        path: "/privacy-policy",
-        element: (
-          <PrivacyPolicy />
-        ),
-      }
+        path: '/privacy-policy',
+        element: <PrivacyPolicy />,
+      },
     ],
   },
 ]);

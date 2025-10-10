@@ -1,11 +1,11 @@
-import AdminDashboard from '@/components/Admin Control/AdminDashboard'
-import React from 'react'
+import AdminDashboard from '@/components/Admin Control/AdminDashboard';
+import React from 'react';
 function Admin() {
   return (
     <div>
-      <AdminDashboard/>
+      <AdminDashboard />
     </div>
-  )
+  );
 }
 
-export default Admin
+export default Admin;

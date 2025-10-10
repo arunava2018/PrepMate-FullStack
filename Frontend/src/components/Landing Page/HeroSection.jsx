@@ -1,10 +1,10 @@
-import { useState } from "react";
-import { Button } from "@/components/ui/button";
-import { Link } from "react-router-dom";
-import { TypeAnimation } from "react-type-animation";
-import { motion } from "framer-motion";
+import { useState } from 'react';
+import { Button } from '@/components/ui/button';
+import { Link } from 'react-router-dom';
+import { TypeAnimation } from 'react-type-animation';
+import { motion } from 'framer-motion';
 
-import { FaCheckCircle, FaBookOpen, FaArrowRight } from "react-icons/fa";
+import { FaCheckCircle, FaBookOpen, FaArrowRight } from 'react-icons/fa';
 
 export default function HeroSection() {
   const [typingDone, setTypingDone] = useState(false);
@@ -25,16 +25,15 @@ export default function HeroSection() {
                      bg-gradient-to-r from-primary to-primary/80 bg-clip-text text-transparent"
           initial={{ opacity: 0, y: -30 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
-        >
+          transition={{ duration: 0.8 }}>
           {!typingDone ? (
             <TypeAnimation
               sequence={[
-                "Land Your Dream Tech Job Faster",
+                'Land Your Dream Tech Job Faster',
                 1500,
-                "Boost Your Interview Success Rate",
+                'Boost Your Interview Success Rate',
                 1500,
-                "PrepMate: Your Ultimate CS Interview Companion",
+                'PrepMate: Your Ultimate CS Interview Companion',
                 () => setTypingDone(true),
               ]}
               wrapper="span"
@@ -52,12 +51,11 @@ export default function HeroSection() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.5 }}
-          className="max-w-2xl mx-auto text-lg sm:text-xl mb-6 leading-relaxed text-muted-foreground"
-        >
-          Unlock your potential with{" "}
-          <span className="font-semibold text-primary">PrepMate</span> — expertly
-          curated CS questions designed for efficient and effective interview
-          preparation.
+          className="max-w-2xl mx-auto text-lg sm:text-xl mb-6 leading-relaxed text-muted-foreground">
+          Unlock your potential with{' '}
+          <span className="font-semibold text-primary">PrepMate</span> —
+          expertly curated CS questions designed for efficient and effective
+          interview preparation.
         </motion.p>
 
         {/* Features */}
@@ -65,8 +63,7 @@ export default function HeroSection() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.8 }}
-          className="max-w-lg mx-auto text-center mb-8 space-y-3"
-        >
+          className="max-w-lg mx-auto text-center mb-8 space-y-3">
           <p className="text-lg text-primary font-medium flex items-center justify-center gap-2">
             Sharpen your skills with curated questions
           </p>
@@ -83,11 +80,10 @@ export default function HeroSection() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 1.1 }}
-          className="text-base text-muted-foreground mb-10 max-w-xl mx-auto flex items-center justify-center gap-2"
-        >
+          className="text-base text-muted-foreground mb-10 max-w-xl mx-auto flex items-center justify-center gap-2">
           <span>
-            Save time, sharpen skills, and build confidence to{" "}
-            <span className="font-medium text-primary">stand out</span> and{" "}
+            Save time, sharpen skills, and build confidence to{' '}
+            <span className="font-medium text-primary">stand out</span> and{' '}
             <span className="font-medium text-primary">succeed</span>
           </span>
           <FaCheckCircle className="text-green-500" />
@@ -98,16 +94,16 @@ export default function HeroSection() {
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 1.4 }}
-          className="flex flex-col sm:flex-row gap-4 justify-center items-center"
-        >
+          className="flex flex-col sm:flex-row gap-4 justify-center items-center">
           {/* Primary CTA */}
           <Link to="/dashboard">
-            <motion.div whileHover={{ scale: 1.05, y: -2 }} whileTap={{ scale: 0.97 }}>
+            <motion.div
+              whileHover={{ scale: 1.05, y: -2 }}
+              whileTap={{ scale: 0.97 }}>
               <Button
                 className="relative bg-primary text-primary-foreground px-10 py-4 rounded-full 
                            text-lg sm:text-xl font-bold shadow-lg hover:shadow-primary/40 
-                           transition-all duration-300 flex items-center gap-3"
-              >
+                           transition-all duration-300 flex items-center gap-3">
                 <span className="drop-shadow-md">Explore Our Content</span>
                 <FaArrowRight className="text-xl" />
                 {/* Glow effect */}
@@ -118,14 +114,15 @@ export default function HeroSection() {
 
           {/* Secondary CTA */}
           <Link to="/features">
-            <motion.div whileHover={{ scale: 1.02, y: -1 }} whileTap={{ scale: 0.98 }}>
+            <motion.div
+              whileHover={{ scale: 1.02, y: -1 }}
+              whileTap={{ scale: 0.98 }}>
               <Button
                 variant="outline"
                 className="border-primary text-primary hover:bg-primary/10 
                            px-8 py-3 rounded-full text-lg font-semibold 
                            shadow-sm hover:shadow-md transition-all duration-200 
-                           flex items-center gap-2"
-              >
+                           flex items-center gap-2">
                 Learn More <FaBookOpen />
               </Button>
             </motion.div>

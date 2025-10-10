@@ -1,13 +1,13 @@
-import React, { useState, useEffect } from "react";
-import { motion } from "framer-motion";
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import React, { useState, useEffect } from 'react';
+import { motion } from 'framer-motion';
+import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 
-import useFetch from "@/hooks/useFetch";
-import { addSubject } from "@/db/apiSubjects";
+import useFetch from '@/hooks/useFetch';
+import { addSubject } from '@/db/apiSubjects';
 
 import {
   Server,
@@ -20,31 +20,31 @@ import {
   Lock,
   Cloud,
   GitBranch,
-} from "lucide-react";
-import Loader from "@/components/Loader";
+} from 'lucide-react';
+import Loader from '@/components/Loader';
 
 // Subject related icons
 const subjectIcons = [
-  { label: "Operating Systems", value: "Server", Icon: Server },
-  { label: "DBMS", value: "Database", Icon: Database },
-  { label: "Computer Networks", value: "Network", Icon: Network },
-  { label: "Algorithms", value: "Workflow", Icon: Workflow },
-  { label: "Computer Architecture", value: "Cpu", Icon: Cpu },
-  { label: "Programming Languages", value: "Code2", Icon: Code2 },
-  { label: "Software Engineering", value: "Terminal", Icon: Terminal },
-  { label: "Cyber Security", value: "Lock", Icon: Lock },
-  { label: "Cloud Computing", value: "Cloud", Icon: Cloud },
-  { label: "Version Control (Git)", value: "GitBranch", Icon: GitBranch },
-  { label: "Object-Oriented Programming (OOP)", value: "Code2", Icon: Code2 },
+  { label: 'Operating Systems', value: 'Server', Icon: Server },
+  { label: 'DBMS', value: 'Database', Icon: Database },
+  { label: 'Computer Networks', value: 'Network', Icon: Network },
+  { label: 'Algorithms', value: 'Workflow', Icon: Workflow },
+  { label: 'Computer Architecture', value: 'Cpu', Icon: Cpu },
+  { label: 'Programming Languages', value: 'Code2', Icon: Code2 },
+  { label: 'Software Engineering', value: 'Terminal', Icon: Terminal },
+  { label: 'Cyber Security', value: 'Lock', Icon: Lock },
+  { label: 'Cloud Computing', value: 'Cloud', Icon: Cloud },
+  { label: 'Version Control (Git)', value: 'GitBranch', Icon: GitBranch },
+  { label: 'Object-Oriented Programming (OOP)', value: 'Code2', Icon: Code2 },
 ];
 
 export default function AddSubject() {
   const [form, setForm] = useState({
-    name: "",
-    description: "",
-    icon: "",
+    name: '',
+    description: '',
+    icon: '',
   });
-  const [successMsg, setSuccessMsg] = useState("");
+  const [successMsg, setSuccessMsg] = useState('');
 
   const { loading, error, fn: saveSubject } = useFetch(addSubject);
 
@@ -57,14 +57,14 @@ export default function AddSubject() {
     const res = await saveSubject(form);
     if (res?.saved) {
       setSuccessMsg(`"${res.subject.name}" has been successfully added.`);
-      setForm({ name: "", description: "", icon: "" });
+      setForm({ name: '', description: '', icon: '' });
     }
   };
 
   // Auto-dismiss alerts after 2.5s
   useEffect(() => {
     if (successMsg || error) {
-      const timer = setTimeout(() => setSuccessMsg(""), 2500);
+      const timer = setTimeout(() => setSuccessMsg(''), 2500);
       return () => clearTimeout(timer);
     }
   }, [successMsg, error]);
@@ -73,8 +73,7 @@ export default function AddSubject() {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4 }}
-      className="max-w-2xl mx-auto mt-10"
-    >
+      className="max-w-2xl mx-auto mt-10">
       <Card className="shadow-lg bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700">
         <CardHeader>
           <CardTitle className="text-2xl font-bold text-gray-900 dark:text-gray-100 text-center">
@@ -125,8 +124,7 @@ export default function AddSubject() {
                   value={form.icon}
                   onChange={handleChange}
                   required
-                  className="w-full p-2 border rounded-lg bg-gray-50 dark:bg-gray-900 dark:text-gray-100"
-                >
+                  className="w-full p-2 border rounded-lg bg-gray-50 dark:bg-gray-900 dark:text-gray-100">
                   <option value="">Select Icon</option>
                   {subjectIcons.map(({ label, value }) => (
                     <option key={value} value={value}>
@@ -181,9 +179,8 @@ export default function AddSubject() {
             <Button
               type="submit"
               disabled={loading}
-              className="w-full bg-yellow-500 hover:bg-yellow-600 text-white font-semibold px-4 py-2 rounded-lg transition-colors disabled:opacity-50"
-            >
-              {loading ? "Saving..." : "Add Subject"}
+              className="w-full bg-yellow-500 hover:bg-yellow-600 text-white font-semibold px-4 py-2 rounded-lg transition-colors disabled:opacity-50">
+              {loading ? 'Saving...' : 'Add Subject'}
             </Button>
           </form>
         </CardContent>

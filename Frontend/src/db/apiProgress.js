@@ -7,23 +7,23 @@ export async function getProgress(userId, subjectId) {
   if (!subjectId || !userId) return null;
 
   try {
-    const token = localStorage.getItem("token");
-    if (!token) throw new Error("Not authenticated");
+    const token = localStorage.getItem('token');
+    if (!token) throw new Error('Not authenticated');
 
     const res = await fetch(`${BASE_URL}/progress/${userId}/${subjectId}`, {
-      method: "GET",
+      method: 'GET',
       headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
         Authorization: `Bearer ${token}`,
       },
     });
 
     const data = await res.json();
-    if (!res.ok) throw new Error(data.error || "Failed to fetch progress");
+    if (!res.ok) throw new Error(data.error || 'Failed to fetch progress');
 
     return data;
   } catch (error) {
-    console.error("Error fetching progress:", error.message);
+    console.error('Error fetching progress:', error.message);
     return { completedQ: 0, totalQ: 0, progress: 0, completed_questions: [] };
   }
 }
@@ -35,24 +35,25 @@ export async function markQuestionAsRead(userId, subjectId, questionId) {
   if (!userId || !subjectId || !questionId) return false;
 
   try {
-    const token = localStorage.getItem("token");
-    if (!token) throw new Error("Not authenticated");
+    const token = localStorage.getItem('token');
+    if (!token) throw new Error('Not authenticated');
 
     const res = await fetch(`${BASE_URL}/progress/mark`, {
-      method: "POST",
+      method: 'POST',
       headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
         Authorization: `Bearer ${token}`,
       },
       body: JSON.stringify({ userId, subjectId, questionId }),
     });
 
     const data = await res.json();
-    if (!res.ok) throw new Error(data.error || "Failed to mark question as read");
+    if (!res.ok)
+      throw new Error(data.error || 'Failed to mark question as read');
 
     return true;
   } catch (error) {
-    console.error("Error marking question as read:", error.message);
+    console.error('Error marking question as read:', error.message);
     return false;
   }
 }
@@ -64,24 +65,24 @@ export async function unmarkQuestion(userId, subjectId, questionId) {
   if (!userId || !subjectId || !questionId) return false;
 
   try {
-    const token = localStorage.getItem("token");
-    if (!token) throw new Error("Not authenticated");
+    const token = localStorage.getItem('token');
+    if (!token) throw new Error('Not authenticated');
 
     const res = await fetch(`${BASE_URL}/progress/unmark`, {
-      method: "POST",
+      method: 'POST',
       headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
         Authorization: `Bearer ${token}`,
       },
       body: JSON.stringify({ userId, subjectId, questionId }),
     });
 
     const data = await res.json();
-    if (!res.ok) throw new Error(data.error || "Failed to unmark question");
+    if (!res.ok) throw new Error(data.error || 'Failed to unmark question');
 
     return true;
   } catch (error) {
-    console.error("Error unmarking question:", error.message);
+    console.error('Error unmarking question:', error.message);
     return false;
   }
 }

@@ -56,7 +56,9 @@
   border-radius: 0 !important;
   background: #ffffff !important;
   color: #374151 !important;
-  font-family: 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace !important;
+  font-family:
+    'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New',
+    monospace !important;
   font-size: 14px !important;
   line-height: 1.6 !important;
   min-height: 200px !important;
@@ -85,7 +87,8 @@
   background: #fefefe !important;
   color: #374151 !important;
   padding: 20px !important;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
+  font-family:
+    -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
   font-size: 14px !important;
   line-height: 1.7 !important;
   border-left: 1px solid #e5e7eb !important;

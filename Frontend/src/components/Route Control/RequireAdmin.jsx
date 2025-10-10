@@ -1,15 +1,15 @@
-import { Navigate } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { Navigate } from 'react-router-dom';
+import { useEffect, useState } from 'react';
 import {
   AlertDialog,
   AlertDialogContent,
   AlertDialogDescription,
   AlertDialogHeader,
   AlertDialogTitle,
-} from "@/components/ui/alert-dialog";
-import { Loader2 } from "lucide-react";
-import { isAdminUser } from "@/db/apiAdmin";
-import { UrlState } from "@/context";
+} from '@/components/ui/alert-dialog';
+import { Loader2 } from 'lucide-react';
+import { isAdminUser } from '@/db/apiAdmin';
+import { UrlState } from '@/context';
 
 export default function RequireAdmin({ children }) {
   const { user, loading: userLoading } = UrlState();

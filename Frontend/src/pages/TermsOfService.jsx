@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link } from 'react-router-dom';
 
 export default function TermsOfService() {
   return (
@@ -10,7 +10,7 @@ export default function TermsOfService() {
             Terms of Service
           </h1>
           <p className="text-muted-foreground text-sm leading-relaxed">
-            Welcome to{" "}
+            Welcome to{' '}
             <span className="font-semibold text-foreground">PrepMate</span>! By
             accessing or using our platform, you agree to comply with and be
             bound by the following terms and conditions. These Terms of Service
@@ -24,7 +24,7 @@ export default function TermsOfService() {
             content, you acknowledge that you have read, understood, and
             accepted these terms, as well as our
             <Link to="/privacy-policy" className="text-primary hover:underline">
-              {" "}
+              {' '}
               Privacy Policy
             </Link>
             .
@@ -122,7 +122,7 @@ export default function TermsOfService() {
           <div>
             <h2 className="text-xl font-semibold mb-3">8. Contact Us</h2>
             <p className="text-muted-foreground leading-relaxed">
-              If you have any questions regarding these Terms, please{" "}
+              If you have any questions regarding these Terms, please{' '}
               <Link to="/contact-us" className="text-primary hover:underline">
                 contact us
               </Link>

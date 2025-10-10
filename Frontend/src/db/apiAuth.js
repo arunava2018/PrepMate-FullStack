@@ -4,8 +4,8 @@ const BASE_URL = import.meta.env.VITE_BACKEND_URL;
 export async function signup({ name, email, password, college, passoutYear }) {
   try {
     const res = await fetch(`${BASE_URL}/auth/signup`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         email,
         password,
@@ -18,10 +18,10 @@ export async function signup({ name, email, password, college, passoutYear }) {
     const data = await res.json();
 
     if (!res.ok) {
-      throw new Error(data.error || "Signup failed");
+      throw new Error(data.error || 'Signup failed');
     }
 
-    localStorage.setItem("token", data.token);
+    localStorage.setItem('token', data.token);
     return data.user;
   } catch (err) {
     throw err;
@@ -32,18 +32,18 @@ export async function signup({ name, email, password, college, passoutYear }) {
 export async function login({ email, password }) {
   try {
     const res = await fetch(`${BASE_URL}/auth/login`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ email, password }),
     });
 
     const data = await res.json();
 
     if (!res.ok) {
-      throw new Error(data.error || "Login failed");
+      throw new Error(data.error || 'Login failed');
     }
 
-    localStorage.setItem("token", data.token);
+    localStorage.setItem('token', data.token);
     return data.user;
   } catch (err) {
     throw err;
@@ -52,19 +52,19 @@ export async function login({ email, password }) {
 
 // -------- LOGOUT --------
 export async function signout() {
-  localStorage.removeItem("token");
+  localStorage.removeItem('token');
   return true; // success indicator
 }
 
 // -------- GET CURRENT USER PROFILE --------
 export async function getCurrentUserProfile() {
-  const token = localStorage.getItem("token");
+  const token = localStorage.getItem('token');
   if (!token) return null;
 
   const res = await fetch(`${BASE_URL}/auth/me`, {
-    method: "GET",
+    method: 'GET',
     headers: {
-      "Content-Type": "application/json",
+      'Content-Type': 'application/json',
       Authorization: `Bearer ${token}`,
     },
   });
@@ -72,7 +72,7 @@ export async function getCurrentUserProfile() {
   const data = await res.json();
 
   if (!res.ok) {
-    throw new Error(data.error || "Failed to fetch profile");
+    throw new Error(data.error || 'Failed to fetch profile');
   }
 
   return data;
@@ -80,13 +80,13 @@ export async function getCurrentUserProfile() {
 
 // -------- GET USER BY ID --------
 export async function getUserById(id) {
-  const token = localStorage.getItem("token");
-  if (!token) throw new Error("Not authenticated");
+  const token = localStorage.getItem('token');
+  if (!token) throw new Error('Not authenticated');
 
   const res = await fetch(`${BASE_URL}/auth/user/${id}`, {
-    method: "GET",
+    method: 'GET',
     headers: {
-      "Content-Type": "application/json",
+      'Content-Type': 'application/json',
       Authorization: `Bearer ${token}`,
     },
   });
@@ -94,7 +94,7 @@ export async function getUserById(id) {
   const data = await res.json();
 
   if (!res.ok) {
-    throw new Error(data.error || "Failed to fetch user");
+    throw new Error(data.error || 'Failed to fetch user');
   }
 
   return data;

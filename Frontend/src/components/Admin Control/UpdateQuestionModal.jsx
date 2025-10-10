@@ -1,27 +1,27 @@
-import { useState, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { Dialog } from "@headlessui/react";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { Button } from "@/components/ui/button";
-import { updateQuestion } from "@/db/apiQuestion";
-import { X, Save, FileText, MessageSquare, Loader2 } from "lucide-react";
+import { useState, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Dialog } from '@headlessui/react';
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
+import { Button } from '@/components/ui/button';
+import { updateQuestion } from '@/db/apiQuestion';
+import { X, Save, FileText, MessageSquare, Loader2 } from 'lucide-react';
 
 export default function UpdateQuestionModal({ isOpen, onClose, question }) {
   const [formData, setFormData] = useState({
-    question_text: "",
-    answer_text: "",
+    question_text: '',
+    answer_text: '',
   });
   const [saving, setSaving] = useState(false);
-  const [questionId, setquestionId] =  useState(null);
+  const [questionId, setquestionId] = useState(null);
 
   // Sync form when question changes
   useEffect(() => {
     if (question) {
       setquestionId(question.id);
       setFormData({
-        question_text: question.question_text || "",
-        answer_text: question.answer_text || "",
+        question_text: question.question_text || '',
+        answer_text: question.answer_text || '',
       });
     }
   }, [question]);
@@ -31,10 +31,14 @@ export default function UpdateQuestionModal({ isOpen, onClose, question }) {
   const handleSave = async () => {
     try {
       setSaving(true);
-      await updateQuestion({questionId, question_text: formData.question_text, answer_text: formData.answer_text   });
+      await updateQuestion({
+        questionId,
+        question_text: formData.question_text,
+        answer_text: formData.answer_text,
+      });
       onClose();
     } catch (err) {
-      console.error("Error updating question:", err);
+      console.error('Error updating question:', err);
     } finally {
       setSaving(false);
     }
@@ -59,9 +63,8 @@ export default function UpdateQuestionModal({ isOpen, onClose, question }) {
               initial={{ scale: 0.95, opacity: 0, y: 20 }}
               animate={{ scale: 1, opacity: 1, y: 0 }}
               exit={{ scale: 0.95, opacity: 0, y: 20 }}
-              transition={{ type: "spring", stiffness: 300, damping: 25 }}
-              className="w-full max-w-2xl max-h-[90vh] bg-white dark:bg-gray-900 rounded-3xl shadow-2xl overflow-hidden flex flex-col"
-            >
+              transition={{ type: 'spring', stiffness: 300, damping: 25 }}
+              className="w-full max-w-2xl max-h-[90vh] bg-white dark:bg-gray-900 rounded-3xl shadow-2xl overflow-hidden flex flex-col">
               {/* Header */}
               <div className="bg-gradient-to-r from-yellow-50 to-orange-50 dark:from-yellow-900/20 dark:to-orange-900/10 px-6 py-4 border-b border-yellow-200 dark:border-yellow-800/30">
                 <div className="flex items-center justify-between">
@@ -80,8 +83,7 @@ export default function UpdateQuestionModal({ isOpen, onClose, question }) {
                   </div>
                   <button
                     onClick={onClose}
-                    className="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
-                  >
+                    className="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors">
                     <X className="w-5 h-5 text-gray-500" />
                   </button>
                 </div>
@@ -89,19 +91,17 @@ export default function UpdateQuestionModal({ isOpen, onClose, question }) {
 
               {/* Content */}
               <div className="p-6 overflow-y-auto flex-1">
-                <form 
-                  className="space-y-6" 
-                  onSubmit={(e) => { 
-                    e.preventDefault(); 
-                    handleSave(); 
-                  }}
-                >
+                <form
+                  className="space-y-6"
+                  onSubmit={(e) => {
+                    e.preventDefault();
+                    handleSave();
+                  }}>
                   {/* Question Input */}
                   <div className="space-y-2">
-                    <label 
-                      htmlFor="questionText" 
-                      className="flex items-center gap-2 text-sm font-medium text-gray-700 dark:text-gray-300"
-                    >
+                    <label
+                      htmlFor="questionText"
+                      className="flex items-center gap-2 text-sm font-medium text-gray-700 dark:text-gray-300">
                       <MessageSquare className="w-4 h-4 text-yellow-600" />
                       Question Text
                     </label>
@@ -123,10 +123,9 @@ export default function UpdateQuestionModal({ isOpen, onClose, question }) {
 
                   {/* Answer Textarea */}
                   <div className="space-y-2">
-                    <label 
-                      htmlFor="answerText" 
-                      className="flex items-center gap-2 text-sm font-medium text-gray-700 dark:text-gray-300"
-                    >
+                    <label
+                      htmlFor="answerText"
+                      className="flex items-center gap-2 text-sm font-medium text-gray-700 dark:text-gray-300">
                       <FileText className="w-4 h-4 text-yellow-600" />
                       Answer Text
                     </label>
@@ -149,8 +148,12 @@ export default function UpdateQuestionModal({ isOpen, onClose, question }) {
 
                   {/* Character Count */}
                   <div className="flex justify-between text-xs text-gray-500 dark:text-gray-400">
-                    <span>Question: {formData.question_text.length} characters</span>
-                    <span>Answer: {formData.answer_text.length} characters</span>
+                    <span>
+                      Question: {formData.question_text.length} characters
+                    </span>
+                    <span>
+                      Answer: {formData.answer_text.length} characters
+                    </span>
                   </div>
 
                   {/* Actions */}
@@ -159,15 +162,17 @@ export default function UpdateQuestionModal({ isOpen, onClose, question }) {
                       type="button"
                       onClick={onClose}
                       variant="outline"
-                      className="px-6 cursor-pointer py-2 border-2 border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-xl transition-all"
-                    >
+                      className="px-6 cursor-pointer py-2 border-2 border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-xl transition-all">
                       Cancel
                     </Button>
                     <Button
                       type="submit"
-                      disabled={saving || !formData.question_text.trim() || !formData.answer_text.trim()}
-                      className="px-6 py-2 bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer flex items-center gap-2"
-                    >
+                      disabled={
+                        saving ||
+                        !formData.question_text.trim() ||
+                        !formData.answer_text.trim()
+                      }
+                      className="px-6 py-2 bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer flex items-center gap-2">
                       {saving ? (
                         <>
                           <Loader2 className="w-4 h-4 animate-spin" />

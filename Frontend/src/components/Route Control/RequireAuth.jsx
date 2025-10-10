@@ -1,7 +1,7 @@
-import { useEffect, useState } from "react";
-import { Navigate, useLocation } from "react-router-dom";
-import { UrlState } from "@/context";
-import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert";
+import { useEffect, useState } from 'react';
+import { Navigate, useLocation } from 'react-router-dom';
+import { UrlState } from '@/context';
+import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert';
 
 export default function RequireAuth({ children }) {
   const { isAuthenticated, loading } = UrlState();

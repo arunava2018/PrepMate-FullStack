@@ -4,13 +4,13 @@ const BASE_URL = import.meta.env.VITE_BACKEND_URL;
 export async function getSubjects() {
   try {
     const res = await fetch(`${BASE_URL}/subjects`, {
-      method: "GET",
-      headers: { "Content-Type": "application/json" },
+      method: 'GET',
+      headers: { 'Content-Type': 'application/json' },
     });
 
     const data = await res.json();
     if (!res.ok) {
-      throw new Error(data.error || "Failed to fetch subjects");
+      throw new Error(data.error || 'Failed to fetch subjects');
     }
 
     return data;
@@ -23,13 +23,13 @@ export async function getSubjects() {
 export async function getSubjectById(id) {
   try {
     const res = await fetch(`${BASE_URL}/subjects/${id}`, {
-      method: "GET",
-      headers: { "Content-Type": "application/json" },
+      method: 'GET',
+      headers: { 'Content-Type': 'application/json' },
     });
 
     const data = await res.json();
     if (!res.ok) {
-      throw new Error(data.error || "Failed to fetch subject");
+      throw new Error(data.error || 'Failed to fetch subject');
     }
 
     return data;
@@ -41,13 +41,13 @@ export async function getSubjectById(id) {
 // -------- Add new subject --------
 export async function addSubject({ name, description, icon }) {
   try {
-    const token = localStorage.getItem("token");
-    if (!token) throw new Error("Not authenticated");
+    const token = localStorage.getItem('token');
+    if (!token) throw new Error('Not authenticated');
 
     const res = await fetch(`${BASE_URL}/subjects/addsubject`, {
-      method: "POST",
+      method: 'POST',
       headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
         Authorization: `Bearer ${token}`,
       },
       body: JSON.stringify({ name, description, icon }),
@@ -55,7 +55,7 @@ export async function addSubject({ name, description, icon }) {
 
     const data = await res.json();
     if (!res.ok) {
-      throw new Error(data.error || "Failed to add subject");
+      throw new Error(data.error || 'Failed to add subject');
     }
 
     return data;

@@ -1,20 +1,20 @@
-import React, { useState, useEffect, useRef } from "react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { BeatLoader } from "react-spinners";
-import { Eye, EyeOff } from "lucide-react";
-import { useNavigate, useLocation } from "react-router-dom";
-import * as Yup from "yup";
-import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert";
-import { UrlState } from "@/context";
+import React, { useState, useEffect, useRef } from 'react';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { BeatLoader } from 'react-spinners';
+import { Eye, EyeOff } from 'lucide-react';
+import { useNavigate, useLocation } from 'react-router-dom';
+import * as Yup from 'yup';
+import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert';
+import { UrlState } from '@/context';
 
 // ✅ Login validation schema
 const loginSchema = Yup.object().shape({
-  email: Yup.string().email("Invalid email").required("Email is required"),
+  email: Yup.string().email('Invalid email').required('Email is required'),
   password: Yup.string()
-    .min(6, "Password must be at least 6 characters")
-    .required("Password is required"),
+    .min(6, 'Password must be at least 6 characters')
+    .required('Password is required'),
 });
 
 export default function Login() {
@@ -24,9 +24,9 @@ export default function Login() {
   const emailInputRef = useRef(null);
 
   // either go back to intended page, or default to dashboard
-  const from = location.state?.from?.pathname || "/dashboard";
+  const from = location.state?.from?.pathname || '/dashboard';
 
-  const [formData, setFormData] = useState({ email: "", password: "" });
+  const [formData, setFormData] = useState({ email: '', password: '' });
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
@@ -74,9 +74,7 @@ export default function Login() {
       {successAlert && (
         <Alert variant="success" className="mb-4">
           <AlertTitle>Login Successful!</AlertTitle>
-          <AlertDescription>
-            Redirecting...
-          </AlertDescription>
+          <AlertDescription>Redirecting...</AlertDescription>
         </Alert>
       )}
 
@@ -102,7 +100,7 @@ export default function Login() {
         <Input
           id="password"
           name="password"
-          type={showPassword ? "text" : "password"}
+          type={showPassword ? 'text' : 'password'}
           placeholder="Enter your password"
           value={formData.password}
           onChange={handleInputChange}
@@ -111,9 +109,8 @@ export default function Login() {
         <button
           type="button"
           onClick={() => setShowPassword((prev) => !prev)}
-          aria-label={showPassword ? "Hide password" : "Show password"}
-          className="absolute right-3 top-8 text-gray-500 hover:text-gray-700"
-        >
+          aria-label={showPassword ? 'Hide password' : 'Show password'}
+          className="absolute right-3 top-8 text-gray-500 hover:text-gray-700">
           {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
         </button>
         {errors.password && (
@@ -129,17 +126,17 @@ export default function Login() {
       {/* Submit */}
       <Button
         type="submit"
-        className="w-full bg-yellow-600 hover:bg-yellow-700 text-white"
-      >
-        {loading ? <BeatLoader size={10} color="#fff" /> : "Login"}
+        className="w-full bg-yellow-600 hover:bg-yellow-700 text-white">
+        {loading ? <BeatLoader size={10} color="#fff" /> : 'Login'}
       </Button>
 
       <p className="mx-auto">
-        Don't have an account?{" "}
+        Don't have an account?{' '}
         <span
-          onClick={() => navigate("/auth/signup", { state: { from: location.state?.from } })  }
-          className="text-yellow-400 underline cursor-pointer"
-        >
+          onClick={() =>
+            navigate('/auth/signup', { state: { from: location.state?.from } })
+          }
+          className="text-yellow-400 underline cursor-pointer">
           Register
         </span>
       </p>

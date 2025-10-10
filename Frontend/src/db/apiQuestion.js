@@ -1,15 +1,15 @@
-const BASE_URL = import.meta.env.VITE_BACKEND_URL + "/questions";
+const BASE_URL = import.meta.env.VITE_BACKEND_URL + '/questions';
 
 // -------- Add new question --------
 export async function addQuestion({ subjectId, subtopicId, question, answer }) {
   try {
-    const token = localStorage.getItem("token");
-    if (!token) throw new Error("Not authenticated");
+    const token = localStorage.getItem('token');
+    if (!token) throw new Error('Not authenticated');
 
     const res = await fetch(`${BASE_URL}/add`, {
-      method: "POST",
+      method: 'POST',
       headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
         Authorization: `Bearer ${token}`,
       },
       body: JSON.stringify({
@@ -22,7 +22,7 @@ export async function addQuestion({ subjectId, subtopicId, question, answer }) {
 
     const data = await res.json();
     if (!res.ok) {
-      throw new Error(data.error || "Failed to add question");
+      throw new Error(data.error || 'Failed to add question');
     }
     return data;
   } catch (err) {
@@ -37,7 +37,7 @@ export async function fetchQuestions(subtopicId) {
     const data = await res.json();
 
     if (!res.ok) {
-      throw new Error(data.error || "Failed to fetch questions");
+      throw new Error(data.error || 'Failed to fetch questions');
     }
     return data;
   } catch (err) {
@@ -46,15 +46,19 @@ export async function fetchQuestions(subtopicId) {
 }
 
 // -------- Update question --------
-export async function updateQuestion({ questionId, question_text, answer_text }) {
+export async function updateQuestion({
+  questionId,
+  question_text,
+  answer_text,
+}) {
   try {
-    const token = localStorage.getItem("token");
-    if (!token) throw new Error("Not authenticated");
+    const token = localStorage.getItem('token');
+    if (!token) throw new Error('Not authenticated');
 
     const res = await fetch(`${BASE_URL}/${questionId}`, {
-      method: "PUT",
+      method: 'PUT',
       headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
         Authorization: `Bearer ${token}`,
       },
       body: JSON.stringify({ question_text, answer_text }),
@@ -62,7 +66,7 @@ export async function updateQuestion({ questionId, question_text, answer_text })
 
     const data = await res.json();
     if (!res.ok) {
-      throw new Error(data.error || "Failed to update question");
+      throw new Error(data.error || 'Failed to update question');
     }
     return data;
   } catch (err) {
@@ -73,17 +77,17 @@ export async function updateQuestion({ questionId, question_text, answer_text })
 // -------- Delete question --------
 export async function deleteQuestion(questionId) {
   try {
-    const token = localStorage.getItem("token");
-    if (!token) throw new Error("Not authenticated");
+    const token = localStorage.getItem('token');
+    if (!token) throw new Error('Not authenticated');
 
     const res = await fetch(`${BASE_URL}/${questionId}`, {
-      method: "DELETE",
+      method: 'DELETE',
       headers: { Authorization: `Bearer ${token}` },
     });
 
     const data = await res.json();
     if (!res.ok) {
-      throw new Error(data.error || "Failed to delete question");
+      throw new Error(data.error || 'Failed to delete question');
     }
     return data;
   } catch (err) {

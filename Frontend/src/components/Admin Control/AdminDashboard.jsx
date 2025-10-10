@@ -1,13 +1,13 @@
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { UrlState } from "@/context";
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { UrlState } from '@/context';
 import {
   Card,
   CardHeader,
   CardTitle,
   CardDescription,
-} from "@/components/ui/card";
-import { motion } from "framer-motion";
+} from '@/components/ui/card';
+import { motion } from 'framer-motion';
 import {
   FilePlus,
   BookOpen,
@@ -19,9 +19,9 @@ import {
   Trash2,
   Settings,
   Database,
-} from "lucide-react";
-import Loader from "@/components/Loader";
-import path from "path";
+} from 'lucide-react';
+import Loader from '@/components/Loader';
+import path from 'path';
 
 export default function AdminDashboard() {
   const { user } = UrlState();
@@ -30,57 +30,59 @@ export default function AdminDashboard() {
 
   const cards = [
     {
-      title: "Add Subject",
-      desc: "Introduce a new subject with its description.",
-      path: "/admin/addSubject",
+      title: 'Add Subject',
+      desc: 'Introduce a new subject with its description.',
+      path: '/admin/addSubject',
       icon: <BookOpen className="w-6 h-6 text-blue-500 dark:text-blue-400" />,
-      bgColor: "bg-blue-50 dark:bg-blue-900/10",
-      borderColor: "hover:border-blue-200 dark:hover:border-blue-800",
+      bgColor: 'bg-blue-50 dark:bg-blue-900/10',
+      borderColor: 'hover:border-blue-200 dark:hover:border-blue-800',
     },
     {
-      title: "Add Subtopic",
-      desc: "Organize subjects by adding structured subtopics.",
-      path: "/admin/addSubtopic",
+      title: 'Add Subtopic',
+      desc: 'Organize subjects by adding structured subtopics.',
+      path: '/admin/addSubtopic',
       icon: <ListPlus className="w-6 h-6 text-green-500 dark:text-green-400" />,
-      bgColor: "bg-green-50 dark:bg-green-900/10",
-      borderColor: "hover:border-green-200 dark:hover:border-green-800",
+      bgColor: 'bg-green-50 dark:bg-green-900/10',
+      borderColor: 'hover:border-green-200 dark:hover:border-green-800',
     },
     {
-      title: "Add Question",
-      desc: "Create new questions with subject & subtopic mapping.",
-      path: "/admin/addQuestion",
+      title: 'Add Question',
+      desc: 'Create new questions with subject & subtopic mapping.',
+      path: '/admin/addQuestion',
       icon: (
         <FilePlus className="w-6 h-6 text-yellow-500 dark:text-yellow-400" />
       ),
-      bgColor: "bg-yellow-50 dark:bg-yellow-900/10",
-      borderColor: "hover:border-yellow-200 dark:hover:border-yellow-800",
+      bgColor: 'bg-yellow-50 dark:bg-yellow-900/10',
+      borderColor: 'hover:border-yellow-200 dark:hover:border-yellow-800',
     },
     {
-      title: "Update Question",
-      desc: "Edit or modify existing questions.",
-      path: "/admin/updateQuestion",
+      title: 'Update Question',
+      desc: 'Edit or modify existing questions.',
+      path: '/admin/updateQuestion',
       icon: (
         <FileEdit className="w-6 h-6 text-purple-500 dark:text-purple-400" />
       ),
-      bgColor: "bg-purple-50 dark:bg-purple-900/10",
-      borderColor: "hover:border-purple-200 dark:hover:border-purple-800",
+      bgColor: 'bg-purple-50 dark:bg-purple-900/10',
+      borderColor: 'hover:border-purple-200 dark:hover:border-purple-800',
     },
     {
-      title: "Delete Question",
-      desc: "Remove questions from the database.",
-      path: "/admin/deleteQuestion",
+      title: 'Delete Question',
+      desc: 'Remove questions from the database.',
+      path: '/admin/deleteQuestion',
       icon: <Trash2 className="w-6 h-6 text-red-500 dark:text-red-400" />,
-      bgColor: "bg-red-50 dark:bg-red-900/10",
-      borderColor: "hover:border-red-300 dark:hover:border-red-800",
+      bgColor: 'bg-red-50 dark:bg-red-900/10',
+      borderColor: 'hover:border-red-300 dark:hover:border-red-800',
     },
     {
-      title : "Approve Interview Experiences",
-      desc: "Review and approve user-submitted interview experiences.",
-      path: "/admin/approveExperiences",
-      icon: <NotebookPen className="w-6 h-6 text-indigo-500 dark:text-indigo-400" />,
-      bgColor: "bg-indigo-50 dark:bg-indigo-900/10",
-      borderColor: "hover:border-indigo-200 dark:hover:border-indigo-800",  
-    }
+      title: 'Approve Interview Experiences',
+      desc: 'Review and approve user-submitted interview experiences.',
+      path: '/admin/approveExperiences',
+      icon: (
+        <NotebookPen className="w-6 h-6 text-indigo-500 dark:text-indigo-400" />
+      ),
+      bgColor: 'bg-indigo-50 dark:bg-indigo-900/10',
+      borderColor: 'hover:border-indigo-200 dark:hover:border-indigo-800',
+    },
   ];
 
   const handleNavigate = (path) => {
@@ -97,25 +99,23 @@ export default function AdminDashboard() {
         className="flex items-center gap-4 mb-8"
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
-      >
+        transition={{ duration: 0.5 }}>
         <div className="flex items-center gap-3">
           <Shield className="w-8 h-8 text-red-500" />
           <h1 className="lg:text-3xl text-2xl font-bold text-gray-900 dark:text-gray-100">
-            Hello, {user?.full_name || "Admin"}
+            Hello, {user?.full_name || 'Admin'}
           </h1>
         </div>
         <motion.span
           className="bg-gradient-to-r from-red-400 to-red-500 text-white text-[14px] md:text-[15px] px-2 py-1 rounded-full shadow-lg font-medium whitespace-nowrap relative transition-all duration-300 ease-in-out"
           whileHover={{
             scale: 1.05,
-            boxShadow: "inset 0 0 12px rgba(255, 255, 255, 0.3)",
+            boxShadow: 'inset 0 0 12px rgba(255, 255, 255, 0.3)',
           }}
           transition={{ duration: 0.3 }}
           style={{
-            boxShadow: "inset 0 0 6px rgba(255, 255, 255, 0.2)",
-          }}
-        >
+            boxShadow: 'inset 0 0 6px rgba(255, 255, 255, 0.2)',
+          }}>
           <span>Admin</span>
         </motion.span>
       </motion.div>
@@ -125,8 +125,7 @@ export default function AdminDashboard() {
         className="mb-8"
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.2, duration: 0.5 }}
-      >
+        transition={{ delay: 0.2, duration: 0.5 }}>
         <Card className="bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 border-blue-200 dark:border-blue-800">
           <CardHeader className="p-4">
             <div className="flex items-center gap-3">
@@ -153,8 +152,7 @@ export default function AdminDashboard() {
         className="mb-6"
         initial={{ opacity: 0, x: -20 }}
         animate={{ opacity: 1, x: 0 }}
-        transition={{ delay: 0.4, duration: 0.5 }}
-      >
+        transition={{ delay: 0.4, duration: 0.5 }}>
         <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100 flex items-center gap-2">
           <Settings className="w-5 h-5 text-gray-600 dark:text-gray-400" />
           Administrative Actions
@@ -170,8 +168,7 @@ export default function AdminDashboard() {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.5, duration: 0.5 }}
-        whileHover={{ scale: 1.02 }}
-      >
+        whileHover={{ scale: 1.02 }}>
         <div className="flex items-center justify-center gap-3">
           <div className="p-2 bg-yellow-200 dark:bg-yellow-800 rounded-full">
             <span className="text-xl">💡</span>
@@ -182,18 +179,18 @@ export default function AdminDashboard() {
             </span>
             <br />
             <span className="text-gray-700 dark:text-gray-300">
-              Begin by adding{" "}
+              Begin by adding{' '}
               <span className="font-extrabold text-blue-600 dark:text-blue-400">
                 Subjects
-              </span>{" "}
-              → then{" "}
+              </span>{' '}
+              → then{' '}
               <span className="font-extrabold text-green-600 dark:text-green-400">
                 Subtopics
-              </span>{" "}
-              → finally{" "}
+              </span>{' '}
+              → finally{' '}
               <span className="font-extrabold text-purple-600 dark:text-purple-400">
                 Questions
-              </span>{" "}
+              </span>{' '}
               for optimal organization
             </span>
           </p>
@@ -211,17 +208,14 @@ export default function AdminDashboard() {
             whileHover={{ scale: 1.02, y: -4 }}
             whileTap={{ scale: 0.98 }}
             onClick={() => handleNavigate(card.path)}
-            className="cursor-pointer"
-          >
+            className="cursor-pointer">
             <Card
-              className={`h-full shadow-md hover:shadow-xl transition-all duration-300 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 ${card.borderColor}`}
-            >
+              className={`h-full shadow-md hover:shadow-xl transition-all duration-300 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 ${card.borderColor}`}>
               <CardHeader className="p-6 flex flex-col gap-4">
                 <motion.div
                   className="p-3 rounded-xl bg-gray-50 dark:bg-gray-800 inline-block"
                   whileHover={{ rotate: 5 }}
-                  transition={{ duration: 0.2 }}
-                >
+                  transition={{ duration: 0.2 }}>
                   {card.icon}
                 </motion.div>
                 <div>

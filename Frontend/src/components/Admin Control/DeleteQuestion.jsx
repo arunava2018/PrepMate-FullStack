@@ -1,8 +1,8 @@
-import { useState, useEffect } from "react";
-import { getSubjects } from "@/db/apiSubjects";
-import { fetchSubtopics } from "@/db/apiSubtopic";
-import { deleteQuestion, fetchQuestions } from "@/db/apiQuestion";
-import Loader from "@/components/Loader";
+import { useState, useEffect } from 'react';
+import { getSubjects } from '@/db/apiSubjects';
+import { fetchSubtopics } from '@/db/apiSubtopic';
+import { deleteQuestion, fetchQuestions } from '@/db/apiQuestion';
+import Loader from '@/components/Loader';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -12,17 +12,24 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-} from "@/components/ui/alert-dialog";
+} from '@/components/ui/alert-dialog';
 
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { ChevronDown, BookOpen, Search, Filter, FileText, Trash2 } from "lucide-react";
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import {
+  ChevronDown,
+  BookOpen,
+  Search,
+  Filter,
+  FileText,
+  Trash2,
+} from 'lucide-react';
 
 export default function DeleteQuestionPage() {
   const [subjects, setSubjects] = useState([]);
   const [subtopics, setSubtopics] = useState([]);
   const [questions, setQuestions] = useState([]);
 
-  const [selectedSubject, setSelectedSubject] = useState(null);   // holds subjectId
+  const [selectedSubject, setSelectedSubject] = useState(null); // holds subjectId
   const [selectedSubtopic, setSelectedSubtopic] = useState(null); // holds subtopicId
   const [selectedQuestion, setSelectedQuestion] = useState(null);
 
@@ -32,7 +39,7 @@ export default function DeleteQuestionPage() {
   useEffect(() => {
     getSubjects()
       .then((res) => setSubjects(res))
-      .catch((err) => console.error("Error loading subjects:", err));
+      .catch((err) => console.error('Error loading subjects:', err));
   }, []);
 
   // Load subtopics when subject changes
@@ -46,7 +53,7 @@ export default function DeleteQuestionPage() {
     setLoading(true);
     fetchSubtopics({ subjectId: selectedSubject }) // ✅ send UUID
       .then((res) => setSubtopics(res))
-      .catch((err) => console.error("Error loading subtopics:", err))
+      .catch((err) => console.error('Error loading subtopics:', err))
       .finally(() => setLoading(false));
   }, [selectedSubject]);
 
@@ -60,7 +67,7 @@ export default function DeleteQuestionPage() {
     setLoading(true);
     fetchQuestions(selectedSubtopic) // ✅ expects subtopicId
       .then((res) => setQuestions(res))
-      .catch((err) => console.error("Error loading questions:", err))
+      .catch((err) => console.error('Error loading questions:', err))
       .finally(() => setLoading(false));
   }, [selectedSubtopic]);
 
@@ -73,7 +80,7 @@ export default function DeleteQuestionPage() {
       setQuestions((prev) => prev.filter((q) => q.id !== selectedQuestion.id));
       setSelectedQuestion(null);
     } catch (err) {
-      console.error("Error deleting question:", err);
+      console.error('Error deleting question:', err);
     }
   };
 
@@ -108,10 +115,9 @@ export default function DeleteQuestionPage() {
                 </label>
                 <div className="relative">
                   <select
-                    value={selectedSubject ?? ""}
+                    value={selectedSubject ?? ''}
                     onChange={(e) => setSelectedSubject(e.target.value || null)}
-                    className="w-full appearance-none bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-xl px-4 py-3 pr-10 text-gray-700 dark:text-gray-300 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-transparent transition-all"
-                  >
+                    className="w-full appearance-none bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-xl px-4 py-3 pr-10 text-gray-700 dark:text-gray-300 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-transparent transition-all">
                     <option value="">Select Subject</option>
                     {subjects?.map((subj) => (
                       <option key={subj.id} value={subj.id}>
@@ -131,11 +137,12 @@ export default function DeleteQuestionPage() {
                 </label>
                 <div className="relative">
                   <select
-                    value={selectedSubtopic ?? ""}
-                    onChange={(e) => setSelectedSubtopic(e.target.value || null)}
+                    value={selectedSubtopic ?? ''}
+                    onChange={(e) =>
+                      setSelectedSubtopic(e.target.value || null)
+                    }
                     disabled={!subtopics.length}
-                    className="w-full appearance-none bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-xl px-4 py-3 pr-10 text-gray-700 dark:text-gray-300 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-transparent transition-all disabled:opacity-50 disabled:cursor-not-allowed"
-                  >
+                    className="w-full appearance-none bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-xl px-4 py-3 pr-10 text-gray-700 dark:text-gray-300 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-transparent transition-all disabled:opacity-50 disabled:cursor-not-allowed">
                     <option value="">Select Subtopic</option>
                     {subtopics?.map((sub) => (
                       <option key={sub.id} value={sub.id}>
@@ -154,7 +161,8 @@ export default function DeleteQuestionPage() {
                 <div className="flex items-center gap-2">
                   <Search className="w-4 h-4 text-yellow-600" />
                   <span className="text-sm font-medium text-yellow-700 dark:text-yellow-300">
-                    Found {questions.length} question{questions.length !== 1 ? "s" : ""}
+                    Found {questions.length} question
+                    {questions.length !== 1 ? 's' : ''}
                   </span>
                 </div>
               </div>
@@ -183,8 +191,7 @@ export default function DeleteQuestionPage() {
                 {questions.map((q, index) => (
                   <div
                     key={q.id}
-                    className="flex items-center justify-between p-4 bg-gray-50 dark:bg-gray-800/50 rounded-xl border border-gray-200 dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-700/50 transition-all group"
-                  >
+                    className="flex items-center justify-between p-4 bg-gray-50 dark:bg-gray-800/50 rounded-xl border border-gray-200 dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-700/50 transition-all group">
                     <div className="flex items-start gap-3 flex-1 min-w-0">
                       <span className="flex-shrink-0 w-8 h-8 bg-yellow-100 dark:bg-yellow-900/30 text-yellow-700 dark:text-yellow-300 rounded-full flex items-center justify-center text-sm font-semibold">
                         {index + 1}
@@ -197,8 +204,7 @@ export default function DeleteQuestionPage() {
                     </div>
                     <button
                       onClick={() => setSelectedQuestion(q)}
-                      className="flex items-center gap-1 px-2 py-2 cursor-pointer bg-red-500 hover:bg-red-600 text-white rounded-lg md:font-medium transition-all transform hover:scale-105 shadow-md hover:shadow-lg text-sm"
-                    >
+                      className="flex items-center gap-1 px-2 py-2 cursor-pointer bg-red-500 hover:bg-red-600 text-white rounded-lg md:font-medium transition-all transform hover:scale-105 shadow-md hover:shadow-lg text-sm">
                       <Trash2 className="w-3 h-3" />
                       Delete
                     </button>
@@ -235,21 +241,25 @@ export default function DeleteQuestionPage() {
                 Get Started
               </h3>
               <p className="text-yellow-700 dark:text-yellow-300">
-                Select a subject from the dropdown above to view available subtopics and questions.
+                Select a subject from the dropdown above to view available
+                subtopics and questions.
               </p>
             </CardContent>
           </Card>
         )}
 
         {/* Delete Confirmation Modal */}
-        <AlertDialog open={!!selectedQuestion} onOpenChange={() => setSelectedQuestion(null)}>
+        <AlertDialog
+          open={!!selectedQuestion}
+          onOpenChange={() => setSelectedQuestion(null)}>
           <AlertDialogContent>
             <AlertDialogHeader>
               <AlertDialogTitle className="text-xl font-bold text-gray-800 dark:text-gray-100">
                 Confirm Deletion
               </AlertDialogTitle>
               <AlertDialogDescription className="mt-2 text-gray-600 dark:text-gray-400">
-                Are you sure you want to delete this question? This action cannot be undone.
+                Are you sure you want to delete this question? This action
+                cannot be undone.
                 <br />
                 <span className="mt-2 font-semibold text-gray-800 dark:text-gray-200">
                   "{selectedQuestion?.question_text}"
@@ -259,14 +269,12 @@ export default function DeleteQuestionPage() {
             <AlertDialogFooter>
               <AlertDialogCancel
                 className="px-4 py-2 cursor-pointer bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200 rounded-lg hover:bg-gray-300 dark:hover:bg-gray-600 transition-all"
-                onClick={() => setSelectedQuestion(null)}
-              >
+                onClick={() => setSelectedQuestion(null)}>
                 Cancel
               </AlertDialogCancel>
               <AlertDialogAction
                 className="px-4 py-2 bg-red-500 text-white rounded-lg cursor-pointer hover:bg-red-600 transition-all"
-                onClick={handleDelete}
-              >
+                onClick={handleDelete}>
                 Delete
               </AlertDialogAction>
             </AlertDialogFooter>

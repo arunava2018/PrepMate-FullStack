@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
-import { Linkedin, Github, Briefcase, Share2 } from "lucide-react";
-import { fetchExperienceById } from "@/db/apiInterviewExperience";
-import MarkdownRenderer from "@/components/MarkdownRenderer";
-import { toast } from "sonner";
-import { Skeleton } from "@/components/ui/skeleton";
+import React, { useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
+import { Linkedin, Github, Briefcase, Share2 } from 'lucide-react';
+import { fetchExperienceById } from '@/db/apiInterviewExperience';
+import MarkdownRenderer from '@/components/MarkdownRenderer';
+import { toast } from 'sonner';
+import { Skeleton } from '@/components/ui/skeleton';
 
 export default function ExperienceDetails() {
   const { experienceId } = useParams();
@@ -17,7 +17,7 @@ export default function ExperienceDetails() {
         const data = await fetchExperienceById(experienceId);
         setExperience(data);
       } catch (err) {
-        console.error("Failed to fetch experience:", err);
+        console.error('Failed to fetch experience:', err);
       } finally {
         setLoading(false);
       }
@@ -29,16 +29,16 @@ export default function ExperienceDetails() {
   const handleShare = async () => {
     try {
       await navigator.clipboard.writeText(window.location.href);
-      toast.success("Link copied to clipboard!");
+      toast.success('Link copied to clipboard!');
     } catch (err) {
-      console.error("Failed to copy:", err);
-      toast.error("Failed to copy link");
+      console.error('Failed to copy:', err);
+      toast.error('Failed to copy link');
     }
   };
 
   // Avatar initials
   const getInitials = (name) => {
-    const parts = name.trim().split(" ");
+    const parts = name.trim().split(' ');
     if (parts.length === 1) return parts[0].charAt(0).toUpperCase();
     return (
       parts[0].charAt(0).toUpperCase() +
@@ -84,7 +84,8 @@ export default function ExperienceDetails() {
           Experience Not Found
         </h2>
         <p className="text-gray-600 dark:text-gray-400">
-          The interview experience you're looking for doesn't exist or has been removed.
+          The interview experience you're looking for doesn't exist or has been
+          removed.
         </p>
       </div>
     );
@@ -102,14 +103,16 @@ export default function ExperienceDetails() {
   } = experience;
 
   // Anonymity check
-  const userName = is_anonymous ? "Anonymous User" : users?.full_name || "Unknown User";
-  const avatarInitials = is_anonymous ? "A" : getInitials(userName);
+  const userName = is_anonymous
+    ? 'Anonymous User'
+    : users?.full_name || 'Unknown User';
+  const avatarInitials = is_anonymous ? 'A' : getInitials(userName);
 
   const createdDate = created_at
-    ? new Date(created_at).toLocaleDateString("en-US", {
-        year: "numeric",
-        month: "long",
-        day: "numeric",
+    ? new Date(created_at).toLocaleDateString('en-US', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
       })
     : null;
 
@@ -134,8 +137,7 @@ export default function ExperienceDetails() {
           {/* Share button */}
           <button
             onClick={handleShare}
-            className="flex items-center justify-center rounded-md bg-amber-500 text-white hover:bg-amber-600 transition px-3 py-2 text-sm font-medium"
-          >
+            className="flex items-center justify-center rounded-md bg-amber-500 text-white hover:bg-amber-600 transition px-3 py-2 text-sm font-medium">
             <Share2 className="w-5 h-5 block sm:hidden" />
             <span className="hidden sm:flex items-center gap-2">
               <Share2 className="w-4 h-4" /> Share
@@ -160,8 +162,7 @@ export default function ExperienceDetails() {
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300"
-                  title="LinkedIn"
-                >
+                  title="LinkedIn">
                   <Linkedin className="w-5 h-5" />
                 </a>
               )}
@@ -171,8 +172,7 @@ export default function ExperienceDetails() {
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-gray-700 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white"
-                  title="GitHub"
-                >
+                  title="GitHub">
                   <Github className="w-5 h-5" />
                 </a>
               )}

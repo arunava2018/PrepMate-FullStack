@@ -1,18 +1,18 @@
-import React, { useState, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import React, { useState, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 
-import useFetch from "@/hooks/useFetch";
-import { getSubjects } from "@/db/apiSubjects";
-import { addSubtopic } from "@/db/apiSubtopic";
+import useFetch from '@/hooks/useFetch';
+import { getSubjects } from '@/db/apiSubjects';
+import { addSubtopic } from '@/db/apiSubtopic';
 
 function Addsubtopic() {
   // ✅ Use subjectId instead of subject name
-  const [form, setForm] = useState({ subjectId: "", name: "" });
-  const [successMsg, setSuccessMsg] = useState("");
+  const [form, setForm] = useState({ subjectId: '', name: '' });
+  const [successMsg, setSuccessMsg] = useState('');
 
   const { data, loading, error, fn: fnSubjects } = useFetch(getSubjects);
   const { loading: load, fn: fnSubtopic } = useFetch(addSubtopic);
@@ -29,15 +29,17 @@ function Addsubtopic() {
     e.preventDefault();
     const res = await fnSubtopic(form); // ✅ form = { subjectId, name }
     if (res) {
-      setSuccessMsg(`Subtopic "${res.subtopic.name}" has been successfully added.`);
-      setForm({ subjectId: "", name: "" }); // reset
+      setSuccessMsg(
+        `Subtopic "${res.subtopic.name}" has been successfully added.`
+      );
+      setForm({ subjectId: '', name: '' }); // reset
     }
   };
 
   // Auto-dismiss alerts after 2.5s
   useEffect(() => {
     if (successMsg || error) {
-      const timer = setTimeout(() => setSuccessMsg(""), 2500);
+      const timer = setTimeout(() => setSuccessMsg(''), 2500);
       return () => clearTimeout(timer);
     }
   }, [successMsg, error]);
@@ -47,8 +49,7 @@ function Addsubtopic() {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4 }}
-      className="max-w-2xl mx-auto mt-10"
-    >
+      className="max-w-2xl mx-auto mt-10">
       <Card className="shadow-lg bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700">
         <CardHeader>
           <CardTitle className="text-2xl font-bold text-gray-900 dark:text-gray-100 text-center">
@@ -68,8 +69,7 @@ function Addsubtopic() {
                 value={form.subjectId}
                 onChange={handleChange}
                 required
-                className="w-full p-2 border rounded-lg bg-gray-50 dark:bg-gray-900 dark:text-gray-100"
-              >
+                className="w-full p-2 border rounded-lg bg-gray-50 dark:bg-gray-900 dark:text-gray-100">
                 <option value="">Select Subject</option>
                 {Array.isArray(data) &&
                   data.map(({ id, name }) => (
@@ -102,8 +102,7 @@ function Addsubtopic() {
                   initial={{ opacity: 0, y: -10 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -10 }}
-                  transition={{ duration: 0.3 }}
-                >
+                  transition={{ duration: 0.3 }}>
                   <Alert className="bg-green-50 border-green-500 dark:bg-green-900/20">
                     <AlertTitle className="text-green-700 dark:text-green-400">
                       ✅ Success
@@ -120,8 +119,7 @@ function Addsubtopic() {
                   initial={{ opacity: 0, y: -10 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -10 }}
-                  transition={{ duration: 0.3 }}
-                >
+                  transition={{ duration: 0.3 }}>
                   <Alert className="bg-red-50 border-red-500 dark:bg-red-900/20">
                     <AlertTitle className="text-red-700 dark:text-red-400">
                       ❌ Error
@@ -138,9 +136,8 @@ function Addsubtopic() {
             <Button
               type="submit"
               disabled={load}
-              className="w-full bg-yellow-500 hover:bg-yellow-600 text-white font-semibold px-4 py-2 rounded-lg transition-colors disabled:opacity-50 cursor-pointer"
-            >
-              {load ? "Saving..." : "Add Subtopic"}
+              className="w-full bg-yellow-500 hover:bg-yellow-600 text-white font-semibold px-4 py-2 rounded-lg transition-colors disabled:opacity-50 cursor-pointer">
+              {load ? 'Saving...' : 'Add Subtopic'}
             </Button>
           </form>
         </CardContent>

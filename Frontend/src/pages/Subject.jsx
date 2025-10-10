@@ -1,11 +1,11 @@
-import React from 'react'
-import SubjectContainer from '@/components/Subject/SubjectContainer'
+import React from 'react';
+import SubjectContainer from '@/components/Subject/SubjectContainer';
 function Subject() {
   return (
     <div>
-      <SubjectContainer/>
+      <SubjectContainer />
     </div>
-  )
+  );
 }
 
-export default Subject
+export default Subject;

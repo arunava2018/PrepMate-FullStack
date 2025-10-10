@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link } from 'react-router-dom';
 
 export default function CookiePolicy() {
   return (
@@ -17,9 +17,7 @@ export default function CookiePolicy() {
 
           {/* How we use cookies */}
           <div>
-            <h2 className="text-2xl font-semibold mb-3">
-              How We Use Cookies
-            </h2>
+            <h2 className="text-2xl font-semibold mb-3">How We Use Cookies</h2>
             <p className="text-muted-foreground leading-relaxed mb-4">
               PrepMate uses cookies to:
             </p>
@@ -68,11 +66,8 @@ export default function CookiePolicy() {
           <div>
             <h2 className="text-2xl font-semibold mb-3">Contact Us</h2>
             <p className="text-muted-foreground leading-relaxed">
-              If you have any questions about our Cookie Policy, please{" "}
-              <Link
-                to="/contact-us"
-                className="text-primary hover:underline"
-              >
+              If you have any questions about our Cookie Policy, please{' '}
+              <Link to="/contact-us" className="text-primary hover:underline">
                 contact us
               </Link>
               .

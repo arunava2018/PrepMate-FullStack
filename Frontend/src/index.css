@@ -1,5 +1,5 @@
-@import "tailwindcss";
-@import "tw-animate-css";
+@import 'tailwindcss';
+@import 'tw-animate-css';
 
 @custom-variant dark (&:is(.dark *));
 @tailwind utilities;
@@ -9,7 +9,10 @@ html {
 body {
   @apply font-sans antialiased text-neutral-800 dark:text-neutral-100 leading-relaxed;
 }
-h1, h2, h3, h4 {
+h1,
+h2,
+h3,
+h4 {
   @apply font-bold tracking-tight;
 }
 
@@ -119,11 +122,6 @@ h1, h2, h3, h4 {
   --sidebar-border: oklch(1 0 0 / 10%);
   --sidebar-ring: oklch(0.554 0.135 66.442);
 }
-
-
-
-
-
 
 @layer base {
   * {

@@ -1,8 +1,8 @@
 // GuestRoute.jsx
-import { useEffect, useState } from "react";
-import { Navigate } from "react-router-dom";
-import { UrlState } from "@/context";
-import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert";
+import { useEffect, useState } from 'react';
+import { Navigate } from 'react-router-dom';
+import { UrlState } from '@/context';
+import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert';
 
 export default function GuestRoute({ children }) {
   const { user, loading } = UrlState();

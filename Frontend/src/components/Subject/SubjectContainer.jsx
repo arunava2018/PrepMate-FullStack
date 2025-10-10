@@ -1,17 +1,17 @@
 // src/pages/Subject.jsx
-import { useParams } from "react-router-dom";
-import { useState, useEffect } from "react";
-import { motion } from "framer-motion";
-import useFetch from "@/hooks/useFetch";
-import { getSubjectById } from "@/db/apiSubjects";
-import { fetchSubtopics } from "@/db/apiSubtopic";
-import { fetchQuestions } from "@/db/apiQuestion";
-import { getProgress } from "@/db/apiProgress";
-import Loader from "@/components/Loader";
-import ProgressCard from "@/components/Subject/ProgressCard";
-import { getIcon } from "@/utils/iconmap";
-import { UrlState } from "@/context";
-import SubtopicAccordion from "@/components/Subject/SubtopicAccordion";
+import { useParams } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import { motion } from 'framer-motion';
+import useFetch from '@/hooks/useFetch';
+import { getSubjectById } from '@/db/apiSubjects';
+import { fetchSubtopics } from '@/db/apiSubtopic';
+import { fetchQuestions } from '@/db/apiQuestion';
+import { getProgress } from '@/db/apiProgress';
+import Loader from '@/components/Loader';
+import ProgressCard from '@/components/Subject/ProgressCard';
+import { getIcon } from '@/utils/iconmap';
+import { UrlState } from '@/context';
+import SubtopicAccordion from '@/components/Subject/SubtopicAccordion';
 
 function SubjectContainer() {
   const { id } = useParams(); // ✅ subjectId from URL (UUID)
@@ -23,7 +23,8 @@ function SubjectContainer() {
   const [openSubtopic, setOpenSubtopic] = useState(null);
   const [progressData, setProgressData] = useState(null);
 
-  const { loading: subjectLoading, fn: fetchSubject } = useFetch(getSubjectById);
+  const { loading: subjectLoading, fn: fetchSubject } =
+    useFetch(getSubjectById);
 
   // Fetch subject
   useEffect(() => {
@@ -52,7 +53,7 @@ function SubjectContainer() {
         }
         setQuestions(allQuestions);
       } catch (err) {
-        console.error("Failed to fetch subtopics:", err);
+        console.error('Failed to fetch subtopics:', err);
         setSubtopics([]); // fallback
       }
     };
@@ -69,7 +70,7 @@ function SubjectContainer() {
         const data = await getProgress(user.id, id);
         setProgressData(data);
       } catch (err) {
-        console.error("Failed to fetch progress:", err);
+        console.error('Failed to fetch progress:', err);
         setProgressData({ progress: 0, completedQ: 0, totalQ: 0 });
       }
     };
@@ -86,14 +87,12 @@ function SubjectContainer() {
     <motion.div
       className="max-w-5xl mx-auto px-6 py-8"
       initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-    >
+      animate={{ opacity: 1, y: 0 }}>
       {/* Header */}
       <div className="flex items-center gap-4 mb-6">
         <motion.div
           whileHover={{ scale: 1.1, rotate: 5 }}
-          className="p-3 bg-gradient-to-br from-yellow-400 to-yellow-600 rounded-2xl shadow-lg"
-        >
+          className="p-3 bg-gradient-to-br from-yellow-400 to-yellow-600 rounded-2xl shadow-lg">
           <Icon className="w-8 h-8 text-white" />
         </motion.div>
         <h1 className="text-4xl font-bold text-gray-800 dark:text-gray-100">

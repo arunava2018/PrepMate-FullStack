@@ -1,14 +1,14 @@
-import { UrlState } from "@/context";
-import { getProgress } from "@/db/apiProgress";
-import { getSubjects } from "@/db/apiSubjects";
-import useFetch from "@/hooks/useFetch";
-import React, { useEffect, useState } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { motion } from "framer-motion";
-import { Activity,UserPlus, LogIn} from "lucide-react";
-import { useNavigate } from "react-router-dom";
-import { getStats } from "@/constants";
+import { UrlState } from '@/context';
+import { getProgress } from '@/db/apiProgress';
+import { getSubjects } from '@/db/apiSubjects';
+import useFetch from '@/hooks/useFetch';
+import React, { useEffect, useState } from 'react';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { motion } from 'framer-motion';
+import { Activity, UserPlus, LogIn } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import { getStats } from '@/constants';
 function DashboardInfo() {
   const { user } = UrlState();
   const navigate = useNavigate();
@@ -16,7 +16,12 @@ function DashboardInfo() {
   const [totalSubjects, setTotalSubjects] = useState(0);
   const [avgProgressPercentage, setAvgProgressPercentage] = useState(0);
   const [completedQuestions, setCompletedQuestions] = useState(0);
-  const stats = getStats({ totalSubjects, totalQuestions, completedQuestions, avgProgressPercentage });
+  const stats = getStats({
+    totalSubjects,
+    totalQuestions,
+    completedQuestions,
+    avgProgressPercentage,
+  });
   const {
     data: subjects,
     loading,
@@ -32,10 +37,13 @@ function DashboardInfo() {
 
   useEffect(() => {
     if (subjects && user?.id) {
-      const totalQ = subjects.reduce((acc, subj) => acc + (subj.question_count || 0), 0);
+      const totalQ = subjects.reduce(
+        (acc, subj) => acc + (subj.question_count || 0),
+        0
+      );
       setTotalQuestions(totalQ);
       setTotalSubjects(subjects.length);
-      
+
       let totalCompletedQuestions = 0;
       const fetchProgress = async () => {
         await Promise.all(
@@ -44,9 +52,10 @@ function DashboardInfo() {
             totalCompletedQuestions += data?.completedQ || 0;
           })
         );
-        
+
         setCompletedQuestions(totalCompletedQuestions);
-        const avgProgress = totalQ > 0 ? (totalCompletedQuestions / totalQ) * 100 : 0;
+        const avgProgress =
+          totalQ > 0 ? (totalCompletedQuestions / totalQ) * 100 : 0;
         setAvgProgressPercentage(avgProgress.toFixed(1));
       };
       fetchProgress();
@@ -59,7 +68,7 @@ function DashboardInfo() {
       <div className="mb-6">
         <Card className="relative bg-white dark:bg-gray-800 border border-yellow-200 dark:border-yellow-800/50 rounded-xl shadow-lg overflow-hidden">
           <div className="absolute inset-0 bg-gradient-to-br from-yellow-50 dark:from-yellow-900/20 to-transparent" />
-          
+
           <CardContent className="relative z-10 p-6">
             <div className="flex flex-col sm:flex-row items-center gap-4">
               <div className="w-12 h-12 bg-gradient-to-br from-yellow-400 to-yellow-500 rounded-full flex items-center justify-center shadow-lg shrink-0">
@@ -71,15 +80,15 @@ function DashboardInfo() {
                   Track Your Learning Progress
                 </h3>
                 <p className="text-sm text-gray-600 dark:text-gray-300 mb-3">
-                  Create an account to access detailed analytics and track your progress across subjects.
+                  Create an account to access detailed analytics and track your
+                  progress across subjects.
                 </p>
-                
+
                 <div className="flex flex-wrap gap-2 justify-center sm:justify-start">
                   <Button
                     onClick={() => navigate('/auth/signup')}
                     size="sm"
-                    className="bg-gradient-to-r from-yellow-400 to-yellow-500 hover:from-yellow-500 hover:to-yellow-600 text-white font-semibold px-4 py-2 rounded-lg text-xs"
-                  >
+                    className="bg-gradient-to-r from-yellow-400 to-yellow-500 hover:from-yellow-500 hover:to-yellow-600 text-white font-semibold px-4 py-2 rounded-lg text-xs">
                     <UserPlus className="w-3 h-3 mr-1" />
                     Sign Up
                   </Button>
@@ -88,8 +97,7 @@ function DashboardInfo() {
                     onClick={() => navigate('/auth/login')}
                     variant="outline"
                     size="sm"
-                    className="border border-yellow-400 hover:border-yellow-500 text-yellow-600 dark:text-yellow-400 hover:bg-yellow-50 dark:hover:bg-yellow-900/20 font-semibold px-4 py-2 rounded-lg text-xs"
-                  >
+                    className="border border-yellow-400 hover:border-yellow-500 text-yellow-600 dark:text-yellow-400 hover:bg-yellow-50 dark:hover:bg-yellow-900/20 font-semibold px-4 py-2 rounded-lg text-xs">
                     <LogIn className="w-3 h-3 mr-1" />
                     Sign In
                   </Button>
@@ -122,23 +130,43 @@ function DashboardInfo() {
     return (
       <div className="relative">
         <svg width={size} height={size} className="transform -rotate-90">
-          <circle cx={size / 2} cy={size / 2} r={radius} fill="transparent" stroke="rgb(229, 231, 235)" strokeWidth={strokeWidth} />
+          <circle
+            cx={size / 2}
+            cy={size / 2}
+            r={radius}
+            fill="transparent"
+            stroke="rgb(229, 231, 235)"
+            strokeWidth={strokeWidth}
+          />
           <motion.circle
-            cx={size / 2} cy={size / 2} r={radius} fill="transparent" stroke="url(#progressGradient)"
-            strokeWidth={strokeWidth} strokeLinecap="round" strokeDasharray={circumference}
+            cx={size / 2}
+            cy={size / 2}
+            r={radius}
+            fill="transparent"
+            stroke="url(#progressGradient)"
+            strokeWidth={strokeWidth}
+            strokeLinecap="round"
+            strokeDasharray={circumference}
             initial={{ strokeDashoffset: circumference }}
             animate={{ strokeDashoffset }}
-            transition={{ duration: 1.5, ease: "easeOut" }}
+            transition={{ duration: 1.5, ease: 'easeOut' }}
           />
           <defs>
-            <linearGradient id="progressGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+            <linearGradient
+              id="progressGradient"
+              x1="0%"
+              y1="0%"
+              x2="100%"
+              y2="100%">
               <stop offset="0%" stopColor="#facc15" />
               <stop offset="100%" stopColor="#eab308" />
             </linearGradient>
           </defs>
         </svg>
         <div className="absolute inset-0 flex items-center justify-center">
-          <span className="text-sm font-black text-gray-800 dark:text-white">{percentage}%</span>
+          <span className="text-sm font-black text-gray-800 dark:text-white">
+            {percentage}%
+          </span>
         </div>
       </div>
     );
@@ -147,7 +175,9 @@ function DashboardInfo() {
     return (
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
         {[...Array(4)].map((_, index) => (
-          <Card key={index} className="bg-white/70 dark:bg-gray-800/70 border border-gray-200/50 dark:border-gray-700/50 rounded-xl animate-pulse h-24">
+          <Card
+            key={index}
+            className="bg-white/70 dark:bg-gray-800/70 border border-gray-200/50 dark:border-gray-700/50 rounded-xl animate-pulse h-24">
             <CardContent className="p-4">
               <div className="flex items-center justify-between mb-2">
                 <div className="h-3 bg-gray-200 dark:bg-gray-700 rounded w-20"></div>
@@ -166,8 +196,12 @@ function DashboardInfo() {
       <Card className="bg-red-100/70 dark:bg-red-900/30 border border-red-200/50 dark:border-red-800/30 rounded-xl mb-6">
         <CardContent className="p-6 text-center">
           <Activity className="w-8 h-8 text-red-500 mx-auto mb-2" />
-          <h3 className="text-lg font-bold text-gray-800 dark:text-white mb-1">Unable to Load Dashboard</h3>
-          <p className="text-sm text-gray-600 dark:text-gray-300">There was an error loading your progress data.</p>
+          <h3 className="text-lg font-bold text-gray-800 dark:text-white mb-1">
+            Unable to Load Dashboard
+          </h3>
+          <p className="text-sm text-gray-600 dark:text-gray-300">
+            There was an error loading your progress data.
+          </p>
         </CardContent>
       </Card>
     );
@@ -177,36 +211,55 @@ function DashboardInfo() {
     <div className="mb-6">
       {/* Compact Header */}
       <div className="text-center mb-6">
-        <h2 className="text-2xl font-bold text-gray-800 dark:text-gray-100 mb-1">Dashboard Overview</h2>
-        <p className="text-sm text-gray-600 dark:text-gray-400">Track your learning progress and achievements</p>
+        <h2 className="text-2xl font-bold text-gray-800 dark:text-gray-100 mb-1">
+          Dashboard Overview
+        </h2>
+        <p className="text-sm text-gray-600 dark:text-gray-400">
+          Track your learning progress and achievements
+        </p>
       </div>
 
       {/* Compact Stats Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
         {stats.map((stat, index) => (
-          <Card key={stat.title} className={`relative ${stat.bgColor} backdrop-blur-sm border ${stat.borderColor} rounded-xl shadow-lg overflow-hidden group transition-all hover:shadow-xl hover:scale-105`}>
+          <Card
+            key={stat.title}
+            className={`relative ${stat.bgColor} backdrop-blur-sm border ${stat.borderColor} rounded-xl shadow-lg overflow-hidden group transition-all hover:shadow-xl hover:scale-105`}>
             <CardHeader className="pb-2">
               <div className="flex items-center justify-between">
-                <CardTitle className="text-gray-600 dark:text-gray-300 text-xs font-medium">{stat.title}</CardTitle>
-                <div className={`p-2 bg-gradient-to-r ${stat.gradient} rounded-lg shadow-md`}>
+                <CardTitle className="text-gray-600 dark:text-gray-300 text-xs font-medium">
+                  {stat.title}
+                </CardTitle>
+                <div
+                  className={`p-2 bg-gradient-to-r ${stat.gradient} rounded-lg shadow-md`}>
                   <stat.icon className="w-4 h-4 text-white" />
                 </div>
               </div>
             </CardHeader>
-            
+
             <CardContent className="pt-0">
               {stat.isProgress ? (
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-2xl font-black text-gray-800 dark:text-gray-100">{stat.value}</p>
-                    <p className="text-xs text-gray-600 dark:text-gray-400">{stat.description}</p>
+                    <p className="text-2xl font-black text-gray-800 dark:text-gray-100">
+                      {stat.value}
+                    </p>
+                    <p className="text-xs text-gray-600 dark:text-gray-400">
+                      {stat.description}
+                    </p>
                   </div>
-                  <CircularProgress percentage={parseFloat(avgProgressPercentage)} />
+                  <CircularProgress
+                    percentage={parseFloat(avgProgressPercentage)}
+                  />
                 </div>
               ) : (
                 <div>
-                  <p className="text-2xl font-black text-gray-800 dark:text-gray-100 mb-1">{stat.value}</p>
-                  <p className="text-xs text-gray-600 dark:text-gray-400">{stat.description}</p>
+                  <p className="text-2xl font-black text-gray-800 dark:text-gray-100 mb-1">
+                    {stat.value}
+                  </p>
+                  <p className="text-xs text-gray-600 dark:text-gray-400">
+                    {stat.description}
+                  </p>
                 </div>
               )}
             </CardContent>

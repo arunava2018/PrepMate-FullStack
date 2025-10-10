@@ -1,24 +1,24 @@
 // useExperienceForm.js
-import { useState } from "react";
-import { addInterviewExperience } from "@/db/apiInterviewExperience";
-import { UrlState } from "@/context";
+import { useState } from 'react';
+import { addInterviewExperience } from '@/db/apiInterviewExperience';
+import { UrlState } from '@/context';
 
 export const useExperienceForm = () => {
   const { user } = UrlState();
 
   const [formData, setFormData] = useState({
-    user_name: user?.name || "",
-    company: "",
-    offer_type: "",
-    opportunity_type: "",
-    position: "",
-    linkedin: "",
-    github: "",
+    user_name: user?.name || '',
+    company: '',
+    offer_type: '',
+    opportunity_type: '',
+    position: '',
+    linkedin: '',
+    github: '',
     is_public: false,
     is_anonymous: false,
   });
 
-  const [experience, setExperience] = useState("");
+  const [experience, setExperience] = useState('');
   const [errors, setErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
@@ -37,52 +37,52 @@ export const useExperienceForm = () => {
   // Field validation
   // -------------------------
   const validateField = (name, value) => {
-    let error = "";
+    let error = '';
 
     switch (name) {
-      case "company":
+      case 'company':
         if (!value.trim()) {
-          error = "Company name is required";
+          error = 'Company name is required';
         } else if (value.trim().length < 2) {
-          error = "Company name must be at least 2 characters long";
+          error = 'Company name must be at least 2 characters long';
         }
         break;
 
-      case "offer_type":
+      case 'offer_type':
         if (!value) {
-          error = "Please select an offer type";
+          error = 'Please select an offer type';
         }
         break;
 
-      case "opportunity_type":
+      case 'opportunity_type':
         if (!value) {
-          error = "Please select an opportunity type";
+          error = 'Please select an opportunity type';
         }
         break;
 
-      case "position":
+      case 'position':
         if (!value.trim()) {
-          error = "Position is required";
+          error = 'Position is required';
         } else if (value.trim().length < 2) {
-          error = "Position must be at least 2 characters long";
+          error = 'Position must be at least 2 characters long';
         }
         break;
 
-      case "linkedin":
+      case 'linkedin':
         if (value && !validateURL(value)) {
           error =
-            "Please enter a valid LinkedIn URL (e.g., https://linkedin.com/in/yourprofile)";
-        } else if (value && !value.includes("linkedin.com")) {
-          error = "Please provide a LinkedIn profile URL";
+            'Please enter a valid LinkedIn URL (e.g., https://linkedin.com/in/yourprofile)';
+        } else if (value && !value.includes('linkedin.com')) {
+          error = 'Please provide a LinkedIn profile URL';
         }
         break;
 
-      case "github":
+      case 'github':
         if (value && !validateURL(value)) {
           error =
-            "Please enter a valid GitHub URL (e.g., https://github.com/yourusername)";
-        } else if (value && !value.includes("github.com")) {
-          error = "Please provide a GitHub profile URL";
+            'Please enter a valid GitHub URL (e.g., https://github.com/yourusername)';
+        } else if (value && !value.includes('github.com')) {
+          error = 'Please provide a GitHub profile URL';
         }
         break;
 
@@ -98,12 +98,12 @@ export const useExperienceForm = () => {
   // -------------------------
   const validateExperience = (content) => {
     if (!content || !content.trim()) {
-      return "Interview experience is required";
+      return 'Interview experience is required';
     }
     if (content.trim().length < 50) {
-      return "Please provide a detailed experience (at least 50 characters)";
+      return 'Please provide a detailed experience (at least 50 characters)';
     }
-    return "";
+    return '';
   };
 
   // -------------------------
@@ -155,16 +155,16 @@ export const useExperienceForm = () => {
 
   const resetForm = (editorRef) => {
     setFormData({
-      company: "",
-      position: "",
-      linkedin: "",
-      github: "",
-      offer_type: "",
-      opportunity_type: "",
+      company: '',
+      position: '',
+      linkedin: '',
+      github: '',
+      offer_type: '',
+      opportunity_type: '',
       is_public: false,
       is_anonymous: false,
     });
-    setExperience("");
+    setExperience('');
     if (editorRef?.current?.clearEditor) {
       editorRef.current.clearEditor();
     }
@@ -183,7 +183,7 @@ export const useExperienceForm = () => {
         setIsSubmitting(false);
 
         const firstErrorField = Object.keys(errors)[0];
-        if (firstErrorField === "experience" && editorRef?.current) {
+        if (firstErrorField === 'experience' && editorRef?.current) {
           editorRef.current.focus();
         } else {
           const field = document.querySelector(`[name="${firstErrorField}"]`);
@@ -202,8 +202,8 @@ export const useExperienceForm = () => {
         offer_type: formData.offer_type,
         opportunity_type: formData.opportunity_type,
         content: experience,
-        is_public: false,   // always false on submit
-        is_anonymous: isAnonymous,    // direct from dialog
+        is_public: false, // always false on submit
+        is_anonymous: isAnonymous, // direct from dialog
       });
 
       resetForm(editorRef);
@@ -211,11 +211,11 @@ export const useExperienceForm = () => {
 
       setTimeout(() => {
         setShowSuccess(false);
-        window.location.href = "/"; // ✅ redirect after toast
+        window.location.href = '/'; // ✅ redirect after toast
       }, 5000);
     } catch (error) {
-      console.error("Submission error:", error);
-      setErrors({ submit: "Failed to submit experience. Please try again." });
+      console.error('Submission error:', error);
+      setErrors({ submit: 'Failed to submit experience. Please try again.' });
     } finally {
       setIsSubmitting(false);
     }

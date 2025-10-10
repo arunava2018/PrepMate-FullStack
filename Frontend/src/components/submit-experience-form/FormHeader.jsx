@@ -1,4 +1,4 @@
-import { Share2 } from "lucide-react";
+import { Share2 } from 'lucide-react';
 
 const FormHeader = () => {
   return (

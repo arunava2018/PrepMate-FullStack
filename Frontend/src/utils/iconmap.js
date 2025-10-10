@@ -10,8 +10,8 @@ import {
   Cloud,
   GitBranch,
   Book,
-  Shapes
-} from "lucide-react";
+  Shapes,
+} from 'lucide-react';
 
 // Centralized icon map
 export const iconMap = {
@@ -26,7 +26,7 @@ export const iconMap = {
   cloud: Cloud,
   gitbranch: GitBranch,
   shapes: Shapes,
-  book: Book
+  book: Book,
 };
 
 // Helper function: pick icon or default

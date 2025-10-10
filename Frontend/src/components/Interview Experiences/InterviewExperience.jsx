@@ -1,14 +1,19 @@
-import { fetchPublicInterviewExperiences } from "@/db/apiInterviewExperience";
-import useFetch from "@/hooks/useFetch";
-import React, { useEffect, useState } from "react";
-import Loader from "../Loader";
-import { Card, CardContent } from "../ui/card";
-import { FileText } from "lucide-react";
-import CompanyExperienceSection from "./CompanyExperienceSection";
-import ExperienceStats from "./ExperienceStats";
+import { fetchPublicInterviewExperiences } from '@/db/apiInterviewExperience';
+import useFetch from '@/hooks/useFetch';
+import React, { useEffect, useState } from 'react';
+import Loader from '../Loader';
+import { Card, CardContent } from '../ui/card';
+import { FileText } from 'lucide-react';
+import CompanyExperienceSection from './CompanyExperienceSection';
+import ExperienceStats from './ExperienceStats';
 
 function InterviewExperience() {
-  const { data, loading, error, fn: fetchExperience } = useFetch(fetchPublicInterviewExperiences);
+  const {
+    data,
+    loading,
+    error,
+    fn: fetchExperience,
+  } = useFetch(fetchPublicInterviewExperiences);
   const [groupedExperiences, setGroupedExperiences] = useState({});
 
   useEffect(() => {

@@ -1,11 +1,11 @@
-import ExperienceForm from '@/components/submit-experience-form/ExperienceForm'
-import React from 'react'
+import ExperienceForm from '@/components/submit-experience-form/ExperienceForm';
+import React from 'react';
 function InterviewExperience() {
   return (
     <div>
-        <ExperienceForm />
+      <ExperienceForm />
     </div>
-  )
+  );
 }
 
-export default InterviewExperience
+export default InterviewExperience;

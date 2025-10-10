@@ -1,17 +1,17 @@
-import { useEffect, useState } from "react";
-import { fetchUnpublishedInterviewExperiences } from "@/db/apiInterviewExperience";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Skeleton } from "@/components/ui/skeleton";
+import { useEffect, useState } from 'react';
+import { fetchUnpublishedInterviewExperiences } from '@/db/apiInterviewExperience';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { Skeleton } from '@/components/ui/skeleton';
 import {
   ChevronDown,
   Building2,
   RefreshCw,
   CheckCircle,
   User,
-} from "lucide-react";
-import ApprovalModal from "./ApprovalModal";
+} from 'lucide-react';
+import ApprovalModal from './ApprovalModal';
 
 export default function ApproveExperiences() {
   const [experiences, setExperiences] = useState([]);
@@ -25,7 +25,7 @@ export default function ApproveExperiences() {
       const res = await fetchUnpublishedInterviewExperiences();
       setExperiences(res);
     } catch (err) {
-      console.error("Error fetching experiences:", err);
+      console.error('Error fetching experiences:', err);
     } finally {
       setLoading(false);
     }
@@ -60,9 +60,8 @@ export default function ApproveExperiences() {
             onClick={fetchData}
             disabled={loading}
             variant="outline"
-            className="gap-2"
-          >
-            <RefreshCw className={`w-4 h-4 ${loading ? "animate-spin" : ""}`} />
+            className="gap-2">
+            <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
             Refresh
           </Button>
         </div>
@@ -97,16 +96,14 @@ export default function ApproveExperiences() {
             ([company, companyExperiences]) => (
               <Card
                 key={company}
-                className="bg-card border border-border rounded-xl"
-              >
+                className="bg-card border border-border rounded-xl">
                 <CardHeader
                   onClick={() =>
                     setExpandedCompany((prev) =>
                       prev === company ? null : company
                     )
                   }
-                  className="cursor-pointer flex justify-between items-center rounded-t-xl"
-                >
+                  className="cursor-pointer flex justify-between items-center rounded-t-xl">
                   <CardTitle className="flex items-center gap-2 text-foreground">
                     <Building2 className="w-5 h-5 text-primary" />
                     {company}
@@ -116,7 +113,7 @@ export default function ApproveExperiences() {
                   </CardTitle>
                   <ChevronDown
                     className={`w-5 h-5 text-muted-foreground transition-transform ${
-                      expandedCompany === company ? "rotate-180" : ""
+                      expandedCompany === company ? 'rotate-180' : ''
                     }`}
                   />
                 </CardHeader>
@@ -126,8 +123,7 @@ export default function ApproveExperiences() {
                     {companyExperiences.map((exp, idx) => (
                       <div
                         key={exp.id}
-                        className="flex justify-between items-center bg-muted p-4 rounded-lg border border-border"
-                      >
+                        className="flex justify-between items-center bg-muted p-4 rounded-lg border border-border">
                         <div className="flex items-center gap-3">
                           <span className="w-7 h-7 flex items-center justify-center rounded-full bg-primary text-primary-foreground text-sm font-bold">
                             {idx + 1}
@@ -135,14 +131,13 @@ export default function ApproveExperiences() {
                           <User className="w-5 h-5 text-muted-foreground" />
                           <p>
                             {exp.is_anonymous
-                              ? "Anonymous User"
-                              : exp.users?.full_name || "Unknown User"}
+                              ? 'Anonymous User'
+                              : exp.users?.full_name || 'Unknown User'}
                           </p>
                         </div>
                         <Button
                           onClick={() => setSelectedExp(exp)}
-                          className="bg-primary text-primary-foreground hover:bg-primary/90"
-                        >
+                          className="bg-primary text-primary-foreground hover:bg-primary/90">
                           <CheckCircle className="w-4 h-4 mr-2" />
                           Review & Approve
                         </Button>
