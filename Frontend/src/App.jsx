@@ -21,6 +21,7 @@ import InterviewExperience from './pages/InterviewExperience';
 import ViewInterviewExperience from './pages/ViewInterviewExperience';
 import ScrollToTop from './ScrollToTop';
 import ApproveInterviewExperiences from './pages/ApproveInterviewExperiences';
+import AdminAgentPanel from './components/Admin Control/AdminAgentPanel';
 import ExperienceDetails from './components/Interview Experiences/ExperienceDetails';
 import AboutUs from './pages/AboutUs';
 import CookiePolicy from './pages/CookiePolicy';
@@ -131,6 +132,14 @@ const router = createBrowserRouter([
         element: (
           <RequireAdmin>
             <ApproveInterviewExperiences />
+          </RequireAdmin>
+        ),
+      },
+      {
+        path: '/admin/aiAgent',
+        element: (
+          <RequireAdmin>
+            <AdminAgentPanel />
           </RequireAdmin>
         ),
       },

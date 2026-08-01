@@ -217,17 +217,17 @@ function Signup() {
           <Button
             type="submit"
             disabled={loading}
-            className="w-full mt-2 bg-yellow-600">
+            className="w-full mt-2 bg-primary hover:bg-primary/90 text-primary-foreground">
             {loading ? <BeatLoader size={10} color="#fff" /> : 'Signup'}
           </Button>
         </CardFooter>
       </form>
 
-      <p className="mx-auto mt-2">
+      <p className="mx-auto mt-2 pb-6 text-muted-foreground text-sm text-center">
         Already have an account?{' '}
         <span
           onClick={() => navigate('/auth/login')}
-          className="text-yellow-400 underline cursor-pointer">
+          className="text-primary underline cursor-pointer font-medium hover:text-primary/80">
           Login
         </span>
       </p>

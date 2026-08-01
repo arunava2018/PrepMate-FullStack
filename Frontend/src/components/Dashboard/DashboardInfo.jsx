@@ -66,20 +66,20 @@ function DashboardInfo() {
   if (!user?.id) {
     return (
       <div className="mb-6">
-        <Card className="relative bg-white dark:bg-gray-800 border border-yellow-200 dark:border-yellow-800/50 rounded-xl shadow-lg overflow-hidden">
-          <div className="absolute inset-0 bg-gradient-to-br from-yellow-50 dark:from-yellow-900/20 to-transparent" />
+        <Card className="relative bg-card border border-border rounded-xl shadow-sm overflow-hidden">
+          <div className="absolute inset-0 bg-muted/20" />
 
           <CardContent className="relative z-10 p-6">
             <div className="flex flex-col sm:flex-row items-center gap-4">
-              <div className="w-12 h-12 bg-gradient-to-br from-yellow-400 to-yellow-500 rounded-full flex items-center justify-center shadow-lg shrink-0">
-                <UserPlus className="w-6 h-6 text-white" />
+              <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center shrink-0">
+                <UserPlus className="w-6 h-6 text-primary" />
               </div>
 
               <div className="flex-1 text-center sm:text-left">
-                <h3 className="text-lg font-bold text-gray-800 dark:text-white mb-1">
+                <h3 className="text-lg font-bold text-foreground mb-1">
                   Track Your Learning Progress
                 </h3>
-                <p className="text-sm text-gray-600 dark:text-gray-300 mb-3">
+                <p className="text-sm text-muted-foreground mb-3">
                   Create an account to access detailed analytics and track your
                   progress across subjects.
                 </p>
@@ -88,7 +88,7 @@ function DashboardInfo() {
                   <Button
                     onClick={() => navigate('/auth/signup')}
                     size="sm"
-                    className="bg-gradient-to-r from-yellow-400 to-yellow-500 hover:from-yellow-500 hover:to-yellow-600 text-white font-semibold px-4 py-2 rounded-lg text-xs">
+                    className="bg-primary text-primary-foreground font-semibold px-4 py-2 rounded-md text-xs">
                     <UserPlus className="w-3 h-3 mr-1" />
                     Sign Up
                   </Button>
@@ -97,7 +97,7 @@ function DashboardInfo() {
                     onClick={() => navigate('/auth/login')}
                     variant="outline"
                     size="sm"
-                    className="border border-yellow-400 hover:border-yellow-500 text-yellow-600 dark:text-yellow-400 hover:bg-yellow-50 dark:hover:bg-yellow-900/20 font-semibold px-4 py-2 rounded-lg text-xs">
+                    className="border-border text-foreground hover:bg-muted font-semibold px-4 py-2 rounded-md text-xs">
                     <LogIn className="w-3 h-3 mr-1" />
                     Sign In
                   </Button>
@@ -106,12 +106,12 @@ function DashboardInfo() {
 
               <div className="hidden md:flex items-center gap-6 text-center shrink-0">
                 <div>
-                  <p className="text-lg font-bold text-yellow-600">10k+</p>
-                  <p className="text-xs text-gray-500">Questions</p>
+                  <p className="text-lg font-bold text-primary">10k+</p>
+                  <p className="text-xs text-muted-foreground">Questions</p>
                 </div>
                 <div>
-                  <p className="text-lg font-bold text-yellow-600">50+</p>
-                  <p className="text-xs text-gray-500">Subjects</p>
+                  <p className="text-lg font-bold text-primary">50+</p>
+                  <p className="text-xs text-muted-foreground">Subjects</p>
                 </div>
               </div>
             </div>
@@ -158,8 +158,8 @@ function DashboardInfo() {
               y1="0%"
               x2="100%"
               y2="100%">
-              <stop offset="0%" stopColor="#facc15" />
-              <stop offset="100%" stopColor="#eab308" />
+              <stop offset="0%" stopColor="hsl(var(--primary))" />
+              <stop offset="100%" stopColor="hsl(var(--primary))" />
             </linearGradient>
           </defs>
         </svg>
@@ -193,13 +193,13 @@ function DashboardInfo() {
 
   if (error) {
     return (
-      <Card className="bg-red-100/70 dark:bg-red-900/30 border border-red-200/50 dark:border-red-800/30 rounded-xl mb-6">
+      <Card className="bg-destructive/10 border border-destructive/20 rounded-xl mb-6">
         <CardContent className="p-6 text-center">
-          <Activity className="w-8 h-8 text-red-500 mx-auto mb-2" />
-          <h3 className="text-lg font-bold text-gray-800 dark:text-white mb-1">
+          <Activity className="w-8 h-8 text-destructive mx-auto mb-2" />
+          <h3 className="text-lg font-bold text-foreground mb-1">
             Unable to Load Dashboard
           </h3>
-          <p className="text-sm text-gray-600 dark:text-gray-300">
+          <p className="text-sm text-muted-foreground">
             There was an error loading your progress data.
           </p>
         </CardContent>
@@ -224,15 +224,15 @@ function DashboardInfo() {
         {stats.map((stat, index) => (
           <Card
             key={stat.title}
-            className={`relative ${stat.bgColor} backdrop-blur-sm border ${stat.borderColor} rounded-xl shadow-lg overflow-hidden group transition-all hover:shadow-xl hover:scale-105`}>
+            className={`relative ${stat.bgColor} border ${stat.borderColor} rounded-xl shadow-sm overflow-hidden group transition-all hover:border-primary/50`}>
             <CardHeader className="pb-2">
               <div className="flex items-center justify-between">
-                <CardTitle className="text-gray-600 dark:text-gray-300 text-xs font-medium">
+                <CardTitle className="text-muted-foreground text-xs font-medium">
                   {stat.title}
                 </CardTitle>
                 <div
-                  className={`p-2 bg-gradient-to-r ${stat.gradient} rounded-lg shadow-md`}>
-                  <stat.icon className="w-4 h-4 text-white" />
+                  className={`p-2 bg-primary/10 rounded-md`}>
+                  <stat.icon className="w-4 h-4 text-primary" />
                 </div>
               </div>
             </CardHeader>

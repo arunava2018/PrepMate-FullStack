@@ -2,15 +2,15 @@ import { Share2 } from 'lucide-react';
 
 const FormHeader = () => {
   return (
-    <div className="text-center mb-6">
-      <div className="w-10 h-10 bg-yellow-400 rounded-lg mx-auto mb-3 flex items-center justify-center">
-        <Share2 className="w-5 h-5 text-white" />
+    <div className="text-center mb-8">
+      <div className="w-12 h-12 bg-primary/10 rounded-xl mx-auto mb-4 flex items-center justify-center">
+        <Share2 className="w-6 h-6 text-primary" />
       </div>
-      <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-2">
+      <h2 className="text-2xl font-bold text-foreground mb-2">
         Share Your Interview Experience
       </h2>
-      <p className="text-gray-600 dark:text-gray-400 text-sm">
-        Help others by sharing your insights
+      <p className="text-muted-foreground text-sm max-w-md mx-auto">
+        Your insights help thousands of students prepare better. Fill out the details below to contribute to the community.
       </p>
     </div>
   );

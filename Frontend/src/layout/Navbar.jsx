@@ -11,8 +11,8 @@ import {
   Settings,
   Shield,
   Home,
-  GraduationCap,
 } from 'lucide-react';
+import Logo from '@/components/Logo';
 import { useTheme } from '../theme/Themeprovides';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
@@ -101,44 +101,43 @@ const Navbar = () => {
 
   return (
     <nav
-      className={`sticky top-0 w-full z-50 backdrop-blur-md transition-all duration-300 
-      bg-background/85 border-b border-border 
-      ${scrolled ? 'shadow-lg' : 'shadow-sm'}`}>
-      <div className="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+      className={`sticky top-0 w-full z-50 backdrop-blur-xl transition-all duration-300 
+      bg-background/80 border-b border-border 
+      ${scrolled ? 'shadow-sm' : ''}`}>
+      <div className="max-w-7xl mx-auto px-6 py-3 flex justify-between items-center">
         {/* Logo */}
         <Link
           to="/"
-          className="flex items-center gap-2 text-2xl font-bold text-primary">
-          <GraduationCap className="h-8 w-8 rounded-full" />
-          PrepMate
+          className="flex items-center">
+          <Logo />
         </Link>
 
         {/* Desktop Navigation */}
-        <div className="hidden md:flex items-center gap-6">
+        <div className="hidden md:flex items-center gap-6 text-sm font-medium">
           {commonLinks.map((link) => (
             <Link
               key={link.to}
               to={link.to}
-              className="flex items-center gap-2 px-4 py-2 rounded-lg 
-              text-muted-foreground hover:text-primary transition-colors">
+              className="flex items-center gap-2 px-3 py-2 rounded-md 
+              text-muted-foreground hover:text-foreground hover:bg-muted/50 transition-colors">
               {link.icon} {link.name}
             </Link>
           ))}
 
           {/* Auth Section */}
           {!isAuthenticated ? (
-            <>
+            <div className="flex items-center gap-3">
               <Link
                 to="/auth/login"
-                className="px-4 py-2 rounded-lg text-muted-foreground hover:text-primary">
-                Login
+                className="px-4 py-2 rounded-md text-muted-foreground hover:text-foreground font-medium transition-colors">
+                Log in
               </Link>
               <Link to="/auth/signup">
-                <Button className="bg-primary hover:bg-primary/90 text-primary-foreground rounded-lg px-6 py-2">
-                  Sign Up
+                <Button className="h-9 px-4 rounded-md shadow-sm">
+                  Sign up
                 </Button>
               </Link>
-            </>
+            </div>
           ) : (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>

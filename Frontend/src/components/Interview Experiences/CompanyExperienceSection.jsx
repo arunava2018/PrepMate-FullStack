@@ -6,44 +6,49 @@ import {
   AccordionContent,
 } from '../ui/accordion';
 import { Badge } from '../ui/badge';
-import { Building2 } from 'lucide-react';
+import { Building2, Layers } from 'lucide-react';
 import ExperienceCard from './ExperienceCard';
 
 function CompanyExperienceSection({ company, experiences }) {
+  const companyInitial = company ? company.trim().charAt(0).toUpperCase() : 'C';
+
   return (
     <Accordion type="multiple" className="w-full">
       <AccordionItem
         value={company}
-        className="border border-amber-200 dark:border-gray-700 rounded-xl bg-gradient-to-r from-orange-50 to-amber-50 dark:from-gray-800 dark:to-gray-900 shadow-sm hover:shadow-md transition-shadow duration-200">
+        className="border border-border/70 rounded-2xl bg-card/60 backdrop-blur-md hover:bg-card/90 shadow-sm hover:shadow-md transition-all duration-200 overflow-hidden"
+      >
         <AccordionTrigger className="px-6 py-4 hover:no-underline group">
           <div className="flex items-center gap-3 text-left">
-            <div className="p-2 bg-amber-100 dark:bg-amber-900/30 rounded-lg group-hover:bg-amber-200 dark:group-hover:bg-amber-900/50 transition-colors">
-              <Building2 className="w-5 h-5 text-amber-600" />
+            {/* Company Avatar Badge */}
+            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-primary/10 to-indigo-500/20 border border-primary/20 flex items-center justify-center text-primary font-bold text-base group-hover:scale-105 transition-transform">
+              {companyInitial}
             </div>
+
             <div>
-              <h2 className="text-lg font-semibold text-amber-800 dark:text-amber-300 group-hover:text-amber-600 dark:group-hover:text-amber-400 transition-colors">
+              <h2 className="text-base sm:text-lg font-bold text-foreground group-hover:text-primary transition-colors flex items-center gap-2">
                 {company}
               </h2>
-              <Badge className="mt-1 bg-orange-100 text-orange-800 dark:bg-orange-900/30 dark:text-orange-200 text-sm">
-                {experiences.length} experience
-                {experiences.length > 1 ? 's' : ''}
-              </Badge>
+              <p className="text-xs text-muted-foreground flex items-center gap-1.5 mt-0.5">
+                <Layers className="w-3 h-3 text-primary" />
+                <span>
+                  {experiences.length} experience{experiences.length > 1 ? 's' : ''} shared
+                </span>
+              </p>
             </div>
           </div>
         </AccordionTrigger>
 
         <AccordionContent className="px-6 pb-6">
           <div className="pt-2">
-            <div className="h-px bg-gradient-to-r from-transparent via-amber-200 dark:via-gray-700 to-transparent mb-4" />
+            <div className="h-px bg-gradient-to-r from-transparent via-border to-transparent mb-5" />
 
-            {/* Experience cards */}
-            <Accordion type="multiple" className="space-y-3">
+            {/* Experience Cards Grid */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {experiences.map((exp, index) => (
-                <div key={exp.id} className="flex items-center justify-between">
-                  <ExperienceCard experience={exp} index={index} />
-                </div>
+                <ExperienceCard key={exp.id} experience={exp} index={index} layoutMode="list" />
               ))}
-            </Accordion>
+            </div>
           </div>
         </AccordionContent>
       </AccordionItem>

@@ -1,91 +1,156 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Badge } from '../ui/badge';
-import { Briefcase, Eye, User } from 'lucide-react';
+import {
+  Briefcase,
+  ArrowRight,
+  User,
+  ShieldCheck,
+  Building2,
+  Sparkles,
+  CheckCircle2,
+  GraduationCap,
+  Globe,
+  School,
+} from 'lucide-react';
+import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
+import { motion } from 'framer-motion';
 
-function ExperienceCard({ experience, index }) {
-  const { id, role, offer_type, users, is_anonymous } = experience;
+function ExperienceCard({ experience, index = 0, layoutMode = 'grid' }) {
+  const { id, role, company_name, offer_type, opportunity_type, users, is_anonymous } = experience;
 
   // Respect anonymity
   const userName = is_anonymous
-    ? 'Anonymous User'
-    : users?.full_name || 'Unknown User';
+    ? 'Anonymous Candidate'
+    : users?.full_name || 'Community Peer';
+  const userPhoto = !is_anonymous ? users?.profile_photo : null;
 
-  // Badge style and text by offer type
+  // Company avatar initials
+  const companyInitial = company_name ? company_name.trim().charAt(0).toUpperCase() : 'C';
+
+  // Badge config for Offer Type
   const getOfferBadgeConfig = (type) => {
     switch (type) {
       case 'full_time':
         return {
-          className: 'bg-green-500 hover:bg-green-600 text-white',
-          text: 'Full Time',
+          icon: CheckCircle2,
+          className:
+            'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/20 hover:bg-emerald-500/20',
+          label: 'Full Time',
         };
       case 'internship_ppo':
         return {
-          className: 'bg-purple-500 hover:bg-purple-600 text-white',
-          text: 'Internship PPO',
+          icon: Sparkles,
+          className:
+            'bg-purple-500/10 text-purple-600 dark:text-purple-400 border-purple-500/20 hover:bg-purple-500/20',
+          label: 'Internship + PPO',
         };
       case 'internship':
         return {
-          className: 'bg-blue-500 hover:bg-blue-600 text-white',
-          text: 'Internship',
+          icon: GraduationCap,
+          className:
+            'bg-blue-500/10 text-blue-600 dark:text-blue-400 border-blue-500/20 hover:bg-blue-500/20',
+          label: 'Internship',
         };
       default:
         return {
-          className: 'bg-gray-500 hover:bg-gray-600 text-white',
-          text: type || 'Unknown',
+          icon: Briefcase,
+          className:
+            'bg-slate-500/10 text-slate-600 dark:text-slate-400 border-slate-500/20 hover:bg-slate-500/20',
+          label: type || 'Interview',
         };
     }
   };
 
   const badgeConfig = getOfferBadgeConfig(offer_type);
+  const BadgeIcon = badgeConfig.icon;
+
+  // Opportunity Type (On Campus / Off Campus)
+  const getOpportunityBadge = (type) => {
+    if (!type) return null;
+    const isOffCampus = type.toLowerCase().includes('off');
+    return (
+      <Badge
+        variant="outline"
+        className="text-[11px] font-medium px-2 py-0.5 rounded-full border-border/60 bg-muted/30 text-muted-foreground flex items-center gap-1"
+      >
+        {isOffCampus ? <Globe className="w-3 h-3" /> : <School className="w-3 h-3" />}
+        {isOffCampus ? 'Off Campus' : 'On Campus'}
+      </Badge>
+    );
+  };
 
   return (
-    <div className="w-full border border-gray-200 dark:border-slate-600/30 rounded-xl bg-white dark:bg-slate-800/50 shadow-sm hover:shadow-md transition-all duration-200 mb-4 backdrop-blur-sm p-5 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-      {/* Left side - User info */}
-      <div className="flex items-center gap-4 min-w-0 flex-1">
-        {/* Index circle */}
-        <div className="w-10 h-10 flex items-center justify-center rounded-full bg-gradient-to-r from-orange-500 to-amber-500 text-white text-sm font-bold shadow-md flex-shrink-0">
-          {index + 1}
+    <motion.div
+      initial={{ opacity: 0, y: 15 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.25, delay: index * 0.04 }}
+      className={`group relative overflow-hidden rounded-2xl border border-border/70 bg-card/70 backdrop-blur-md p-5 sm:p-6 
+        shadow-sm hover:shadow-xl hover:border-primary/40 hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between ${
+          layoutMode === 'list' ? 'w-full' : 'h-full'
+        }`}
+    >
+      {/* Top Header: Company Avatar & Badges */}
+      <div>
+        <div className="flex items-start justify-between gap-3 mb-4">
+          <div className="flex items-center gap-3">
+            {/* Company Initial Icon */}
+            <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-indigo-500/10 via-purple-500/10 to-pink-500/10 border border-primary/20 flex items-center justify-center text-primary font-extrabold text-lg shadow-inner group-hover:scale-105 transition-transform">
+              {companyInitial}
+            </div>
+            <div>
+              <h4 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+                {company_name || 'Company'}
+              </h4>
+              <h3 className="text-base sm:text-lg font-bold text-foreground group-hover:text-primary transition-colors line-clamp-1">
+                {role || 'Software Engineering Role'}
+              </h3>
+            </div>
+          </div>
         </div>
 
-        {/* User details */}
-        <div className="min-w-0 flex-1">
-          <div className="flex items-center gap-2 mb-1">
-            <User className="w-4 h-4 text-orange-500 dark:text-orange-400 flex-shrink-0" />
-            <h3
-              className="text-base sm:text-lg font-semibold text-gray-900 dark:text-white truncate"
-              title={userName}>
-              {userName}
-            </h3>
-          </div>
+        {/* Offer & Opportunity Badges */}
+        <div className="flex flex-wrap items-center gap-2 mb-4">
+          <Badge
+            variant="outline"
+            className={`text-xs font-semibold px-2.5 py-1 rounded-full border flex items-center gap-1.5 transition-colors ${badgeConfig.className}`}
+          >
+            <BadgeIcon className="w-3.5 h-3.5" />
+            {badgeConfig.label}
+          </Badge>
 
-          <div className="flex items-center gap-2">
-            <Briefcase className="w-4 h-4 text-gray-500 dark:text-slate-400 flex-shrink-0" />
-            <p
-              className="text-sm text-gray-600 dark:text-slate-400 truncate"
-              title={role || 'Position Not Specified'}>
-              {role || 'Position Not Specified'}
-            </p>
-          </div>
+          {getOpportunityBadge(opportunity_type)}
         </div>
       </div>
 
-      {/* Right side - Actions */}
-      <div className="flex flex-wrap items-center gap-3 sm:justify-end">
-        {offer_type && (
-          <Badge
-            className={`px-3 py-1 text-xs sm:text-sm font-medium transition-colors duration-200 ${badgeConfig.className}`}>
-            {badgeConfig.text}
-          </Badge>
-        )}
+      {/* Footer: User Info & CTA */}
+      <div className="pt-4 mt-2 border-t border-border/50 flex items-center justify-between gap-3">
+        {/* User profile */}
+        <div className="flex items-center gap-2.5 min-w-0">
+          <Avatar className="h-7 w-7 border border-border flex-shrink-0">
+            {userPhoto ? (
+              <AvatarImage src={userPhoto} alt={userName} />
+            ) : (
+              <AvatarFallback className="bg-primary/10 text-primary text-[10px] font-bold">
+                {is_anonymous ? <ShieldCheck className="w-3.5 h-3.5 text-primary" /> : userName[0]}
+              </AvatarFallback>
+            )}
+          </Avatar>
+          <span className="text-xs font-medium text-muted-foreground truncate" title={userName}>
+            {userName}
+          </span>
+        </div>
+
+        {/* Read CTA button */}
         <Link
           to={`/view-interview-experiences/${id}`}
-          className="flex items-center gap-1 text-sm sm:text-base text-blue-600 dark:text-blue-400 hover:underline transition-colors">
-          <Eye className="w-4 h-4" />
-          View
+          className="inline-flex items-center gap-1.5 text-xs font-semibold text-primary hover:text-primary/80 transition-colors flex-shrink-0 group/link"
+        >
+          <span>Read Story</span>
+          <ArrowRight className="w-3.5 h-3.5 group-hover/link:translate-x-1 transition-transform" />
         </Link>
       </div>
-    </div>
+    </motion.div>
   );
 }
 

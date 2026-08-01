@@ -25,14 +25,23 @@ export default function ExperienceDetails() {
     fetchExperience();
   }, [experienceId]);
 
-  // Share
+  const shortenWithTiny = async (longUrl) => {
+    const res = await fetch(
+      `https://tinyurl.com/api-create.php?url=${encodeURIComponent(longUrl)}`
+    );
+    if (!res.ok) throw new Error('TinyURL failed');
+    return res.text()
+  };
+
   const handleShare = async () => {
     try {
-      await navigator.clipboard.writeText(window.location.href);
-      toast.success('Link copied to clipboard!');
+      const shortUrl = await shortenWithTiny(window.location.href);
+      await navigator.clipboard.writeText(shortUrl);
+      toast.success('Short URL copied!');
     } catch (err) {
-      console.error('Failed to copy:', err);
-      toast.error('Failed to copy link');
+      console.error(err);
+      toast.error('Failed to copy short link — trying full link instead');
+      await navigator.clipboard.writeText(window.location.href);
     }
   };
 
@@ -58,7 +67,7 @@ export default function ExperienceDetails() {
           <Skeleton className="h-9 w-20 rounded-md" />
         </div>
 
-        <div className="flex items-center justify-between border rounded-lg px-4 py-3 bg-white dark:bg-neutral-900">
+        <div className="flex items-center justify-between border border-border rounded-lg px-4 py-3 bg-card text-card-foreground">
           <div className="flex items-center gap-3">
             <Skeleton className="w-10 h-10 rounded-full" />
             <Skeleton className="h-5 w-32" />
@@ -66,7 +75,7 @@ export default function ExperienceDetails() {
           <Skeleton className="h-4 w-28" />
         </div>
 
-        <div className="bg-white dark:bg-gray-900 rounded-xl p-6 border shadow-sm space-y-3">
+        <div className="bg-card rounded-xl p-6 border border-border shadow-sm space-y-3">
           <Skeleton className="h-5 w-2/3" />
           <Skeleton className="h-4 w-full" />
           <Skeleton className="h-4 w-5/6" />
@@ -124,7 +133,7 @@ export default function ExperienceDetails() {
           {/* Company + Role */}
           <div>
             {company_name && (
-              <h1 className="flex items-center gap-2 text-2xl sm:text-3xl font-semibold text-amber-700 dark:text-amber-300">
+              <h1 className="flex items-center gap-2 text-2xl sm:text-3xl font-semibold text-primary dark:text-primary-foreground">
                 <Briefcase className="w-5 h-5" />
                 {company_name}
               </h1>
@@ -137,7 +146,7 @@ export default function ExperienceDetails() {
           {/* Share button */}
           <button
             onClick={handleShare}
-            className="flex items-center justify-center rounded-md bg-amber-500 text-white hover:bg-amber-600 transition px-3 py-2 text-sm font-medium">
+            className="flex items-center justify-center rounded-md bg-primary text-primary-foreground hover:bg-primary/90 transition px-3 py-2 text-sm font-medium">
             <Share2 className="w-5 h-5 block sm:hidden" />
             <span className="hidden sm:flex items-center gap-2">
               <Share2 className="w-4 h-4" /> Share
@@ -149,7 +158,7 @@ export default function ExperienceDetails() {
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 px-4 py-3">
           {/* Left: avatar + name + socials */}
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-full bg-gradient-to-br from-amber-400 to-orange-500 flex items-center justify-center text-white font-semibold">
+            <div className="w-10 h-10 rounded-full bg-primary text-primary-foreground flex items-center justify-center font-semibold">
               {avatarInitials}
             </div>
             <div className="flex items-center gap-2 flex-wrap">
@@ -189,7 +198,7 @@ export default function ExperienceDetails() {
       </div>
 
       {/* Content */}
-      <div className="bg-white dark:bg-gray-900 rounded-xl p-6 border shadow-sm">
+      <div className="bg-card text-card-foreground rounded-xl p-6 border border-border shadow-sm">
         <MarkdownRenderer
           content={
             content ||

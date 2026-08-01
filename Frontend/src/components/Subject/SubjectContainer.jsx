@@ -92,7 +92,7 @@ function SubjectContainer() {
       <div className="flex items-center gap-4 mb-6">
         <motion.div
           whileHover={{ scale: 1.1, rotate: 5 }}
-          className="p-3 bg-gradient-to-br from-yellow-400 to-yellow-600 rounded-2xl shadow-lg">
+          className="p-3 bg-gradient-to-br from-primary to-primary/80 rounded-2xl shadow-lg">
           <Icon className="w-8 h-8 text-white" />
         </motion.div>
         <h1 className="text-4xl font-bold text-gray-800 dark:text-gray-100">

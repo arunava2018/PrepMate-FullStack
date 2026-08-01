@@ -126,17 +126,17 @@ export default function Login() {
       {/* Submit */}
       <Button
         type="submit"
-        className="w-full bg-yellow-600 hover:bg-yellow-700 text-white">
+        className="w-full bg-primary hover:bg-primary/90 text-primary-foreground">
         {loading ? <BeatLoader size={10} color="#fff" /> : 'Login'}
       </Button>
 
-      <p className="mx-auto">
+      <p className="mx-auto text-muted-foreground text-sm">
         Don't have an account?{' '}
         <span
           onClick={() =>
             navigate('/auth/signup', { state: { from: location.state?.from } })
           }
-          className="text-yellow-400 underline cursor-pointer">
+          className="text-primary underline cursor-pointer font-medium hover:text-primary/80">
           Register
         </span>
       </p>

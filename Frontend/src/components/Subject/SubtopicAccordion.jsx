@@ -28,7 +28,7 @@ export default function SubtopicAccordion({
   user,
 }) {
   return (
-    <motion.div className="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 overflow-hidden hover:shadow-md transition-shadow duration-300">
+    <motion.div className="bg-card text-card-foreground rounded-2xl shadow-sm border border-border overflow-hidden hover:shadow-md transition-all duration-300">
       {/* Accordion Header */}
       <motion.button
         onClick={() =>
@@ -36,7 +36,7 @@ export default function SubtopicAccordion({
         }
         className="w-full px-4 sm:px-6 py-4 sm:py-5 text-left flex items-center justify-between transition-colors duration-200">
         <div className="flex items-center gap-3 sm:gap-4">
-          <div className="w-8 h-8 sm:w-10 sm:h-10 bg-yellow-100 dark:bg-yellow-900 rounded-xl flex items-center justify-center text-yellow-700 dark:text-yellow-300 font-bold text-sm">
+          <div className="w-8 h-8 sm:w-10 sm:h-10 bg-primary/10 dark:bg-primary/20 rounded-xl flex items-center justify-center text-primary font-bold text-sm">
             {index + 1}
           </div>
           <h3 className="text-lg sm:text-xl font-semibold text-gray-800 dark:text-gray-100 break-words">
@@ -73,7 +73,7 @@ export default function SubtopicAccordion({
                 ))}
               </div>
             ) : (
-              <p className="text-sm text-gray-500 dark:text-gray-400 p-3 sm:p-4 text-center bg-gray-50 dark:bg-gray-700 rounded-lg">
+              <p className="text-sm text-muted-foreground p-3 sm:p-4 text-center bg-muted rounded-lg border border-border/50">
                 No questions available for this subtopic.
               </p>
             )}

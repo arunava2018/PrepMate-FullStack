@@ -1,4 +1,5 @@
 import { cacheClient } from '../utils/cacheClient.js';
+
 export const cacheMiddleware = ({ ttl = 3600, key } = {}) => {
   return async (req, res, next) => {
     try {
@@ -10,26 +11,26 @@ export const cacheMiddleware = ({ ttl = 3600, key } = {}) => {
       if (!cacheKey) return next();
 
       const cached = await cacheClient.get(cacheKey);
-      if (cached) {
+      if (cached !== null && cached !== undefined) {
         return res.json(cached);
       }
 
-      // Hook res.json to write to cache when controller responds
+      // Hook res.json to write to cache asynchronously when controller responds
       const originalJson = res.json.bind(res);
-      res.json = async (body) => {
-        try {
-          await cacheClient.set(cacheKey, body, ttl);
-        } catch (e) {
-          // swallow cache errors, still respond
-          console.error('Cache set error:', e?.message || e);
+      res.json = (body) => {
+        if (res.statusCode >= 200 && res.statusCode < 300) {
+          cacheClient.set(cacheKey, body, ttl).catch((e) => {
+            console.error('[Cache] Middleware set error:', e?.message || e);
+          });
         }
         return originalJson(body);
       };
 
       next();
     } catch (err) {
-      console.error('Cache middleware error:', err);
-      next(); // don't break the request if cache fails
+      console.error('[Cache] Middleware error:', err?.message || err);
+      next(); // Don't break the request if cache fails
     }
   };
 };
+

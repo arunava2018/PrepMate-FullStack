@@ -75,58 +75,46 @@ const DashboardPage = () => {
                   navigate(`/subject/${slugify(subj.name)}/${subj.id}`);
                 }
               }}
-              className={`group transition transform hover:scale-105 hover:shadow-xl rounded-2xl ${
-                isLoggedIn ? 'cursor-pointer' : 'cursor-default'
+              className={`group transition-all duration-200 border border-border bg-card hover:bg-accent/50 ${
+                isLoggedIn ? 'cursor-pointer hover:shadow-md hover:border-primary/50' : 'cursor-default'
               }`}>
               <CardHeader className="flex flex-col items-center relative py-6">
-                <div className="p-3 bg-yellow-100 dark:bg-yellow-900 rounded-full shadow-md mb-3">
-                  <Icon className="w-10 h-10 text-yellow-600 dark:text-yellow-300" />
+                <div className="p-3 bg-primary/10 rounded-xl mb-4 group-hover:scale-105 transition-transform duration-200">
+                  <Icon className="w-8 h-8 text-primary" />
                 </div>
-                <CardTitle className="text-lg font-semibold text-center text-gray-800 dark:text-gray-100">
+                <CardTitle className="text-lg font-semibold text-center text-foreground">
                   {subj.name}
                 </CardTitle>
 
                 {/* Question count - only show when logged in */}
                 {isLoggedIn && (
                   <div className="absolute top-4 right-4">
-                    <span className="text-xs font-semibold bg-gradient-to-r from-yellow-400 to-yellow-600 text-white px-3 py-1 rounded-full shadow-md">
+                    <span className="text-xs font-semibold bg-primary/10 text-primary px-2.5 py-0.5 rounded-full border border-primary/20">
                       {subj.question_count} Qs
                     </span>
                   </div>
                 )}
               </CardHeader>
 
-              <CardContent className="text-center text-gray-600 dark:text-gray-400">
-                <p className="mb-3">
+              <CardContent className="text-center text-muted-foreground flex flex-col items-center">
+                <p className="mb-6 text-sm">
                   {subj.description || 'No description available.'}
                 </p>
 
                 {/* Progress Bar - only show when logged in */}
                 {isLoggedIn && (
-                  <div className="w-full flex flex-col gap-2">
-                    <div className="flex justify-between text-sm font-medium text-gray-700 dark:text-gray-300">
+                  <div className="w-full flex flex-col gap-2 mt-auto">
+                    <div className="flex justify-between text-sm font-medium text-foreground">
                       <span>Progress</span>
                       <span>{progress.toFixed(0)}%</span>
                     </div>
 
-                    <div className="relative w-full bg-gray-200 dark:bg-gray-700 rounded-full h-5 overflow-hidden shadow-inner">
+                    <div className="relative w-full bg-muted rounded-full h-2 overflow-hidden">
                       <motion.div
-                        className="h-5 rounded-full bg-gradient-to-r from-yellow-400 via-yellow-500 to-yellow-600 shadow-md relative"
+                        className="h-full rounded-full bg-primary relative"
                         initial={{ width: '0%' }}
                         animate={{ width: `${progress}%` }}
                         transition={{ duration: 0.8, ease: 'easeInOut' }}>
-                        {/* Animated stripe overlay */}
-                        <motion.div
-                          className="absolute inset-0 rounded-full bg-[linear-gradient(45deg,rgba(255,255,255,0.25)_25%,transparent_25%,transparent_50%,rgba(255,255,255,0.25)_50%,rgba(255,255,255,0.25)_75%,transparent_75%,transparent)] bg-[length:1rem_1rem]"
-                          animate={{
-                            backgroundPosition: ['0px 0px', '20px 0px'],
-                          }}
-                          transition={{
-                            duration: 1,
-                            repeat: Infinity,
-                            ease: 'linear',
-                          }}
-                        />
                       </motion.div>
                     </div>
                   </div>
@@ -134,9 +122,9 @@ const DashboardPage = () => {
 
                 {/* Sign in prompt for non-logged-in users */}
                 {!isLoggedIn && (
-                  <div className="mt-4 p-3 bg-yellow-50 dark:bg-yellow-900/20 rounded-lg border border-yellow-200 dark:border-yellow-800/30">
-                    <p className="text-sm text-yellow-700 dark:text-yellow-300 font-medium">
-                      Sign in to track your progress and access content
+                  <div className="mt-auto w-full p-3 bg-muted rounded-md border border-border">
+                    <p className="text-xs text-muted-foreground font-medium">
+                      Sign in to track progress
                     </p>
                   </div>
                 )}

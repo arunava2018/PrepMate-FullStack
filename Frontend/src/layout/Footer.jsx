@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
-import { Twitter, Github, Linkedin, GraduationCap, Mail } from 'lucide-react';
+import { Twitter, Github, Linkedin, Mail } from 'lucide-react';
+import Logo from '@/components/Logo';
 import { UrlState } from '@/context';
 import { socialLinks } from '../constants.js';
 export default function Footer() {
@@ -15,8 +16,7 @@ export default function Footer() {
           {/* Brand Column */}
           <div className="col-span-2 md:col-span-4 lg:col-span-1 mb-6 sm:mb-0">
             <div className="flex items-center gap-2 mb-4 justify-center sm:justify-start">
-              <GraduationCap className="h-7 w-7 text-yellow-500" />
-              <h2 className="text-lg font-bold text-yellow-500">PrepMate</h2>
+              <Logo iconSize="h-7 w-7" />
             </div>
             <p className="text-sm text-muted-foreground leading-relaxed mb-6 max-w-xs mx-auto sm:mx-0">
               Your personal Q&A bank for Computer Science interview prep.
@@ -32,7 +32,7 @@ export default function Footer() {
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label={label}
-                  className="w-9 h-9 flex items-center justify-center rounded-lg border border-border hover:bg-yellow-500 hover:text-black hover:border-yellow-500 transition-all duration-200">
+                  className="w-9 h-9 flex items-center justify-center rounded-lg border border-border hover:bg-primary hover:text-black hover:border-primary transition-all duration-200">
                   <Icon size={18} />
                 </a>
               ))}
@@ -41,28 +41,28 @@ export default function Footer() {
 
           {/* Product */}
           <div>
-            <h3 className="text-sm font-semibold uppercase tracking-wide text-yellow-500 mb-4">
+            <h3 className="text-sm font-semibold uppercase tracking-wide text-primary mb-4">
               Product
             </h3>
             <ul className="space-y-3 text-sm">
               <li>
                 <a
                   href="#features"
-                  className="text-muted-foreground hover:text-yellow-500">
+                  className="text-muted-foreground hover:text-primary">
                   Features
                 </a>
               </li>
               <li>
                 <a
                   href="#faq"
-                  className="text-muted-foreground hover:text-yellow-500">
+                  className="text-muted-foreground hover:text-primary">
                   FAQ
                 </a>
               </li>
               <li>
                 <Link
                   to="/"
-                  className="text-muted-foreground hover:text-yellow-500">
+                  className="text-muted-foreground hover:text-primary">
                   What's New
                 </Link>
               </li>
@@ -74,7 +74,7 @@ export default function Footer() {
 
           {/* Resources */}
           <div>
-            <h3 className="text-sm font-semibold uppercase tracking-wide text-yellow-500 mb-4">
+            <h3 className="text-sm font-semibold uppercase tracking-wide text-primary mb-4">
               Resources
             </h3>
             <ul className="space-y-3 text-sm">
@@ -82,13 +82,13 @@ export default function Footer() {
                 {!isAuthenticated ? (
                   <Link
                     to="/auth/signup"
-                    className="text-muted-foreground hover:text-yellow-500">
+                    className="text-muted-foreground hover:text-primary">
                     Dashboard
                   </Link>
                 ) : (
                   <Link
                     to="/dashboard"
-                    className="text-muted-foreground hover:text-yellow-500">
+                    className="text-muted-foreground hover:text-primary">
                     Dashboard
                   </Link>
                 )}
@@ -96,7 +96,7 @@ export default function Footer() {
               <li>
                 <Link
                   to="/view-interview-experiences"
-                  className="text-muted-foreground hover:text-yellow-500">
+                  className="text-muted-foreground hover:text-primary">
                   Interview Experiences
                 </Link>
               </li>
@@ -111,35 +111,35 @@ export default function Footer() {
 
           {/* Company */}
           <div>
-            <h3 className="text-sm font-semibold uppercase tracking-wide text-yellow-500 mb-4">
+            <h3 className="text-sm font-semibold uppercase tracking-wide text-primary mb-4">
               Company
             </h3>
             <ul className="space-y-3 text-sm">
               <li>
                 <Link
                   to="/about-us"
-                  className="text-muted-foreground hover:text-yellow-500">
+                  className="text-muted-foreground hover:text-primary">
                   About Us
                 </Link>
               </li>
               <li>
                 <Link
                   to="/contact-us"
-                  className="text-muted-foreground hover:text-yellow-500">
+                  className="text-muted-foreground hover:text-primary">
                   Contact
                 </Link>
               </li>
               <li>
                 <Link
                   to="/privacy-policy"
-                  className="text-muted-foreground hover:text-yellow-500">
+                  className="text-muted-foreground hover:text-primary">
                   Privacy Policy
                 </Link>
               </li>
               <li>
                 <Link
                   to="/terms"
-                  className="text-muted-foreground hover:text-yellow-500">
+                  className="text-muted-foreground hover:text-primary">
                   Terms of Service
                 </Link>
               </li>
@@ -148,7 +148,7 @@ export default function Footer() {
 
           {/* Support */}
           <div>
-            <h3 className="text-sm font-semibold uppercase tracking-wide text-yellow-500 mb-4">
+            <h3 className="text-sm font-semibold uppercase tracking-wide text-primary mb-4">
               Support
             </h3>
             <ul className="space-y-3 text-sm">
@@ -156,20 +156,20 @@ export default function Footer() {
                 {!isAuthenticated ? (
                   <Link
                     to="/auth/signup"
-                    className="text-muted-foreground hover:text-yellow-500">
+                    className="text-muted-foreground hover:text-primary">
                     Get Started
                   </Link>
                 ) : (
                   <Link
                     to={`/profile/${user.id}`}
-                    className="text-muted-foreground hover:text-yellow-500">
+                    className="text-muted-foreground hover:text-primary">
                     <span className="sm:inline hidden">My Account</span>
                     <span className="inline sm:hidden">Account</span>
                   </Link>
                 )}
               </li>
               <li>
-                <div className="text-muted-foreground hover:text-yellow-500 flex items-center gap-2 justify-center sm:justify-start cursor-pointer">
+                <div className="text-muted-foreground hover:text-primary flex items-center gap-2 justify-center sm:justify-start cursor-pointer">
                   <Mail size={14} />
                   <span className="sm:inline hidden">Support</span>
                   <span className="inline sm:hidden">Help</span>
@@ -178,7 +178,7 @@ export default function Footer() {
               <li>
                 <Link
                   to="/"
-                  className="text-muted-foreground hover:text-yellow-500">
+                  className="text-muted-foreground hover:text-primary">
                   <span className="sm:inline hidden">Status</span>
                   <span className="inline sm:hidden">Site</span>
                 </Link>
@@ -186,7 +186,7 @@ export default function Footer() {
               <li>
                 <Link
                   to="/"
-                  className="text-muted-foreground hover:text-yellow-500">
+                  className="text-muted-foreground hover:text-primary">
                   <span className="sm:inline hidden">Community</span>
                   <span className="inline sm:hidden">Forum</span>
                 </Link>
@@ -204,7 +204,7 @@ export default function Footer() {
               <span>
                 © {new Date().getFullYear()} PrepMate. All rights reserved.
               </span>
-              <Link to="/cookies" className="hover:text-yellow-500">
+              <Link to="/cookies" className="hover:text-primary">
                 Cookie Policy
               </Link>
             </div>
@@ -213,7 +213,7 @@ export default function Footer() {
               <Link
                 to="https://arunava-banerjee.vercel.app/"
                 target="_blank"
-                className="hover:text-yellow-500 font-medium">
+                className="hover:text-primary font-medium">
                 Arunava
               </Link>
             </div>

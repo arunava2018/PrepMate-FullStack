@@ -12,7 +12,7 @@ export default function Auth() {
     <div className="min-h-screen flex items-center justify-center bg-neutral-50 dark:bg-neutral-950 px-4">
       <Card className="w-full max-w-md shadow-lg rounded-2xl border border-neutral-200 dark:border-neutral-800">
         <CardHeader>
-          <CardTitle className="text-center text-2xl font-bold text-yellow-600 dark:text-yellow-400">
+          <CardTitle className="text-center text-2xl font-bold text-primary">
             {mode === 'login' ? 'Welcome Back 👋' : 'Join PrepMate 🚀'}
           </CardTitle>
           <p className="text-center text-neutral-600 dark:text-neutral-400 mt-2">

@@ -86,7 +86,7 @@ export default function AdminApprovalForm({ initialData, onClose, fetchData }) {
           name="role"
           value={formData.role}
           onChange={handleChange}
-          className="w-full p-2 rounded-lg border border-border bg-input text-foreground outline-none focus:ring-2 focus:ring-primary/30"
+          className="w-full p-2.5 rounded-lg border border-input bg-background text-foreground outline-none focus:ring-2 focus:ring-primary/30 transition-all text-sm"
           placeholder="e.g. Software Engineer Intern"
         />
       </div>
@@ -100,7 +100,7 @@ export default function AdminApprovalForm({ initialData, onClose, fetchData }) {
           name="offer_type"
           value={formData.offer_type}
           onChange={handleChange}
-          className="w-full p-2 rounded-lg border border-border bg-input text-foreground focus:ring-2 focus:ring-primary/30">
+          className="w-full p-2.5 rounded-lg border border-input bg-background text-foreground focus:ring-2 focus:ring-primary/30 transition-all text-sm">
           <option value="">Select Offer Type</option>
           {offerTypes.map((opt) => (
             <option key={opt.value} value={opt.value}>
@@ -119,7 +119,7 @@ export default function AdminApprovalForm({ initialData, onClose, fetchData }) {
           name="opportunity_type"
           value={formData.opportunity_type}
           onChange={handleChange}
-          className="w-full p-2 rounded-lg border border-border bg-input text-foreground focus:ring-2 focus:ring-primary/30">
+          className="w-full p-2.5 rounded-lg border border-input bg-background text-foreground focus:ring-2 focus:ring-primary/30 transition-all text-sm">
           <option value="">Select Opportunity Type</option>
           {opportunityTypes.map((opt) => (
             <option key={opt.value} value={opt.value}>
@@ -140,7 +140,7 @@ export default function AdminApprovalForm({ initialData, onClose, fetchData }) {
             name="linkedin_url"
             value={formData.linkedin_url}
             onChange={handleChange}
-            className="w-full p-2 rounded-lg border border-border bg-input text-foreground outline-none focus:ring-2 focus:ring-primary/30"
+            className="w-full p-2.5 rounded-lg border border-input bg-background text-foreground outline-none focus:ring-2 focus:ring-primary/30 transition-all text-sm"
           />
         </div>
 
@@ -153,7 +153,7 @@ export default function AdminApprovalForm({ initialData, onClose, fetchData }) {
             name="github_url"
             value={formData.github_url}
             onChange={handleChange}
-            className="w-full p-2 rounded-lg border border-border bg-input text-foreground outline-none focus:ring-2 focus:ring-primary/30"
+            className="w-full p-2.5 rounded-lg border border-input bg-background text-foreground outline-none focus:ring-2 focus:ring-primary/30 transition-all text-sm"
           />
         </div>
       </div>

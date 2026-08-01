@@ -55,7 +55,7 @@ export default function MarkdownRenderer({ content }) {
             </span>
             <button
               onClick={() => copyToClipboard(codeString)}
-              className="flex items-center gap-1 text-xs px-2 py-0.5 rounded bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-300 hover:bg-amber-500 hover:text-white transition-colors">
+              className="flex items-center gap-1 text-xs px-2 py-0.5 rounded bg-secondary dark:bg-secondary/50 text-muted-foreground hover:bg-primary hover:text-primary-foreground transition-colors">
               {copiedCode === codeString ? (
                 <>
                   <Check className="w-3 h-3" /> Copied
@@ -90,7 +90,7 @@ export default function MarkdownRenderer({ content }) {
           </SyntaxHighlighter>
         </div>
       ) : (
-        <code className="bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 px-1 py-0.5 rounded text-[0.85rem] font-mono text-amber-800 dark:text-amber-200 font-medium">
+        <code className="bg-muted border border-border px-1.5 py-0.5 rounded text-[0.85rem] font-mono text-foreground font-semibold">
           {children}
         </code>
       );
@@ -102,7 +102,7 @@ export default function MarkdownRenderer({ content }) {
         <h1
           className="text-3xl font-bold mt-10 mb-4 text-gray-900 dark:text-white"
           {...props}>
-          <span className="bg-gradient-to-r from-amber-400 to-orange-500 bg-clip-text text-transparent">
+          <span className="bg-gradient-to-r from-primary to-primary/80 bg-clip-text text-transparent">
             {children}
           </span>
         </h1>
@@ -114,7 +114,7 @@ export default function MarkdownRenderer({ content }) {
         <h2
           className="text-2xl font-semibold mt-8 mb-3 text-gray-800 dark:text-gray-100 flex items-center gap-2"
           {...props}>
-          <div className="w-1 h-5 bg-gradient-to-b from-amber-400 to-orange-500 rounded-full"></div>
+          <div className="w-1 h-5 bg-gradient-to-b from-primary to-primary/80 rounded-full"></div>
           {children}
         </h2>
       );
@@ -123,7 +123,7 @@ export default function MarkdownRenderer({ content }) {
     h3({ children, ...props }) {
       return (
         <h3
-          className="text-xl font-semibold mt-6 mb-2 text-gray-700 dark:text-gray-200 border-l-4 border-amber-400 pl-2"
+          className="text-xl font-semibold mt-6 mb-2 text-gray-700 dark:text-gray-200 border-l-4 border-primary pl-2"
           {...props}>
           {children}
         </h3>
@@ -144,7 +144,7 @@ export default function MarkdownRenderer({ content }) {
     blockquote({ children, ...props }) {
       return (
         <blockquote
-          className="border-l-4 border-amber-400 bg-amber-50 dark:bg-amber-900/10 pl-4 pr-3 py-2 my-4 rounded-r-md italic text-gray-700 dark:text-gray-300 text-sm"
+          className="border-l-4 border-primary bg-muted/30 dark:bg-muted/10 pl-4 pr-3 py-2 my-4 rounded-r-md italic text-gray-700 dark:text-gray-300 text-sm"
           {...props}>
           {children}
         </blockquote>
@@ -154,7 +154,7 @@ export default function MarkdownRenderer({ content }) {
     ul({ children, ...props }) {
       return (
         <ul
-          className="space-y-1.5 my-4 ml-5 list-disc marker:text-amber-500 dark:marker:text-amber-400"
+          className="space-y-1.5 my-4 ml-5 list-disc marker:text-primary"
           {...props}>
           {children}
         </ul>
@@ -164,7 +164,7 @@ export default function MarkdownRenderer({ content }) {
     ol({ children, ...props }) {
       return (
         <ol
-          className="space-y-1.5 my-4 ml-5 list-decimal marker:text-amber-500 dark:marker:text-amber-400"
+          className="space-y-1.5 my-4 ml-5 list-decimal marker:text-primary"
           {...props}>
           {children}
         </ol>
@@ -209,7 +209,7 @@ export default function MarkdownRenderer({ content }) {
     tr({ children, ...props }) {
       return (
         <tr
-          className="odd:bg-white even:bg-gray-50 dark:odd:bg-gray-900 dark:even:bg-gray-800 hover:bg-amber-50 dark:hover:bg-amber-900/20 transition-colors"
+          className="odd:bg-background even:bg-muted/30 dark:odd:bg-background dark:even:bg-muted/10 hover:bg-muted/50 dark:hover:bg-muted/20 transition-colors"
           {...props}>
           {children}
         </tr>
