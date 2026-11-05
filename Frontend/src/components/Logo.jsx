@@ -1,78 +1,122 @@
-import React from 'react';
-import { motion } from 'framer-motion';
 
-const Logo = ({ showText = true, className = '', iconSize = 'h-8 w-8' }) => {
+import React, { useId } from "react";
+import { motion } from "framer-motion";
+
+const Logo = ({
+  showText = true,
+  className = "",
+  iconSize = "h-9 w-9",
+}) => {
+  const gradientId = useId().replace(/:/g, "");
+
   return (
-    <div className={`flex items-center gap-3 select-none ${className}`}>
-      {/* Animated SVG Icon Container */}
+    <div
+      className={`flex items-center gap-2.5 select-none ${className}`}
+      aria-label="PrepMate"
+    >
+      {/* Logo Icon */}
       <motion.div
-        whileHover={{ scale: 1.05, rotate: 5 }}
-        whileTap={{ scale: 0.95 }}
+        whileHover={{ scale: 1.06 }}
+        whileTap={{ scale: 0.96 }}
+        transition={{ duration: 0.2 }}
         className={`relative ${iconSize} flex-shrink-0`}
       >
         <svg
           viewBox="0 0 100 100"
           fill="none"
           xmlns="http://www.w3.org/2000/svg"
-          className="w-full h-full drop-shadow-[0_2px_8px_rgba(99,102,241,0.15)]"
+          className="w-full h-full"
+          role="img"
+          aria-label="PrepMate logo"
         >
           <defs>
-            {/* High-end tech gradient */}
-            <linearGradient id="logo-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" stop-color="#6366f1" /> {/* Indigo-500 */}
-              <stop offset="50%" stop-color="#8b5cf6" /> {/* Violet-500 */}
-              <stop offset="100%" stop-color="#ec4899" /> {/* Pink-500 */}
+            <linearGradient
+              id={`${gradientId}-book`}
+              x1="10"
+              y1="15"
+              x2="90"
+              y2="90"
+              gradientUnits="userSpaceOnUse"
+            >
+              <stop offset="0%" stopColor="#6366F1" />
+              <stop offset="100%" stopColor="#2563EB" />
             </linearGradient>
-            <linearGradient id="node-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" stop-color="#22d3ee" /> {/* Cyan-400 */}
-              <stop offset="100%" stop-color="#818cf8" /> {/* Indigo-400 */}
-            </linearGradient>
-            <filter id="glow-effect" x="-10%" y="-10%" width="120%" height="120%">
-              <feDropShadow dx="0" dy="2" stdDeviation="4" flood-color="#8b5cf6" flood-opacity="0.3" />
-            </filter>
           </defs>
 
-          {/* Ambient background glow ring */}
-          <circle cx="50" cy="50" r="42" stroke="url(#logo-gradient)" stroke-width="1.5" opacity="0.1" />
+          {/* Open book */}
+          <path
+            d="M50 36 C39 27 24 25 12 30 V72 C25 68 39 71 50 81 C61 71 75 68 88 72 V30 C76 25 61 27 50 36Z"
+            fill={`url(#${gradientId}-book)`}
+            fillOpacity="0.13"
+            stroke={`url(#${gradientId}-book)`}
+            strokeWidth="5"
+            strokeLinejoin="round"
+          />
 
-          {/* Styled Abstract PM monogram: Interlocking loops representing Interview Prep and Career Match */}
-          <g filter="url(#glow-effect)">
-            {/* The vertical stem for 'P' (Prep) */}
-            <path
-              d="M 36 26 L 36 74"
-              stroke="url(#logo-gradient)"
-              stroke-width="7.5"
-              stroke-linecap="round"
-            />
-            {/* The loop of 'P' which wraps around and flows into 'M' */}
-            <path
-              d="M 36 29.75 C 54 29.75, 56 46, 36 46 L 52 46 C 64 46, 65 67, 52 67"
-              stroke="url(#logo-gradient)"
-              stroke-width="7.5"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            />
-            {/* The second arch of the 'M' (Mate) */}
-            <path
-              d="M 52 50 C 65 50, 68 67, 68 67"
-              stroke="url(#logo-gradient)"
-              stroke-width="7.5"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            />
-          </g>
+          {/* Center spine */}
+          <path
+            d="M50 37 V80"
+            stroke={`url(#${gradientId}-book)`}
+            strokeWidth="4"
+            strokeLinecap="round"
+          />
 
-          {/* Interactive Core Tech Node (representing technical success) */}
-          <circle cx="68" cy="67" r="4.5" fill="url(#node-gradient)" />
-          <circle cx="36" cy="26" r="4.5" fill="url(#node-gradient)" />
+          {/* Code brackets */}
+          <path
+            d="M30 45 L22 52 L30 59"
+            stroke="currentColor"
+            strokeWidth="4"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+
+          <path
+            d="M39 45 L33 59"
+            stroke="currentColor"
+            strokeWidth="3.5"
+            strokeLinecap="round"
+          />
+
+          {/* Progress lines */}
+          <path
+            d="M61 47 H76"
+            stroke={`url(#${gradientId}-book)`}
+            strokeWidth="4"
+            strokeLinecap="round"
+          />
+
+          <path
+            d="M61 57 H72"
+            stroke={`url(#${gradientId}-book)`}
+            strokeWidth="4"
+            strokeLinecap="round"
+          />
+
+          {/* Achievement checkmark */}
+          <circle
+            cx="76"
+            cy="25"
+            r="13"
+            fill="#0D9488"
+            stroke="currentColor"
+            strokeWidth="2"
+          />
+
+          <path
+            d="M70 25 L74 29 L82 20"
+            stroke="white"
+            strokeWidth="3"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
         </svg>
       </motion.div>
 
-      {/* Brand Text Typography */}
+      {/* Brand Name */}
       {showText && (
-        <span className="font-extrabold text-xl tracking-tight text-foreground flex items-center">
+        <span className="flex items-center font-bold text-xl tracking-tight text-foreground">
           Prep
-          <span className="bg-gradient-to-r from-indigo-500 via-violet-500 to-pink-500 bg-clip-text text-transparent ml-0.5">
+          <span className="text-indigo-500 ml-0.5">
             Mate
           </span>
         </span>

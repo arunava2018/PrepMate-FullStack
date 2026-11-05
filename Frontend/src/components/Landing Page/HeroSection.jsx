@@ -122,7 +122,7 @@ export default function HeroSection() {
           <div className="absolute inset-0 bg-primary/20 blur-3xl rounded-full translate-y-4"></div>
           
           <img
-            src="/hero-illustration1.png"
+            src="/hero-illustration1.webp"
             alt="SaaS Platform Dashboard"
             className="relative w-full max-w-lg xl:max-w-xl object-contain rounded-2xl shadow-[0_20px_50px_rgba(0,0,0,0.3)] border border-border/50"
           />
