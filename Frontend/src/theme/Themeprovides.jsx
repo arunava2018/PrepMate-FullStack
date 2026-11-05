@@ -3,6 +3,8 @@ import {
   useContext,
   useLayoutEffect,
   useMemo,
+  useCallback,
+  useRef,
   useState,
 } from 'react';
 
@@ -26,6 +28,21 @@ function getInitialTheme() {
 
 export function ThemeProvider({ children }) {
   const [theme, setTheme] = useState(getInitialTheme);
+  const transitionTimer = useRef(null);
+
+  const changeTheme = useCallback((nextTheme) => {
+    const resolvedTheme = typeof nextTheme === 'function' ? nextTheme(theme) : nextTheme;
+    if (resolvedTheme === theme) return;
+
+    const root = document.documentElement;
+    root.classList.add('theme-transition');
+    window.clearTimeout(transitionTimer.current);
+    transitionTimer.current = window.setTimeout(() => {
+      root.classList.remove('theme-transition');
+    }, 450);
+
+    setTheme(resolvedTheme);
+  }, [theme]);
 
   // Apply class to <html> before paint to avoid flash
   useLayoutEffect(() => {
@@ -42,7 +59,7 @@ export function ThemeProvider({ children }) {
     } catch {}
   }, [theme]);
 
-  const value = useMemo(() => ({ theme, setTheme }), [theme]);
+  const value = useMemo(() => ({ theme, setTheme: changeTheme }), [theme, changeTheme]);
 
   return (
     <ThemeContext.Provider value={value}>{children}</ThemeContext.Provider>

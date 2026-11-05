@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import {
   Sun,
@@ -11,6 +11,8 @@ import {
   Settings,
   Shield,
   Home,
+  BookOpen,
+  MessageSquareText,
 } from 'lucide-react';
 import Logo from '@/components/Logo';
 import { useTheme } from '../theme/Themeprovides';
@@ -31,21 +33,17 @@ import { isAdminUser } from '@/db/apiAdmin';
 
 const Navbar = () => {
   const navigate = useNavigate();
+  const { pathname, hash } = useLocation();
   const { theme, setTheme } = useTheme();
   const { user, fetchUser } = UrlState();
   const isAuthenticated = !!user?.id;
   const [isAdmin, setIsAdmin] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
-  const [scrolled, setScrolled] = useState(false);
 
-  // Check admin + scroll listener
+  // Check admin access
   useEffect(() => {
     if (isAuthenticated) isAdminUser().then(setIsAdmin);
     else setIsAdmin(false);
-
-    const handleScroll = () => setScrolled(window.scrollY > 20);
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
   }, [isAuthenticated]);
 
   // Logout handler
@@ -61,8 +59,9 @@ const Navbar = () => {
   const ThemeButton = (
     <button
       onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
-      className="inline-flex items-center justify-center h-10 w-10 rounded-lg border border-border hover:bg-muted transition-all duration-200"
-      aria-label="Toggle theme">
+      className="inline-flex h-10 w-10 items-center justify-center rounded-lg border border-black/10 text-[#5e554a] transition-colors hover:bg-[#f2eee6] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring dark:border-white/10 dark:text-[#aaa398] dark:hover:bg-[#262421]"
+      aria-label={`Switch to ${theme === 'dark' ? 'light' : 'dark'} theme`}
+      title={`Switch to ${theme === 'dark' ? 'light' : 'dark'} theme`}>
       {theme === 'dark' ? (
         <Sun size={18} className="text-primary" />
       ) : (
@@ -85,6 +84,8 @@ const Navbar = () => {
   // Common links
   const commonLinks = [
     { name: 'Home', to: '/', icon: <Home className="w-4 h-4" /> },
+    { name: 'Features', to: '/#features', icon: <BookOpen className="w-4 h-4" /> },
+    { name: 'Experiences', to: '/view-interview-experiences', icon: <MessageSquareText className="w-4 h-4" /> },
     ...(isAuthenticated
       ? [
           {
@@ -101,25 +102,23 @@ const Navbar = () => {
 
   return (
     <nav
-      className={`sticky top-0 w-full z-50 backdrop-blur-xl transition-all duration-300 
-      bg-background/80 border-b border-border 
-      ${scrolled ? 'shadow-sm' : ''}`}>
-      <div className="max-w-7xl mx-auto px-6 py-3 flex justify-between items-center">
+      className="site-nav sticky top-0 z-50 w-full border-b border-black/10 bg-[#f7f4ee] text-[#1f1b16] dark:border-white/10 dark:bg-[#161513] dark:text-[#efe9de]">
+      <div className="mx-auto flex h-16 w-full max-w-[1440px] items-center justify-between px-5 sm:px-6 md:px-8">
         {/* Logo */}
         <Link
           to="/"
-          className="flex items-center">
+          className="flex items-center rounded-md focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-ring">
           <Logo />
         </Link>
 
         {/* Desktop Navigation */}
-        <div className="hidden md:flex items-center gap-6 text-sm font-medium">
+        <div className="hidden items-center gap-2 text-sm font-medium md:flex">
           {commonLinks.map((link) => (
             <Link
               key={link.to}
               to={link.to}
-              className="flex items-center gap-2 px-3 py-2 rounded-md 
-              text-muted-foreground hover:text-foreground hover:bg-muted/50 transition-colors">
+              aria-current={pathname === link.to || (link.name === 'Features' && pathname === '/' && hash === '#features') ? 'page' : undefined}
+              className={`site-nav-link inline-flex min-h-9 items-center gap-2 rounded-md px-3 text-sm transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring ${pathname === link.to || (link.name === 'Features' && pathname === '/' && hash === '#features') ? 'bg-[#efe9df] text-[#1f1b16] dark:bg-[#262421] dark:text-[#efe9de]' : 'text-[#5e554a] hover:bg-[#efe9df] hover:text-[#1f1b16] dark:text-[#aaa398] dark:hover:bg-[#262421] dark:hover:text-[#efe9de]'}`}>
               {link.icon} {link.name}
             </Link>
           ))}
@@ -129,11 +128,11 @@ const Navbar = () => {
             <div className="flex items-center gap-3">
               <Link
                 to="/auth/login"
-                className="px-4 py-2 rounded-md text-muted-foreground hover:text-foreground font-medium transition-colors">
+                className="inline-flex h-10 items-center rounded-md px-3 font-medium text-[#5e554a] transition-colors hover:text-[#1f1b16] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring dark:text-[#aaa398] dark:hover:text-[#efe9de]">
                 Log in
               </Link>
               <Link to="/auth/signup">
-                <Button className="h-9 px-4 rounded-md shadow-sm">
+                <Button className="h-10 rounded-md bg-[#2459a6] px-4 font-medium text-white shadow-none hover:bg-[#1d4a8a] dark:bg-[#a8c7f3] dark:text-[#111a27] dark:hover:bg-[#91b8ef]">
                   Sign up
                 </Button>
               </Link>
@@ -141,7 +140,7 @@ const Navbar = () => {
           ) : (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <button className="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-muted">
+                <button className="flex items-center gap-3 rounded-lg px-3 py-2 transition-colors hover:bg-[#efe9df] focus-visible:outline focus-visible:outline-2 focus-visible:outline-ring dark:hover:bg-[#262421]">
                   {UserAvatar}
                   <span className="hidden lg:block">{user.full_name}</span>
                 </button>
@@ -180,9 +179,10 @@ const Navbar = () => {
 
         {/* Mobile Menu Toggle */}
         <button
-          className="md:hidden h-10 w-10 rounded-lg hover:bg-muted"
+          className="inline-flex h-10 w-10 items-center justify-center rounded-lg text-[#5e554a] transition-colors hover:bg-[#efe9df] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring dark:text-[#aaa398] dark:hover:bg-[#262421] md:hidden"
           onClick={() => setMenuOpen((prev) => !prev)}
-          aria-label="Toggle menu">
+          aria-label={menuOpen ? 'Close menu' : 'Open menu'}
+          aria-expanded={menuOpen}>
           {menuOpen ? <X size={22} /> : <Menu size={22} />}
         </button>
       </div>
@@ -194,14 +194,14 @@ const Navbar = () => {
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: 'auto' }}
             exit={{ opacity: 0, height: 0 }}
-            transition={{ duration: 0.2 }}
-            className="md:hidden bg-background/95 backdrop-blur-md border-t border-border">
-            <div className="px-6 py-6 space-y-2">
+            transition={{ duration: 0.16, ease: [0.22, 1, 0.36, 1] }}
+            className="border-t border-black/10 bg-[#f7f4ee] dark:border-white/10 dark:bg-[#161513] md:hidden">
+            <div className="mx-auto max-w-[1440px] space-y-1 px-5 py-3 sm:px-6">
               {commonLinks.map((link) => (
                 <Link
                   key={link.to}
                   to={link.to}
-                  className="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-muted"
+                  className="flex min-h-10 items-center gap-3 rounded-md px-3 py-2 text-sm text-[#5e554a] transition-colors hover:bg-[#efe9df] hover:text-[#1f1b16] focus-visible:outline focus-visible:outline-2 focus-visible:outline-ring dark:text-[#aaa398] dark:hover:bg-[#262421] dark:hover:text-[#efe9de]"
                   onClick={() => setMenuOpen(false)}>
                   {link.icon} {link.name}
                 </Link>
@@ -211,13 +211,13 @@ const Navbar = () => {
                 <>
                   <Link
                     to="/auth/login"
-                    className="block px-4 py-3 rounded-lg hover:bg-muted"
+                    className="flex min-h-10 items-center rounded-md px-3 py-2 text-sm text-[#5e554a] transition-colors hover:bg-[#efe9df] hover:text-[#1f1b16] focus-visible:outline focus-visible:outline-2 focus-visible:outline-ring dark:text-[#aaa398] dark:hover:bg-[#262421] dark:hover:text-[#efe9de]"
                     onClick={() => setMenuOpen(false)}>
-                    Login
+                    Log in
                   </Link>
                   <Link to="/auth/signup" onClick={() => setMenuOpen(false)}>
-                    <Button className="w-full bg-primary hover:bg-primary/90 text-primary-foreground rounded-lg py-3">
-                      Sign Up
+                    <Button className="h-10 w-full rounded-md bg-[#2459a6] px-4 font-medium text-white shadow-none hover:bg-[#1d4a8a] dark:bg-[#a8c7f3] dark:text-[#111a27] dark:hover:bg-[#91b8ef]">
+                      Sign up
                     </Button>
                   </Link>
                 </>
@@ -225,14 +225,14 @@ const Navbar = () => {
                 <>
                   <Link
                     to={`/profile/${user.id}`}
-                    className="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-muted"
+                    className="flex min-h-10 items-center gap-3 rounded-md px-3 py-2 text-sm text-[#5e554a] transition-colors hover:bg-[#efe9df] hover:text-[#1f1b16] focus-visible:outline focus-visible:outline-2 focus-visible:outline-ring dark:text-[#aaa398] dark:hover:bg-[#262421] dark:hover:text-[#efe9de]"
                     onClick={() => setMenuOpen(false)}>
                     <Settings className="w-5 h-5" /> Profile
                   </Link>
                   <button
                     onClick={handleLogout}
                     disabled={loading}
-                    className="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-destructive/10 text-destructive w-full">
+                    className="flex min-h-10 w-full items-center gap-3 rounded-md px-3 py-2 text-sm text-destructive transition-colors hover:bg-destructive/10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-ring">
                     {loading ? (
                       'Signing out...'
                     ) : (

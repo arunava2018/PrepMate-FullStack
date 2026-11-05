@@ -1,12 +1,12 @@
 import ExperienceCTA from './ExperienceCTA';
 import FAQ from './FAQ';
 import Features from './Feature';
-import Footer from '../../layout/Footer';
 import HeroSection from './HeroSection';
 import Testimonials from './Testimonials';
+import './landing.css';
 export default function LandingPage() {
   return (
-    <div>
+    <div className="landing-page">
       <HeroSection />
       <ExperienceCTA />
       <Features />

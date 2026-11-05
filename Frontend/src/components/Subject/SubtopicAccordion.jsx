@@ -1,20 +1,5 @@
-// src/components/Subject/SubtopicAccordion.jsx
-import { motion, AnimatePresence } from 'framer-motion';
 import { ChevronDown } from 'lucide-react';
 import QuestionItem from './QuestionItem';
-
-const accordionVariants = {
-  closed: {
-    height: 0,
-    opacity: 0,
-    transition: { duration: 0.3, ease: 'easeInOut' },
-  },
-  open: {
-    height: 'auto',
-    opacity: 1,
-    transition: { duration: 0.4, ease: 'easeInOut' },
-  },
-};
 
 export default function SubtopicAccordion({
   subtopic,
@@ -27,59 +12,49 @@ export default function SubtopicAccordion({
   subjectId,
   user,
 }) {
-  return (
-    <motion.div className="bg-card text-card-foreground rounded-2xl shadow-sm border border-border overflow-hidden hover:shadow-md transition-all duration-300">
-      {/* Accordion Header */}
-      <motion.button
-        onClick={() =>
-          setOpenSubtopic(openSubtopic === subtopic.id ? null : subtopic.id)
-        }
-        className="w-full px-4 sm:px-6 py-4 sm:py-5 text-left flex items-center justify-between transition-colors duration-200">
-        <div className="flex items-center gap-3 sm:gap-4">
-          <div className="w-8 h-8 sm:w-10 sm:h-10 bg-primary/10 dark:bg-primary/20 rounded-xl flex items-center justify-center text-primary font-bold text-sm">
-            {index + 1}
-          </div>
-          <h3 className="text-lg sm:text-xl font-semibold text-gray-800 dark:text-gray-100 break-words">
-            {subtopic.name}
-          </h3>
-        </div>
-        <motion.div
-          animate={{ rotate: openSubtopic === subtopic.id ? 180 : 0 }}
-          transition={{ duration: 0.3 }}>
-          <ChevronDown className="w-5 h-5 text-gray-500 dark:text-gray-400" />
-        </motion.div>
-      </motion.button>
+  const isOpen = openSubtopic === subtopic.id;
+  const contentId = `subtopic-${subtopic.id}`;
 
-      {/* Accordion Content */}
-      <AnimatePresence>
-        {openSubtopic === subtopic.id && (
-          <motion.div
-            variants={accordionVariants}
-            initial="closed"
-            animate="open"
-            exit="closed"
-            className="overflow-hidden px-3 sm:px-6 pb-4 sm:pb-6">
-            {questions.length ? (
-              <div className="space-y-3">
-                {questions.map((q) => (
-                  <QuestionItem
-                    key={q.id}
-                    question={q}
-                    progressData={progressData}
-                    setProgressData={setProgressData}
-                    subjectId={subjectId}
-                    user={user}
-                  />
-                ))}
-              </div>
-            ) : (
-              <p className="text-sm text-muted-foreground p-3 sm:p-4 text-center bg-muted rounded-lg border border-border/50">
-                No questions available for this subtopic.
-              </p>
-            )}
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </motion.div>
+  return (
+    <section className="overflow-hidden rounded-xl border border-black/10 bg-[#fdfbf7] dark:border-white/10 dark:bg-[#1c1a18]">
+      <h3>
+        <button
+          type="button"
+          aria-expanded={isOpen}
+          aria-controls={contentId}
+          onClick={() => setOpenSubtopic(isOpen ? null : subtopic.id)}
+          className="flex min-h-16 w-full items-center justify-between gap-4 px-4 py-4 text-left transition-colors hover:bg-[#f2eee6] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring dark:hover:bg-[#262421] sm:px-5">
+          <span className="flex min-w-0 items-center gap-3">
+            <span className="w-7 shrink-0 text-xs tabular-nums text-[#776f65] dark:text-[#8a847a]">{String(index + 1).padStart(2, '0')}</span>
+            <span className="min-w-0 text-base font-medium leading-6 text-[#1f1b16] dark:text-[#efe9de]">{subtopic.name}</span>
+          </span>
+          <span className="flex shrink-0 items-center gap-3 text-xs text-[#776f65] dark:text-[#8a847a]">
+            {questions.length} {questions.length === 1 ? 'question' : 'questions'}
+            <ChevronDown size={17} className={`transition-transform duration-150 ${isOpen ? 'rotate-180' : ''}`} aria-hidden="true" />
+          </span>
+        </button>
+      </h3>
+
+      {isOpen && (
+        <div id={contentId} className="border-t border-black/10 p-3 dark:border-white/10 sm:p-4">
+          {questions.length ? (
+            <div className="space-y-2">
+              {questions.map((question) => (
+                <QuestionItem
+                  key={question.id}
+                  question={question}
+                  progressData={progressData}
+                  setProgressData={setProgressData}
+                  subjectId={subjectId}
+                  user={user}
+                />
+              ))}
+            </div>
+          ) : (
+            <p className="rounded-lg border border-black/10 bg-[#f7f4ee] p-4 text-sm text-[#5e554a] dark:border-white/10 dark:bg-[#161513] dark:text-[#aaa398]">No questions are available in this subtopic yet.</p>
+          )}
+        </div>
+      )}
+    </section>
   );
 }

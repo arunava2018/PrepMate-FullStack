@@ -1,80 +1,30 @@
 import { Link } from 'react-router-dom';
+import PolicyPage from '@/components/PolicyPage';
 
 export default function CookiePolicy() {
   return (
-    <div className="min-h-screen bg-background text-foreground">
-      <section className="py-10 md:py-16 lg:py-20">
-        <div className="max-w-4xl mx-auto px-6 space-y-5">
-          {/* What are cookies */}
-          <div>
-            <h2 className="text-2xl font-semibold mb-3">What are Cookies?</h2>
-            <p className="text-muted-foreground leading-relaxed">
-              Cookies are small text files placed on your device when you visit
-              a website. They help websites function properly, remember your
-              preferences, and improve overall performance.
-            </p>
-          </div>
-
-          {/* How we use cookies */}
-          <div>
-            <h2 className="text-2xl font-semibold mb-3">How We Use Cookies</h2>
-            <p className="text-muted-foreground leading-relaxed mb-4">
-              PrepMate uses cookies to:
-            </p>
-            <ul className="list-disc list-inside text-muted-foreground space-y-2">
-              <li>Enable essential site features like authentication.</li>
-              <li>Remember your preferences and settings.</li>
-              <li>Improve platform performance and reliability.</li>
-              <li>Analyze site traffic and usage trends.</li>
-            </ul>
-          </div>
-
-          {/* Types of cookies */}
-          <div>
-            <h2 className="text-2xl font-semibold mb-3">Types of Cookies</h2>
-            <ul className="list-disc list-inside text-muted-foreground space-y-2">
-              <li>
-                <strong>Essential Cookies:</strong> Required for core site
-                functionality such as login and navigation.
-              </li>
-              <li>
-                <strong>Performance Cookies:</strong> Collect anonymous data to
-                help us improve the platform.
-              </li>
-              <li>
-                <strong>Preference Cookies:</strong> Store your choices such as
-                theme and language.
-              </li>
-              <li>
-                <strong>Analytics Cookies:</strong> Provide insights into how
-                our services are used.
-              </li>
-            </ul>
-          </div>
-
-          {/* Managing cookies */}
-          <div>
-            <h2 className="text-2xl font-semibold mb-3">Managing Cookies</h2>
-            <p className="text-muted-foreground leading-relaxed">
-              You can manage or disable cookies through your browser settings.
-              Please note that disabling certain cookies may affect the
-              functionality of PrepMate.
-            </p>
-          </div>
-
-          {/* Contact */}
-          <div>
-            <h2 className="text-2xl font-semibold mb-3">Contact Us</h2>
-            <p className="text-muted-foreground leading-relaxed">
-              If you have any questions about our Cookie Policy, please{' '}
-              <Link to="/contact-us" className="text-primary hover:underline">
-                contact us
-              </Link>
-              .
-            </p>
-          </div>
-        </div>
+    <PolicyPage
+      title="Cookie policy"
+      intro="How PrepMate uses browser storage to support sign-in and remember your theme preference">
+      <section>
+        <h2>What cookies and browser storage do</h2>
+        <p>Cookies and browser storage are small pieces of data saved by your browser. They can help a site remember settings and support account features.</p>
       </section>
-    </div>
+      <section>
+        <h2>How PrepMate uses browser storage</h2>
+        <ul>
+          <li>Authentication data supports signed-in features.</li>
+          <li>Your theme preference is saved so the site can reopen in your selected theme.</li>
+        </ul>
+      </section>
+      <section>
+        <h2>Managing stored data</h2>
+        <p>You can clear browser storage through your browser settings. Removing authentication data signs you out; clearing the theme preference returns the site to its default or system theme.</p>
+      </section>
+      <section>
+        <h2>Contact</h2>
+        <p>If you have a question about this policy, please <Link to="/contact-us">contact us</Link>.</p>
+      </section>
+    </PolicyPage>
   );
 }

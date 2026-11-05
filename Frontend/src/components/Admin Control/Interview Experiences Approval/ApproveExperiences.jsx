@@ -1,162 +1,100 @@
 import { useEffect, useState } from 'react';
-import { fetchUnpublishedInterviewExperiences } from '@/db/apiInterviewExperience';
+import { ArrowRight, Building2, ChevronDown, LoaderCircle, RefreshCw, UserRound } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { Skeleton } from '@/components/ui/skeleton';
-import {
-  ChevronDown,
-  Building2,
-  RefreshCw,
-  CheckCircle,
-  User,
-} from 'lucide-react';
+import { Card } from '@/components/ui/card';
+import { fetchUnpublishedInterviewExperiences } from '@/db/apiInterviewExperience';
+import AdminPageShell from '../AdminPageShell';
 import ApprovalModal from './ApprovalModal';
 
 export default function ApproveExperiences() {
   const [experiences, setExperiences] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
   const [expandedCompany, setExpandedCompany] = useState(null);
-  const [selectedExp, setSelectedExp] = useState(null); // for modal
+  const [selectedExperience, setSelectedExperience] = useState(null);
 
   const fetchData = async () => {
     setLoading(true);
+    setError('');
     try {
-      const res = await fetchUnpublishedInterviewExperiences();
-      setExperiences(res);
-    } catch (err) {
-      console.error('Error fetching experiences:', err);
+      const result = await fetchUnpublishedInterviewExperiences();
+      setExperiences(Array.isArray(result) ? result : []);
+    } catch (cause) {
+      setError(cause.message || 'Could not load pending experiences');
     } finally {
       setLoading(false);
     }
   };
 
-  useEffect(() => {
-    fetchData();
-  }, []);
+  useEffect(() => { fetchData(); }, []);
 
-  const groupedExperiences = experiences.reduce((acc, exp) => {
-    if (!acc[exp.company_name]) acc[exp.company_name] = [];
-    acc[exp.company_name].push(exp);
-    return acc;
+  const groupedExperiences = experiences.reduce((groups, experience) => {
+    const company = experience.company_name || 'Other companies';
+    if (!groups[company]) groups[company] = [];
+    groups[company].push(experience);
+    return groups;
   }, {});
 
   return (
-    <div className="min-h-screen bg-background p-6">
-      <div className="max-w-4xl mx-auto space-y-6">
-        {/* Header */}
-        <div className="text-center space-y-3">
-          <h1 className="text-3xl font-bold text-foreground">
-            Approve Interview Experiences
-          </h1>
-          <div className="flex justify-center gap-4">
-            <Badge variant="secondary" className="flex items-center gap-1">
-              <Building2 className="w-4 h-4" />
-              {Object.keys(groupedExperiences).length} Companies
-            </Badge>
-            <Badge variant="secondary">{experiences.length} Pending</Badge>
+    <AdminPageShell title="Review interview experiences" description="Review submissions before they appear in the interview experience library" wide>
+      <div className="space-y-4">
+        <div className="flex flex-wrap items-center justify-between gap-4 rounded-xl border border-black/10 bg-[#fdfbf7] px-5 py-4 dark:border-white/10 dark:bg-[#1c1a18]">
+          <div className="flex items-baseline gap-3">
+            <span className="text-2xl font-medium tabular-nums">{experiences.length}</span>
+            <span className="text-sm text-[#5e554a] dark:text-[#aaa398]">pending submissions across {Object.keys(groupedExperiences).length} companies</span>
           </div>
-          <Button
-            onClick={fetchData}
-            disabled={loading}
-            variant="outline"
-            className="gap-2">
-            <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
+          <Button type="button" variant="outline" onClick={fetchData} disabled={loading} className="h-9 gap-2 rounded-md shadow-none">
+            {loading ? <LoaderCircle size={15} className="animate-spin" /> : <RefreshCw size={15} />}
             Refresh
           </Button>
         </div>
 
-        {/* Loading */}
-        {loading && (
-          <div className="space-y-3">
-            {[1, 2].map((i) => (
-              <Card key={i} className="bg-card border border-border">
-                <CardHeader>
-                  <Skeleton className="h-6 w-40" />
-                </CardHeader>
-              </Card>
-            ))}
-          </div>
+        {error && <p role="alert" className="rounded-lg border border-destructive/20 bg-destructive/5 px-4 py-3 text-sm text-destructive">{error}</p>}
+
+        {loading && experiences.length === 0 && <p role="status" className="py-4 text-sm text-[#5e554a] dark:text-[#aaa398]">Loading pending submissions</p>}
+
+        {!loading && experiences.length === 0 && !error && (
+          <p className="rounded-xl border border-black/10 bg-[#fdfbf7] p-5 text-sm text-[#5e554a] dark:border-white/10 dark:bg-[#1c1a18] dark:text-[#aaa398]">There are no pending experiences to review.</p>
         )}
 
-        {/* Empty */}
-        {!loading && experiences.length === 0 && (
-          <Card className="bg-card text-center py-12 border border-border">
-            <CardContent>
-              <p className="text-lg font-medium text-muted-foreground">
-                No pending experiences to approve.
-              </p>
-            </CardContent>
-          </Card>
-        )}
-
-        {/* Companies */}
-        {!loading &&
-          Object.entries(groupedExperiences).map(
-            ([company, companyExperiences]) => (
-              <Card
-                key={company}
-                className="bg-card border border-border rounded-xl">
-                <CardHeader
-                  onClick={() =>
-                    setExpandedCompany((prev) =>
-                      prev === company ? null : company
-                    )
-                  }
-                  className="cursor-pointer flex justify-between items-center rounded-t-xl">
-                  <CardTitle className="flex items-center gap-2 text-foreground">
-                    <Building2 className="w-5 h-5 text-primary" />
-                    {company}
-                    <Badge variant="secondary" className="ml-2">
-                      {companyExperiences.length} pending
-                    </Badge>
-                  </CardTitle>
-                  <ChevronDown
-                    className={`w-5 h-5 text-muted-foreground transition-transform ${
-                      expandedCompany === company ? 'rotate-180' : ''
-                    }`}
-                  />
-                </CardHeader>
-
-                {expandedCompany === company && (
-                  <CardContent className="space-y-3">
-                    {companyExperiences.map((exp, idx) => (
-                      <div
-                        key={exp.id}
-                        className="flex justify-between items-center bg-muted p-4 rounded-lg border border-border">
-                        <div className="flex items-center gap-3">
-                          <span className="w-7 h-7 flex items-center justify-center rounded-full bg-primary text-primary-foreground text-sm font-bold">
-                            {idx + 1}
-                          </span>
-                          <User className="w-5 h-5 text-muted-foreground" />
-                          <p>
-                            {exp.is_anonymous
-                              ? 'Anonymous User'
-                              : exp.users?.full_name || 'Unknown User'}
-                          </p>
-                        </div>
-                        <Button
-                          onClick={() => setSelectedExp(exp)}
-                          className="bg-primary text-primary-foreground hover:bg-primary/90">
-                          <CheckCircle className="w-4 h-4 mr-2" />
-                          Review & Approve
-                        </Button>
-                      </div>
-                    ))}
-                  </CardContent>
-                )}
-              </Card>
-            )
-          )}
+        {Object.entries(groupedExperiences).map(([company, companyExperiences]) => {
+          const isOpen = expandedCompany === company;
+          const listId = `company-${company.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`;
+          return (
+            <Card key={company} className="gap-0 overflow-hidden rounded-xl border-black/10 bg-[#fdfbf7] py-0 shadow-none dark:border-white/10 dark:bg-[#1c1a18]">
+              <h2>
+                <button type="button" aria-expanded={isOpen} aria-controls={listId} onClick={() => setExpandedCompany(isOpen ? null : company)} className="flex min-h-14 w-full items-center justify-between gap-4 px-5 py-4 text-left transition-colors hover:bg-[#f2eee6] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-ring dark:hover:bg-[#262421]">
+                  <span className="flex min-w-0 items-center gap-3">
+                    <Building2 size={17} className="shrink-0 text-[#5e554a] dark:text-[#aaa398]" />
+                    <span className="truncate text-sm font-medium">{company}</span>
+                  </span>
+                  <span className="flex shrink-0 items-center gap-3 text-xs tabular-nums text-[#776f65] dark:text-[#8a847a]">
+                    {companyExperiences.length} pending
+                    <ChevronDown size={16} className={`transition-transform duration-150 ${isOpen ? 'rotate-180' : ''}`} />
+                  </span>
+                </button>
+              </h2>
+              {isOpen && (
+                <ul id={listId} className="divide-y divide-black/10 border-t border-black/10 dark:divide-white/10 dark:border-white/10">
+                  {companyExperiences.map((experience) => (
+                    <li key={experience.id} className="flex flex-col gap-3 px-5 py-4 sm:flex-row sm:items-center sm:justify-between">
+                      <span className="inline-flex items-center gap-2 text-sm text-[#5e554a] dark:text-[#aaa398]">
+                        <UserRound size={16} />
+                        {experience.is_anonymous ? 'Anonymous learner' : experience.users?.full_name || 'Unknown user'}
+                      </span>
+                      <Button type="button" variant="outline" onClick={() => setSelectedExperience(experience)} className="h-9 gap-2 self-start rounded-md shadow-none sm:self-auto">
+                        Review submission <ArrowRight size={15} />
+                      </Button>
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </Card>
+          );
+        })}
       </div>
 
-      {/* Modal */}
-      <ApprovalModal
-        open={!!selectedExp}
-        onClose={() => setSelectedExp(null)}
-        experience={selectedExp}
-        fetchData={fetchData}
-      />
-    </div>
+      <ApprovalModal open={!!selectedExperience} onClose={() => setSelectedExperience(null)} experience={selectedExperience} fetchData={fetchData} />
+    </AdminPageShell>
   );
 }

@@ -1,199 +1,111 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { UrlState } from '@/context';
+import { Link } from 'react-router-dom';
 import {
-  Card,
-  CardHeader,
-  CardTitle,
-  CardDescription,
-} from '@/components/ui/card';
-import { motion } from 'framer-motion';
-import {
-  FilePlus,
+  ArrowRight,
   BookOpen,
-  ListPlus,
-  Shield,
-  FileEdit,
-  NotebookPen,
-  FolderEdit,
-  Trash2,
-  Settings,
   Database,
+  FilePlus2,
+  FilePenLine,
+  ListPlus,
+  NotebookPen,
+  ShieldCheck,
+  Trash2,
 } from 'lucide-react';
-import Loader from '@/components/Loader';
+import { Card } from '@/components/ui/card';
+
+const actions = [
+  {
+    title: 'Add subject',
+    description: 'Create a subject and add its description.',
+    path: '/admin/addSubject',
+    icon: BookOpen,
+  },
+  {
+    title: 'Add subtopic',
+    description: 'Organize a subject into focused topics.',
+    path: '/admin/addSubtopic',
+    icon: ListPlus,
+  },
+  {
+    title: 'Add question',
+    description: 'Write a question and answer for a subtopic.',
+    path: '/admin/addQuestion',
+    icon: FilePlus2,
+  },
+  {
+    title: 'Update question',
+    description: 'Edit an existing question or answer.',
+    path: '/admin/updateQuestion',
+    icon: FilePenLine,
+  },
+  {
+    title: 'Delete question',
+    description: 'Remove a question from the question bank.',
+    path: '/admin/deleteQuestion',
+    icon: Trash2,
+    destructive: true,
+  },
+  {
+    title: 'Approve interview experiences',
+    description: 'Review interview accounts submitted by learners.',
+    path: '/admin/approveExperiences',
+    icon: NotebookPen,
+  },
+  {
+    title: 'AI content curator',
+    description: 'Generate suggested questions and review them before saving.',
+    path: '/admin/aiAgent',
+    icon: Database,
+  },
+];
 
 export default function AdminDashboard() {
-  const { user } = UrlState();
-  const navigate = useNavigate();
-  const [loading, setLoading] = useState(false);
-
-  const cards = [
-    {
-      title: 'Add Subject',
-      desc: 'Introduce a new subject with its description.',
-      path: '/admin/addSubject',
-      icon: <BookOpen className="w-6 h-6 text-primary" />,
-    },
-    {
-      title: 'Add Subtopic',
-      desc: 'Organize subjects by adding structured subtopics.',
-      path: '/admin/addSubtopic',
-      icon: <ListPlus className="w-6 h-6 text-primary" />,
-    },
-    {
-      title: 'Add Question',
-      desc: 'Create new questions with subject & subtopic mapping.',
-      path: '/admin/addQuestion',
-      icon: <FilePlus className="w-6 h-6 text-primary" />,
-    },
-    {
-      title: 'Update Question',
-      desc: 'Edit or modify existing questions.',
-      path: '/admin/updateQuestion',
-      icon: <FileEdit className="w-6 h-6 text-primary" />,
-    },
-    {
-      title: 'Delete Question',
-      desc: 'Remove questions from the database.',
-      path: '/admin/deleteQuestion',
-      icon: <Trash2 className="w-6 h-6 text-destructive" />,
-    },
-    {
-      title: 'Approve Interview Experiences',
-      desc: 'Review and approve user-submitted interview experiences.',
-      path: '/admin/approveExperiences',
-      icon: <NotebookPen className="w-6 h-6 text-primary" />,
-    },
-    {
-      title: 'AI Content Curator Agent',
-      desc: 'Autonomously search web & add top interview questions via AI Agent tools.',
-      path: '/admin/aiAgent',
-      icon: <Database className="w-6 h-6 text-purple-600" />,
-    },
-  ];
-
-  const handleNavigate = (path) => {
-    setLoading(true);
-    navigate(path);
-  };
-
-  if (loading) return <Loader />;
-
   return (
-    <div className="max-w-6xl mx-auto mt-10 p-6">
-      {/* Header */}
-      <motion.div
-        className="flex items-center gap-4 mb-8"
-        initial={{ opacity: 0, y: -20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}>
-        <div className="flex items-center gap-3">
-          <Shield className="w-8 h-8 text-primary" />
-          <h1 className="lg:text-3xl text-2xl font-bold text-foreground">
-            Hello, {user?.full_name || 'Admin'}
-          </h1>
+    <div className="mx-auto w-full max-w-[1200px] px-5 py-8 text-[#1f1b16] dark:text-[#efe9de] sm:px-6 md:px-8 md:py-10">
+      <header className="mb-8">
+        <div className="mb-3 inline-flex items-center gap-2 text-sm text-[#5e554a] dark:text-[#aaa398]">
+          <ShieldCheck size={16} strokeWidth={1.7} aria-hidden="true" />
+          Content administration
         </div>
-        <motion.span
-          className="bg-primary/10 text-primary border border-primary/20 text-[14px] md:text-[15px] px-3 py-1 rounded-full font-medium whitespace-nowrap relative"
-          whileHover={{ scale: 1.05 }}
-          transition={{ duration: 0.3 }}>
-          <span>Admin</span>
-        </motion.span>
-      </motion.div>
-
-      {/* Compact Context Section */}
-      <motion.div
-        className="mb-8"
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.2, duration: 0.5 }}>
-        <Card className="bg-card border-border">
-          <CardHeader className="p-4">
-            <div className="flex items-center gap-3">
-              <div className="p-2 rounded-lg bg-primary/10">
-                <Database className="w-5 h-5 text-primary" />
-              </div>
-              <div className="flex-1">
-                <CardTitle className="text-lg font-semibold text-foreground mb-1">
-                  Content Management System
-                </CardTitle>
-                <CardDescription className="text-muted-foreground text-sm">
-                  Your central hub for managing educational content database -
-                  create, update, and organize subjects, subtopics, and
-                  questions efficiently.
-                </CardDescription>
-              </div>
-            </div>
-          </CardHeader>
-        </Card>
-      </motion.div>
-
-      {/* Section Title */}
-      <motion.div
-        className="mb-6"
-        initial={{ opacity: 0, x: -20 }}
-        animate={{ opacity: 1, x: 0 }}
-        transition={{ delay: 0.4, duration: 0.5 }}>
-        <h2 className="text-xl font-semibold text-foreground flex items-center gap-2">
-          <Settings className="w-5 h-5 text-muted-foreground" />
-          Administrative Actions
-        </h2>
-        <p className="text-muted-foreground mt-1 text-sm">
-          Choose an action below to manage your content database
+        <h1 className="text-3xl font-medium leading-tight tracking-tight">Manage PrepMate content</h1>
+        <p className="mt-2 max-w-2xl text-sm leading-6 text-[#5e554a] dark:text-[#aaa398]">
+          Organize subjects and questions, and review interview experiences shared by learners.
         </p>
-      </motion.div>
+      </header>
 
-      {/* Quick Start Guide */}
-      <motion.div
-        className="mb-8 p-6 bg-muted/30 rounded-xl border border-border shadow-sm"
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.5, duration: 0.5 }}>
-        <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-          <div className="p-2 bg-primary/10 text-primary rounded-full">
-            <span className="text-xl">💡</span>
-          </div>
-          <p className="text-sm font-medium text-foreground text-center sm:text-left">
-            <span className="font-bold">Quick Start Guide: </span>
-            Begin by adding <span className="text-primary font-semibold">Subjects</span> → then <span className="text-primary font-semibold">Subtopics</span> → finally <span className="text-primary font-semibold">Questions</span> for optimal organization.
-          </p>
+      <aside className="mb-8 flex items-start gap-3 rounded-xl border border-black/10 bg-[#fdfbf7] p-4 dark:border-white/10 dark:bg-[#1c1a18] sm:items-center sm:p-5">
+        <BookOpen size={18} className="mt-0.5 shrink-0 text-[#5e554a] dark:text-[#aaa398] sm:mt-0" aria-hidden="true" />
+        <p className="text-sm leading-6 text-[#5e554a] dark:text-[#aaa398]">
+          <span className="font-medium text-[#1f1b16] dark:text-[#efe9de]">Suggested order:</span> Add a subject, organize it with subtopics, then add questions.
+        </p>
+      </aside>
+
+      <section aria-labelledby="admin-actions-heading">
+        <div className="mb-4 flex items-baseline justify-between gap-4">
+          <h2 id="admin-actions-heading" className="text-xl font-medium">Available actions</h2>
+          <span className="text-sm tabular-nums text-[#776f65] dark:text-[#8a847a]">{actions.length} tools</span>
         </div>
-      </motion.div>
-
-      {/* Action Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-        {cards.map((card, idx) => (
-          <motion.div
-            key={card.title}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: idx * 0.15 + 0.6, duration: 0.4 }}
-            whileHover={{ scale: 1.02, y: -2 }}
-            whileTap={{ scale: 0.98 }}
-            onClick={() => handleNavigate(card.path)}
-            className="cursor-pointer">
-            <Card
-              className={`h-full shadow-sm hover:shadow-md transition-all duration-300 bg-card border border-border hover:border-primary/50`}>
-              <CardHeader className="p-6 flex flex-col gap-4">
-                <motion.div
-                  className="p-3 rounded-xl bg-primary/10 inline-block self-start"
-                  whileHover={{ rotate: 5 }}
-                  transition={{ duration: 0.2 }}>
-                  {card.icon}
-                </motion.div>
-                <div>
-                  <CardTitle className="text-lg font-semibold text-foreground mb-2">
-                    {card.title}
-                  </CardTitle>
-                  <CardDescription className="text-muted-foreground leading-relaxed">
-                    {card.desc}
-                  </CardDescription>
-                </div>
-              </CardHeader>
-            </Card>
-          </motion.div>
-        ))}
-      </div>
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-3">
+          {actions.map(({ title, description, path, icon: Icon, destructive }) => (
+            <Link
+              key={path}
+              to={path}
+              className="group block rounded-xl focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring">
+              <Card className="flex min-h-[132px] h-full flex-row items-start gap-4 rounded-xl border-black/10 bg-[#fdfbf7] p-5 shadow-none transition-colors hover:bg-[#f2eee6] dark:border-white/10 dark:bg-[#1c1a18] dark:hover:bg-[#262421]">
+                <span className={`inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-black/10 dark:border-white/10 ${destructive ? 'text-[#a33a32] dark:text-[#e58a82]' : 'text-[#5e554a] dark:text-[#aaa398]'}`}>
+                  <Icon size={17} strokeWidth={1.6} aria-hidden="true" />
+                </span>
+                <span className="min-w-0 flex-1">
+                  <span className="flex items-start justify-between gap-3">
+                    <span className="text-[15px] font-medium leading-5 text-[#1f1b16] dark:text-[#efe9de]">{title}</span>
+                    <ArrowRight size={16} className="mt-0.5 shrink-0 text-[#776f65] transition-transform group-hover:translate-x-0.5 dark:text-[#8a847a]" aria-hidden="true" />
+                  </span>
+                  <span className="mt-2 block text-sm leading-5 text-[#5e554a] dark:text-[#aaa398]">{description}</span>
+                </span>
+              </Card>
+            </Link>
+          ))}
+        </div>
+      </section>
     </div>
   );
 }

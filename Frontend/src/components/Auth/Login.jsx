@@ -4,12 +4,12 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { BeatLoader } from 'react-spinners';
 import { Eye, EyeOff } from 'lucide-react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import * as Yup from 'yup';
 import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert';
 import { UrlState } from '@/context';
 
-// ✅ Login validation schema
+// Login validation schema
 const loginSchema = Yup.object().shape({
   email: Yup.string().email('Invalid email').required('Email is required'),
   password: Yup.string()
@@ -20,7 +20,7 @@ const loginSchema = Yup.object().shape({
 export default function Login() {
   const navigate = useNavigate();
   const location = useLocation();
-  const { login } = UrlState(); // ✅ login comes from context now
+  const { login } = UrlState(); // ogin comes from context now
   const emailInputRef = useRef(null);
 
   // either go back to intended page, or default to dashboard
@@ -70,38 +70,40 @@ export default function Login() {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4">
+    <form onSubmit={handleSubmit} className="space-y-5">
       {successAlert && (
         <Alert variant="success" className="mb-4">
-          <AlertTitle>Login Successful!</AlertTitle>
-          <AlertDescription>Redirecting...</AlertDescription>
+          <AlertTitle>Login successful</AlertTitle>
+          <AlertDescription>Taking you to your dashboard</AlertDescription>
         </Alert>
       )}
 
       {/* Email */}
-      <div className="space-y-1">
+      <div className="space-y-2">
         <Label htmlFor="email">Email</Label>
         <Input
+          className="h-11 rounded-lg border-border bg-background/80 px-3 text-sm shadow-none placeholder:text-muted-foreground focus-visible:ring-2"
           id="email"
           name="email"
           type="email"
-          placeholder="Enter your email"
+          placeholder="you@example.com"
           value={formData.email}
           onChange={handleInputChange}
           ref={emailInputRef}
           required
         />
-        {errors.email && <p className="text-red-500 text-sm">{errors.email}</p>}
+        {errors.email && <p className="text-sm text-destructive">{errors.email}</p>}
       </div>
 
       {/* Password */}
-      <div className="relative space-y-1">
+      <div className="relative space-y-2">
         <Label htmlFor="password">Password</Label>
         <Input
+          className="h-11 rounded-lg border-border bg-background/80 px-3 pr-11 text-sm shadow-none placeholder:text-muted-foreground focus-visible:ring-2"
           id="password"
           name="password"
           type={showPassword ? 'text' : 'password'}
-          placeholder="Enter your password"
+          placeholder="Password"
           value={formData.password}
           onChange={handleInputChange}
           required
@@ -110,35 +112,31 @@ export default function Login() {
           type="button"
           onClick={() => setShowPassword((prev) => !prev)}
           aria-label={showPassword ? 'Hide password' : 'Show password'}
-          className="absolute right-3 top-8 text-gray-500 hover:text-gray-700">
+          className="absolute right-1 top-[29px] inline-flex h-9 w-9 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-muted hover:text-foreground focus-visible:outline focus-visible:outline-2 focus-visible:outline-ring">
           {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
         </button>
         {errors.password && (
-          <p className="text-red-500 text-sm">{errors.password}</p>
+          <p className="text-sm text-destructive">{errors.password}</p>
         )}
       </div>
 
       {/* General error */}
       {errors.general && (
-        <p className="text-red-500 text-sm">{errors.general}</p>
+        <p className="text-sm text-destructive">{errors.general}</p>
       )}
 
       {/* Submit */}
       <Button
         type="submit"
-        className="w-full bg-primary hover:bg-primary/90 text-primary-foreground">
+        className="h-12 w-full rounded-lg bg-primary text-primary-foreground shadow-none hover:bg-primary/90">
         {loading ? <BeatLoader size={10} color="#fff" /> : 'Login'}
       </Button>
 
-      <p className="mx-auto text-muted-foreground text-sm">
+      <p className="text-center text-sm text-muted-foreground">
         Don't have an account?{' '}
-        <span
-          onClick={() =>
-            navigate('/auth/signup', { state: { from: location.state?.from } })
-          }
-          className="text-primary underline cursor-pointer font-medium hover:text-primary/80">
+        <Link to="/auth/signup" state={{ from: location.state?.from }} className="font-medium text-primary underline-offset-4 hover:underline">
           Register
-        </span>
+        </Link>
       </p>
     </form>
   );

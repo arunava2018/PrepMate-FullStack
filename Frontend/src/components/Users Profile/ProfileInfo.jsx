@@ -1,149 +1,60 @@
 import React from 'react';
+import { CalendarDays, GraduationCap, Mail, UserRound } from 'lucide-react';
 import { UrlState } from '@/context';
-import {
-  FaUser,
-  FaEnvelope,
-  FaUniversity,
-  FaCalendarAlt,
-  FaBolt,
-} from 'react-icons/fa';
-import { IoWarning } from 'react-icons/io5';
-import ProfileAction from './profileActions';
 import UserExperiences from '@/components/Users Profile/UserExperinces.jsx';
 
 function ProfileInfo() {
   const { user } = UrlState();
-  let profileAvatar =
-    user?.full_name
-      ?.split(' ')
-      .map((n) => n[0])
-      .join('') || 'U';
-  const profileFields = [
-    {
-      key: 'Full Name',
-      value: user?.full_name,
-      icon: <FaUser className="text-blue-500 dark:text-blue-400" />,
-      placeholder: 'Enter your full name',
-    },
-    {
-      key: 'Email',
-      value: user?.email,
-      icon: <FaEnvelope className="text-emerald-500 dark:text-emerald-400" />,
-      placeholder: 'Enter your email address',
-    },
-    {
-      key: 'College Name',
-      value: user?.college_name,
-      icon: <FaUniversity className="text-purple-500 dark:text-purple-400" />,
-      placeholder: 'Enter your college name',
-    },
-    {
-      key: 'Passout Year',
-      value: user?.passout_year,
-      icon: <FaCalendarAlt className="text-amber-500 dark:text-amber-400" />,
-      placeholder: 'Enter graduation year',
-    },
+  const initials = user?.full_name
+    ?.split(' ')
+    .filter(Boolean)
+    .map((part) => part[0])
+    .join('') || 'U';
+
+  const fields = [
+    { label: 'Name', value: user?.full_name, Icon: UserRound },
+    { label: 'Email', value: user?.email, Icon: Mail },
+    { label: 'College', value: user?.college_name, Icon: GraduationCap },
+    { label: 'Graduation year', value: user?.passout_year, Icon: CalendarDays },
   ];
 
   return (
-    <div className="min-h-screen p-6">
-      <div className="max-w-7xl mx-auto space-y-6">
-        {/* Alert Banner */}
-        <div className="flex justify-center">
-          <div className="inline-flex items-center gap-3 px-4 py-3 bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800/50 rounded-xl w-full md:w-auto">
-            <IoWarning className="h-5 w-5 text-amber-600 dark:text-amber-400 flex-shrink-0" />
-            <span className="text-sm font-medium text-amber-800 dark:text-amber-200">
-              Remember to save changes after editing your profile
-            </span>
-          </div>
+    <div className="mx-auto w-full max-w-6xl px-4 py-8 text-[#1f1b16] dark:text-[#efe9de] sm:px-6 md:py-10">
+      <header className="mb-7 flex items-center gap-4 border-b border-black/10 pb-6 dark:border-white/10 sm:mb-8 sm:pb-7">
+        <div className="relative flex h-14 w-14 shrink-0 items-center justify-center rounded-lg border border-black/10 bg-[#fdfbf7] text-lg font-medium text-[#5e554a] dark:border-white/10 dark:bg-[#1c1a18] dark:text-[#c2baae]" aria-label={`${user?.full_name || 'User'} initials`}>
+          <span className="absolute bottom-2 left-0 top-2 w-0.5 rounded-r bg-[#386eb8] dark:bg-[#a8c7f3]" aria-hidden="true" />
+          {initials}
         </div>
-        {/* Welcome Header */}
-        <div className="text-center rounded-2xl p-4 sm:p-6">
-          <div className="flex flex-col items-center space-y-2 justify-center">
-            {/* Avatar */}
-            <div className="h-12 w-12 sm:h-16 sm:w-16 lg:h-20 lg:w-20 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center text-white font-bold text-lg sm:text-xl lg:text-2xl shadow-lg">
-              {profileAvatar}
-            </div>
-
-            {/* Text */}
-            <div>
-              <h1 className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white">
-                Welcome, {user?.full_name?.split(' ')[0] || 'User'}
-              </h1>
-              <p className="text-sm sm:text-base text-gray-600 dark:text-gray-400 mt-1">
-                Manage your profile information and settings
-              </p>
-            </div>
-          </div>
+        <div className="min-w-0">
+          <p className="text-sm font-medium text-[#2459a6] dark:text-[#a8c7f3]">Account</p>
+          <h1 className="mt-1 text-2xl font-medium leading-tight tracking-tight sm:text-3xl">Your profile</h1>
+          <p className="mt-1 text-sm leading-5 text-[#5e554a] dark:text-[#aaa398]">Account details and interview accounts you have shared</p>
         </div>
-        {/* Grid Layout */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          {/* Profile Information - 2/3 on desktop */}
-          <div className="lg:col-span-2 bg-white dark:bg-[#111111] rounded-2xl shadow-sm border border-gray-200 dark:border-gray-700">
-            {/* Header */}
-            <div className="flex items-center gap-3 px-6 py-4 border-b border-gray-200 dark:border-gray-700">
-              <div className="h-10 w-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl flex items-center justify-center">
-                <FaUser className="text-white text-sm" />
-              </div>
-              <h2 className="text-lg font-semibold text-gray-900 dark:text-white">
-                Profile Information
-              </h2>
-            </div>
+      </header>
 
-            {/* Content */}
-            <div className="p-6">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {profileFields.map((field) => (
-                  <div key={field.key} className="space-y-3">
-                    {/* Field Label */}
-                    <div className="flex items-center gap-2">
-                      <div className="p-2 bg-gray-100 dark:bg-gray-700 rounded-lg">
-                        {field.icon}
-                      </div>
-                      <span className="text-sm font-medium text-gray-700 dark:text-gray-300 uppercase tracking-wide">
-                        {field.key}
-                      </span>
-                    </div>
-
-                    {/* Field Value */}
-                    <div className="ml-10">
-                      {field.value ? (
-                        <p className="text-gray-900 dark:text-white font-medium">
-                          {field.value}
-                        </p>
-                      ) : (
-                        <p className="text-gray-400 dark:text-gray-500 italic">
-                          {field.placeholder}
-                        </p>
-                      )}
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-
-          {/* Quick Actions - 1/3 on desktop */}
-          <div className="bg-white dark:bg-[#111111] rounded-2xl shadow-sm border border-gray-200 dark:border-gray-700">
-            {/* Header */}
-            <div className="flex items-center gap-3 px-6 py-4 border-b border-gray-200 dark:border-gray-700">
-              <div className="h-10 w-10 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-xl flex items-center justify-center">
-                <FaBolt className="text-white text-sm" />
-              </div>
-              <h2 className="text-lg font-semibold text-gray-900 dark:text-white">
-                Quick Actions
-              </h2>
-            </div>
-
-            {/* Content */}
-            <div className="p-6">
-              <ProfileAction />
-            </div>
-          </div>
+      <section className="rounded-xl border border-black/10 bg-[#fdfbf7] dark:border-white/10 dark:bg-[#1c1a18]" aria-labelledby="profile-details-title">
+        <div className="border-b border-black/10 px-5 py-4 dark:border-white/10 sm:px-6">
+          <h2 id="profile-details-title" className="text-base font-medium">Profile details</h2>
+          <p className="mt-1 text-sm text-[#5e554a] dark:text-[#aaa398]">Information associated with your account</p>
         </div>
-        {/* User Interview Experiences Section */}
-        <UserExperiences userId={user?.id} /> {/* ✅ added here */}
-      </div>
+        <dl className="grid gap-x-6 px-5 sm:grid-cols-2 sm:px-6 xl:grid-cols-[minmax(0,1fr)_minmax(0,1.6fr)_minmax(0,1.3fr)_minmax(0,.85fr)]">
+          {fields.map(({ label, value, Icon }) => (
+            <div key={label} className="min-w-0 border-b border-black/10 py-4 last:border-b-0 dark:border-white/10 sm:[&:nth-last-child(-n+2)]:border-b-0 xl:border-b-0">
+              <dt className="flex items-center gap-2 text-sm text-[#5e554a] dark:text-[#aaa398]">
+                <Icon size={16} strokeWidth={1.7} aria-hidden="true" />
+                {label}
+              </dt>
+              <dd className="mt-2 break-words pl-6 text-sm font-medium text-[#1f1b16] dark:text-[#efe9de]">
+                {value || <span className="font-normal text-[#776f65] dark:text-[#8a847a]">Not added</span>}
+              </dd>
+            </div>
+          ))}
+        </dl>
+      </section>
+
+      <section className="mt-6" aria-label="Your interview experiences">
+        <UserExperiences userId={user?.id} />
+      </section>
     </div>
   );
 }

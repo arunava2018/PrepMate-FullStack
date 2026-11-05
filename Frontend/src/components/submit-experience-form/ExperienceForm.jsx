@@ -18,7 +18,6 @@ import {
   Github,
   FileText,
   AlertCircle,
-  CheckCircle,
 } from 'lucide-react';
 
 const ExperienceForm = () => {
@@ -47,72 +46,30 @@ const ExperienceForm = () => {
     errors,
     isSubmitting,
     showSuccess,
+    setShowSuccess,
     handleChange,
     handleExperienceChange,
     handleSubmit,
-    setFormData,
   } = useExperienceForm();
 
   // apply anonymous preference once chosen
   const handlePreferenceSelect = (anonymous) => {
     setIsAnonymous(anonymous);
-    if (anonymous) {
-      setFormData((prev) => ({
-        ...prev,
-        user_name: 'Anonymous User',
-        linkedin: '',
-      }));
-    } else {
-      setFormData((prev) => ({
-        ...prev,
-        user_name: user?.full_name || '',
-        linkedin: '',
-      }));
-    }
   };
 
   // handle dialog close with reason
   const handleDialogClose = (reason) => {
     if (reason === 'dismissed' && isAnonymous === null) {
-      navigate('/'); // redirect home if dismissed without choosing
+      navigate('/view-interview-experiences');
     }
     setShowPreferenceDialog(false); // otherwise just close
   };
 
-  // URL validation
-  const validateURL = (url) => {
-    if (!url) return true;
-    const urlPattern =
-      /^(https?:\/\/)?([\w-]+\.)+[\w-]{2,}(\/[\w\-._~:/?#[\]@!$&'()*+,;=]*)?$/;
-    return urlPattern.test(url);
-  };
-
-  const getFieldStatus = (fieldName, value) => {
-    if (errors[fieldName]) return 'error';
-    if (value && !errors[fieldName]) {
-      if (fieldName === 'linkedin' || fieldName === 'github') {
-        return validateURL(value) ? 'success' : 'error';
-      }
-      return 'success';
-    }
-    return 'default';
-  };
-
-  const getStatusIcon = (status) => {
-    switch (status) {
-      case 'error':
-        return <AlertCircle className="w-4 h-4 text-destructive" />;
-      case 'success':
-        return <CheckCircle className="w-4 h-4 text-green-500" />;
-      default:
-        return null;
-    }
-  };
-
   return (
-    <div className="min-h-screen bg-muted/20 p-4 py-8">
-      <div className="max-w-3xl mx-auto">
-        <SuccessMessage showSuccess={showSuccess} />
+    <div className="bg-[#f7f4ee] px-5 py-10 dark:bg-[#161513] sm:px-6 sm:py-12">
+      <div className="mx-auto w-full max-w-3xl">
+        <FormHeader />
+        <SuccessMessage showSuccess={showSuccess} onClose={() => setShowSuccess(false)} />
 
         {/* preference dialog */}
         <PostingPreferenceDialog
@@ -125,59 +82,33 @@ const ExperienceForm = () => {
         {isAnonymous !== null && (
           <form
             onSubmit={(e) => handleSubmit(e, editorRef, isAnonymous)}
-            className="bg-card text-card-foreground rounded-xl shadow-sm border border-border p-6 sm:p-8 space-y-8">
-            <FormHeader />
+            className="experience-form space-y-8 rounded-xl border border-black/10 bg-[#fdfbf7] p-5 text-[#1f1b16] dark:border-white/10 dark:bg-[#1c1a18] dark:text-[#efe9de] sm:p-8 [&_input]:border-black/10 [&_input]:bg-[#fdfbf7] [&_input]:text-[#1f1b16] [&_input]:placeholder:text-[#776f65] [&_input]:focus-visible:ring-[#2459a6] [&_label]:text-[#1f1b16] [&_label_svg]:text-[#2459a6] dark:[&_input]:border-white/10 dark:[&_input]:bg-[#1c1a18] dark:[&_input]:text-[#efe9de] dark:[&_input]:placeholder:text-[#8a847a] dark:[&_label]:text-[#efe9de] dark:[&_label_svg]:text-[#a8c7f3]">
 
             <div className="space-y-6">
-              {/* Name + Company */}
+              {/* Posting preference and company */}
               <div className="grid md:grid-cols-2 gap-6">
-                {/* Name */}
                 <div className="space-y-2">
-                  <label className="flex items-center gap-2 text-sm font-medium text-foreground">
-                    <User className="w-4 h-4 text-primary" /> Your Name
-                    <span className="text-destructive">*</span>
-                  </label>
-                  <div className="relative">
-                    <Input
-                      type="text"
-                      name="username"
-                      value={formData.user_name}
-                      onChange={handleChange}
-                      placeholder="Your Name"
-                      disabled={isAnonymous}
-                      className={`pr-10 ${errors.username ? 'border-destructive focus-visible:ring-destructive' : ''}`}
-                    />
-                    <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
-                      {getStatusIcon(getFieldStatus('username', formData.user_name))}
-                    </div>
+                  <p className="text-sm font-medium">Sharing as</p>
+                  <div className="flex min-h-10 items-center gap-2 rounded-md border border-black/10 px-3 text-sm text-[#5e554a] dark:border-white/10 dark:text-[#aaa398]">
+                    <User size={16} aria-hidden="true" />
+                    {isAnonymous ? 'Anonymous' : user?.full_name || 'Your PrepMate profile'}
                   </div>
-                  {errors.username && (
-                    <p className="text-destructive text-xs flex items-center gap-1">
-                      <AlertCircle className="w-3 h-3" />
-                      {errors.username}
-                    </p>
-                  )}
                 </div>
 
                 {/* Company */}
                 <div className="space-y-2">
                   <label className="flex items-center gap-2 text-sm font-medium text-foreground">
-                    <Building2 className="w-4 h-4 text-primary" /> Company
+                    <Building2 className="h-4 w-4" /> Company
                     <span className="text-destructive">*</span>
                   </label>
-                  <div className="relative">
-                    <Input
+                  <Input
                       type="text"
                       name="company"
                       value={formData.company}
                       onChange={handleChange}
-                      placeholder="Company Name"
-                      className={`pr-10 ${errors.company ? 'border-destructive focus-visible:ring-destructive' : ''}`}
+                      placeholder="Company name"
+                      className={errors.company ? 'border-destructive focus-visible:ring-destructive' : ''}
                     />
-                    <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
-                      {getStatusIcon(getFieldStatus('company', formData.company))}
-                    </div>
-                  </div>
                   {errors.company && (
                     <p className="text-destructive text-xs flex items-center gap-1">
                       <AlertCircle className="w-3 h-3" />
@@ -191,15 +122,15 @@ const ExperienceForm = () => {
               <div className="grid md:grid-cols-2 gap-6">
                 <div className="space-y-2">
                   <label className="flex items-center gap-2 text-sm font-medium text-foreground">
-                    <Briefcase className="w-4 h-4 text-primary" /> Offer Type
+                    <Briefcase className="h-4 w-4" /> Offer type
                     <span className="text-destructive">*</span>
                   </label>
                   <select
                     name="offer_type"
                     value={formData.offer_type}
                     onChange={handleChange}
-                    className={`flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 ${errors.offer_type ? 'border-destructive focus-visible:ring-destructive' : ''}`}>
-                    <option value="">Select Offer Type</option>
+                    className={`flex h-10 w-full rounded-md border border-black/10 bg-[#fdfbf7] px-3 py-2 text-sm text-[#1f1b16] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2459a6] dark:border-white/10 dark:bg-[#1c1a18] dark:text-[#efe9de] ${errors.offer_type ? 'border-destructive focus-visible:ring-destructive' : ''}`}>
+                    <option value="">Select offer type</option>
                     {offerTypes.map((offer) => (
                       <option key={offer.value} value={offer.value}>
                         {offer.label}
@@ -210,15 +141,15 @@ const ExperienceForm = () => {
 
                 <div className="space-y-2">
                   <label className="flex items-center gap-2 text-sm font-medium text-foreground">
-                    <Briefcase className="w-4 h-4 text-primary" /> Opportunity Type
+                    <Briefcase className="h-4 w-4" /> Opportunity type
                     <span className="text-destructive">*</span>
                   </label>
                   <select
                     name="opportunity_type"
                     value={formData.opportunity_type}
                     onChange={handleChange}
-                    className={`flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 ${errors.opportunity_type ? 'border-destructive focus-visible:ring-destructive' : ''}`}>
-                    <option value="">Select Opportunity Type</option>
+                    className={`flex h-10 w-full rounded-md border border-black/10 bg-[#fdfbf7] px-3 py-2 text-sm text-[#1f1b16] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2459a6] dark:border-white/10 dark:bg-[#1c1a18] dark:text-[#efe9de] ${errors.opportunity_type ? 'border-destructive focus-visible:ring-destructive' : ''}`}>
+                    <option value="">Select opportunity type</option>
                     {opportunityTypes.map((type) => (
                       <option key={type.value} value={type.value}>
                         {type.label}
@@ -231,7 +162,7 @@ const ExperienceForm = () => {
               {/* Position */}
               <div className="space-y-2">
                 <label className="flex items-center gap-2 text-sm font-medium text-foreground">
-                  <Briefcase className="w-4 h-4 text-primary" /> Position
+                    <Briefcase className="h-4 w-4" /> Position
                   <span className="text-destructive">*</span>
                 </label>
                 <Input
@@ -248,7 +179,7 @@ const ExperienceForm = () => {
               <div className="grid md:grid-cols-2 gap-6">
                 <div className="space-y-2">
                   <label className="flex items-center gap-2 text-sm font-medium text-foreground">
-                    <Linkedin className="w-4 h-4 text-primary" /> LinkedIn
+                    <Linkedin className="h-4 w-4" /> LinkedIn
                     <span className="text-muted-foreground text-xs font-normal">
                       (optional)
                     </span>
@@ -266,7 +197,7 @@ const ExperienceForm = () => {
 
                 <div className="space-y-2">
                   <label className="flex items-center gap-2 text-sm font-medium text-foreground">
-                    <Github className="w-4 h-4 text-primary" /> GitHub
+                    <Github className="h-4 w-4" /> GitHub
                     <span className="text-muted-foreground text-xs font-normal">
                       (optional)
                     </span>
@@ -286,20 +217,27 @@ const ExperienceForm = () => {
               <div className="pt-2">
                 <MarkdownEditor
                   ref={editorRef}
+                  id="interview-experience"
                   value={experience}
                   onChange={handleExperienceChange}
                   error={errors.experience}
-                  label="Interview Experience *"
+                  label="Interview experience *"
                   placeholder="Write your interview experience..."
                 />
               </div>
             </div>
 
+            {errors.submit && (
+              <p role="alert" className="rounded-md border border-destructive/30 bg-destructive/5 px-4 py-3 text-sm text-destructive">
+                {errors.submit}
+              </p>
+            )}
+
             {/* Submit */}
             <Button
               type="submit"
               disabled={isSubmitting}
-              className="w-full h-12 text-base font-semibold transition-all">
+              className="h-11 w-full rounded-md bg-[#2459a6] text-sm font-medium text-white shadow-none transition-colors hover:bg-[#1d4a8a] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring dark:bg-[#a8c7f3] dark:text-[#111a27] dark:hover:bg-[#91b8ef]">
               <FileText className="w-5 h-5 mr-2" />
               {isSubmitting ? 'Submitting...' : 'Submit for Review'}
             </Button>

@@ -1,302 +1,189 @@
-import React, { useEffect, useState, useMemo } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { fetchPublicInterviewExperiences } from '@/db/apiInterviewExperience';
 import useFetch from '@/hooks/useFetch';
 import Loader from '../Loader';
-import { Card, CardContent } from '../ui/card';
 import { Button } from '../ui/button';
 import { Input } from '../ui/input';
 import {
-  FileText,
-  Search,
-  Filter,
-  Plus,
-  Sparkles,
-  LayoutGrid,
+  ArrowRight,
   Building2,
-  XCircle,
-  TrendingUp,
+  LayoutGrid,
+  ListFilter,
+  Plus,
+  Search,
+  X,
 } from 'lucide-react';
 import CompanyExperienceSection from './CompanyExperienceSection';
 import ExperienceStats from './ExperienceStats';
 import ExperienceCard from './ExperienceCard';
-import { UrlState } from '@/context';
-import { motion, AnimatePresence } from 'framer-motion';
+
+const offerTypeFilters = [
+  { id: 'all', label: 'All offers' },
+  { id: 'full_time', label: 'Full time' },
+  { id: 'internship_ppo', label: 'Internship + PPO' },
+  { id: 'internship', label: 'Internship' },
+];
 
 function InterviewExperience() {
-  const { user } = UrlState();
-  const isAuthenticated = !!user?.id;
-
   const {
     data: fetchedExperiences,
     loading,
     error,
     fn: fetchExperience,
   } = useFetch(fetchPublicInterviewExperiences);
-
-  // Search & Filter States
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedOfferType, setSelectedOfferType] = useState('all');
-  const [viewMode, setViewMode] = useState('grid'); // 'grid' | 'company'
+  const [viewMode, setViewMode] = useState('grid');
 
   useEffect(() => {
     fetchExperience();
   }, []);
 
-  const experiencesList = useMemo(() => {
-    return Array.isArray(fetchedExperiences) ? fetchedExperiences : [];
-  }, [fetchedExperiences]);
-
-  // Filter experiences based on search and offer type
+  const experiences = Array.isArray(fetchedExperiences) ? fetchedExperiences : [];
   const filteredExperiences = useMemo(() => {
-    return experiencesList.filter((exp) => {
-      // Search match
-      const query = searchQuery.toLowerCase().trim();
+    const query = searchQuery.trim().toLowerCase();
+    return experiences.filter((experience) => {
       const matchesSearch =
         !query ||
-        exp.company_name?.toLowerCase().includes(query) ||
-        exp.role?.toLowerCase().includes(query) ||
-        (!exp.is_anonymous && exp.users?.full_name?.toLowerCase().includes(query));
-
-      // Offer type match
-      const matchesOffer =
-        selectedOfferType === 'all' || exp.offer_type === selectedOfferType;
-
+        experience.company_name?.toLowerCase().includes(query) ||
+        experience.role?.toLowerCase().includes(query) ||
+        (!experience.is_anonymous && experience.users?.full_name?.toLowerCase().includes(query));
+      const matchesOffer = selectedOfferType === 'all' || experience.offer_type === selectedOfferType;
       return matchesSearch && matchesOffer;
     });
-  }, [experiencesList, searchQuery, selectedOfferType]);
+  }, [experiences, searchQuery, selectedOfferType]);
 
-  // Group filtered experiences by company for 'company' view mode
   const groupedExperiences = useMemo(() => {
-    return filteredExperiences.reduce((acc, exp) => {
-      if (exp.company_name) {
-        const normalizedName = exp.company_name.trim().toLowerCase();
-
-        if (!acc[normalizedName]) {
-          acc[normalizedName] = {
-            displayName: exp.company_name.trim(),
-            experiences: [],
-          };
-        }
-
-        acc[normalizedName].experiences.push(exp);
-      }
-      return acc;
+    return filteredExperiences.reduce((groups, experience) => {
+      if (!experience.company_name) return groups;
+      const key = experience.company_name.trim().toLowerCase();
+      if (!groups[key]) groups[key] = { displayName: experience.company_name.trim(), experiences: [] };
+      groups[key].experiences.push(experience);
+      return groups;
     }, {});
   }, [filteredExperiences]);
 
-  const totalCompaniesCount = Object.keys(
-    experiencesList.reduce((acc, exp) => {
-      if (exp.company_name) acc[exp.company_name.trim().toLowerCase()] = true;
-      return acc;
-    }, {})
-  ).length;
+  const totalCompanies = useMemo(
+    () => new Set(experiences.map((experience) => experience.company_name?.trim().toLowerCase()).filter(Boolean)).size,
+    [experiences]
+  );
 
   if (loading) return <Loader />;
 
   if (error) {
     return (
-      <Card className="border border-destructive/20 bg-destructive/5 rounded-2xl shadow-sm my-8">
-        <CardContent className="flex items-center justify-between p-6">
-          <div className="flex items-center gap-3">
-            <XCircle className="w-6 h-6 text-destructive" />
-            <span className="text-destructive font-medium">
-              Failed to load interview experiences. Please try again later.
-            </span>
-          </div>
-          <Button onClick={fetchExperience} variant="outline" size="sm">
-            Retry
-          </Button>
-        </CardContent>
-      </Card>
+      <section className="mx-auto my-10 max-w-5xl rounded-xl border border-black/10 bg-[#fdfbf7] p-6 text-[#1f1b16] dark:border-white/10 dark:bg-[#1c1a18] dark:text-[#efe9de]" role="alert">
+        <h1 className="text-lg font-medium">Interview experiences</h1>
+        <p className="mt-2 text-sm text-[#5e554a] dark:text-[#aaa398]">We couldn’t load the shared experiences. Try again in a moment.</p>
+        <Button type="button" variant="outline" onClick={fetchExperience} className="mt-4">Try again</Button>
+      </section>
     );
   }
 
-  const offerTypeFilters = [
-    { id: 'all', label: 'All Offers' },
-    { id: 'full_time', label: 'Full Time' },
-    { id: 'internship_ppo', label: 'Internship + PPO' },
-    { id: 'internship', label: 'Internship' },
-  ];
+  const hasFilters = Boolean(searchQuery) || selectedOfferType !== 'all';
 
   return (
-    <div className="space-y-8 pb-12">
-      {/* SaaS Hero Section */}
-      <div className="relative overflow-hidden rounded-3xl border border-border/70 bg-gradient-to-b from-card/80 via-card/50 to-background/40 backdrop-blur-xl p-8 sm:p-12 text-center shadow-sm">
-        {/* Glow accent */}
-        <div className="absolute -top-24 left-1/2 -translate-x-1/2 w-96 h-96 bg-primary/10 rounded-full blur-3xl pointer-events-none" />
-
-        <div className="relative z-10 max-w-3xl mx-auto space-y-4">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-primary/20 bg-primary/10 text-primary text-xs font-semibold uppercase tracking-wider">
-            <Sparkles className="w-3.5 h-3.5" />
-            <span>Verified Peer Insights</span>
-          </div>
-
-          <h1 className="text-3xl sm:text-5xl font-extrabold text-foreground tracking-tight leading-tight">
-            Interview Experiences{' '}
-            <span className="bg-gradient-to-r from-indigo-500 via-violet-500 to-pink-500 bg-clip-text text-transparent">
-              & Insights
-            </span>
-          </h1>
-
-          <p className="text-muted-foreground text-sm sm:text-base leading-relaxed max-w-2xl mx-auto">
-            Discover real interview questions, recruitment processes, and career strategies shared by candidates from top tech companies.
+    <div className="mx-auto w-full max-w-6xl px-4 pb-14 pt-8 text-[#1f1b16] dark:text-[#efe9de] sm:px-6 sm:pt-10">
+      <header className="flex flex-col gap-6 border-b border-black/10 pb-7 dark:border-white/10 sm:flex-row sm:items-end sm:justify-between">
+        <div className="max-w-2xl">
+          <p className="text-sm font-medium text-[#2459a6] dark:text-[#a8c7f3]">PrepMate community</p>
+          <h1 className="mt-2 text-3xl font-medium leading-tight tracking-tight sm:text-4xl">Learn from the interview room</h1>
+          <p className="mt-3 max-w-xl text-sm leading-6 text-[#5e554a] dark:text-[#aaa398] sm:text-base">
+            Read interview accounts shared by developers, or add your own experience for others to learn from.
           </p>
-
-          {/* Action CTA */}
-          <div className="pt-2 flex items-center justify-center gap-4">
-            <Link to={isAuthenticated ? '/submit-interview-experience' : '/auth/login'}>
-              <Button size="lg" className="rounded-xl shadow-lg shadow-primary/20 gap-2 font-semibold">
-                <Plus className="w-4 h-4" /> Share Experience
-              </Button>
-            </Link>
-          </div>
         </div>
-      </div>
+        <Link to="/share-experience" className="inline-flex h-10 shrink-0 items-center justify-center gap-2 rounded-md bg-[#2459a6] px-4 text-sm font-medium text-white transition-colors hover:bg-[#1d4a8a] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring">
+          <Plus size={16} aria-hidden="true" /> Share an experience
+        </Link>
+      </header>
 
-      {/* Stats Section */}
-      <ExperienceStats
-        experiences={experiencesList}
-        totalCompanies={totalCompaniesCount}
-      />
+      <ExperienceStats experiences={experiences} totalCompanies={totalCompanies} />
 
-      {/* Controls: Search, Filters & View Toggle */}
-      <div className="space-y-4 bg-card/60 backdrop-blur-md border border-border/70 p-4 sm:p-6 rounded-2xl shadow-sm">
-        <div className="flex flex-col md:flex-row items-center justify-between gap-4">
-          {/* Search Input */}
-          <div className="relative w-full md:w-80">
-            <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-            <Input
-              type="text"
-              placeholder="Search by company, role..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-10 pr-9 rounded-xl bg-background/80 border-border/70 focus-visible:ring-primary"
-            />
-            {searchQuery && (
-              <button
-                onClick={() => setSearchQuery('')}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
-              >
-                <XCircle className="w-4 h-4" />
-              </button>
-            )}
-          </div>
-
-          {/* Filter Pills & View Switcher */}
-          <div className="flex flex-wrap items-center justify-between md:justify-end gap-3 w-full md:w-auto">
-            {/* Offer Type Filter Pills */}
-            <div className="flex items-center gap-1.5 overflow-x-auto pb-1 md:pb-0 scrollbar-none">
-              {offerTypeFilters.map((filter) => (
-                <button
-                  key={filter.id}
-                  onClick={() => setSelectedOfferType(filter.id)}
-                  className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${
-                    selectedOfferType === filter.id
-                      ? 'bg-primary text-primary-foreground shadow-sm'
-                      : 'bg-muted/50 hover:bg-muted text-muted-foreground hover:text-foreground'
-                  }`}
-                >
-                  {filter.label}
+      <section className="mt-8" aria-label="Search and filter experiences">
+        <div className="flex flex-col gap-4 rounded-xl border border-black/10 bg-[#fdfbf7] p-4 dark:border-white/10 dark:bg-[#1c1a18] sm:p-5">
+          <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
+            <label className="relative block w-full lg:max-w-sm">
+              <span className="sr-only">Search company, role, or contributor</span>
+              <Search size={16} className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-[#776f65] dark:text-[#8a847a]" aria-hidden="true" />
+              <Input
+                type="search"
+                placeholder="Search company or role"
+                value={searchQuery}
+                onChange={(event) => setSearchQuery(event.target.value)}
+                className="h-10 rounded-md border-black/10 bg-transparent pl-9 pr-9 text-[#1f1b16] placeholder:text-[#776f65] focus-visible:ring-[#2459a6] dark:border-white/10 dark:text-[#efe9de] dark:placeholder:text-[#8a847a]"
+              />
+              {searchQuery && (
+                <button type="button" onClick={() => setSearchQuery('')} aria-label="Clear search" className="absolute right-2 top-1/2 inline-flex h-7 w-7 -translate-y-1/2 items-center justify-center rounded text-[#776f65] hover:text-[#1f1b16] focus-visible:outline focus-visible:outline-2 focus-visible:outline-ring dark:text-[#8a847a] dark:hover:text-[#efe9de]">
+                  <X size={15} aria-hidden="true" />
                 </button>
-              ))}
-            </div>
+              )}
+            </label>
 
-            {/* View Mode Segmented Controls */}
-            <div className="flex items-center bg-muted/60 p-1 rounded-xl border border-border/60">
-              <button
-                onClick={() => setViewMode('grid')}
-                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${
-                  viewMode === 'grid'
-                    ? 'bg-card text-foreground shadow-xs'
-                    : 'text-muted-foreground hover:text-foreground'
-                }`}
-                title="Grid View"
-              >
-                <LayoutGrid className="w-3.5 h-3.5" />
-                <span className="hidden sm:inline">Cards</span>
+            <div className="flex items-center gap-2 overflow-x-auto pb-1 lg:pb-0" role="group" aria-label="Filter by offer type">
+              {offerTypeFilters.map((filter) => {
+                const active = selectedOfferType === filter.id;
+                return (
+                  <button
+                    key={filter.id}
+                    type="button"
+                    aria-pressed={active}
+                    onClick={() => setSelectedOfferType(filter.id)}
+                    className={`shrink-0 rounded-md border px-3 py-2 text-sm transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring ${active ? 'border-[#2459a6] bg-[#2459a6] text-white dark:border-[#a8c7f3] dark:bg-[#a8c7f3] dark:text-[#17191d]' : 'border-black/10 text-[#5e554a] hover:bg-[#f2eee6] dark:border-white/10 dark:text-[#aaa398] dark:hover:bg-[#262421]'}`}
+                  >
+                    {filter.label}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+
+          <div className="flex flex-wrap items-center justify-between gap-3 border-t border-black/10 pt-3 dark:border-white/10">
+            <p className="text-sm text-[#5e554a] dark:text-[#aaa398]" aria-live="polite">
+              <span className="font-medium tabular-nums text-[#1f1b16] dark:text-[#efe9de]">{filteredExperiences.length}</span>{' '}
+              {filteredExperiences.length === 1 ? 'experience' : 'experiences'}
+              {hasFilters ? ' found' : ' shared'}
+            </p>
+            <div className="flex items-center gap-1 rounded-md border border-black/10 p-1 dark:border-white/10" role="group" aria-label="Display mode">
+              <button type="button" aria-label="Show cards" aria-pressed={viewMode === 'grid'} onClick={() => setViewMode('grid')} className={`inline-flex h-8 items-center gap-2 rounded px-2 text-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-ring ${viewMode === 'grid' ? 'bg-[#efe9df] text-[#1f1b16] dark:bg-[#262421] dark:text-[#efe9de]' : 'text-[#776f65] hover:text-[#1f1b16] dark:text-[#8a847a] dark:hover:text-[#efe9de]'}`}>
+                <LayoutGrid size={15} aria-hidden="true" /><span className="hidden sm:inline">Cards</span>
               </button>
-              <button
-                onClick={() => setViewMode('company')}
-                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${
-                  viewMode === 'company'
-                    ? 'bg-card text-foreground shadow-xs'
-                    : 'text-muted-foreground hover:text-foreground'
-                }`}
-                title="Company Group View"
-              >
-                <Building2 className="w-3.5 h-3.5" />
-                <span className="hidden sm:inline">Company</span>
+              <button type="button" aria-label="Group by company" aria-pressed={viewMode === 'company'} onClick={() => setViewMode('company')} className={`inline-flex h-8 items-center gap-2 rounded px-2 text-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-ring ${viewMode === 'company' ? 'bg-[#efe9df] text-[#1f1b16] dark:bg-[#262421] dark:text-[#efe9de]' : 'text-[#776f65] hover:text-[#1f1b16] dark:text-[#8a847a] dark:hover:text-[#efe9de]'}`}>
+                <Building2 size={15} aria-hidden="true" /><span className="hidden sm:inline">By company</span>
               </button>
             </div>
           </div>
         </div>
-      </div>
+      </section>
 
-      {/* Grid or Accordion Content */}
-      {filteredExperiences.length > 0 ? (
-        <AnimatePresence mode="wait">
-          {viewMode === 'grid' ? (
-            /* Cards Grid View */
-            <motion.div
-              key="grid-view"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
-            >
-              {filteredExperiences.map((exp, idx) => (
-                <ExperienceCard key={exp.id} experience={exp} index={idx} layoutMode="grid" />
-              ))}
-            </motion.div>
-          ) : (
-            /* Company Grouped Accordion View */
-            <motion.div
-              key="company-view"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              className="space-y-4"
-            >
-              {Object.entries(groupedExperiences)
-                .sort(([a], [b]) => a.localeCompare(b))
-                .map(([normalizedName, { displayName, experiences }]) => (
-                  <CompanyExperienceSection
-                    key={normalizedName}
-                    company={displayName}
-                    experiences={experiences}
-                  />
-                ))}
-            </motion.div>
-          )}
-        </AnimatePresence>
-      ) : (
-        /* Empty State */
-        <Card className="bg-card/70 border border-border/70 rounded-2xl text-center py-16 px-6 shadow-sm">
-          <CardContent className="space-y-4 max-w-md mx-auto">
-            <div className="w-14 h-14 bg-primary/10 rounded-2xl flex items-center justify-center mx-auto text-primary">
-              <Search className="w-7 h-7" />
+      <section className="mt-6" aria-label="Interview experiences">
+        {filteredExperiences.length > 0 ? (
+          viewMode === 'grid' ? (
+            <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
+              {filteredExperiences.map((experience) => <ExperienceCard key={experience.id} experience={experience} />)}
             </div>
-            <h3 className="text-xl font-bold text-foreground">No experiences found</h3>
-            <p className="text-sm text-muted-foreground">
-              We couldn't find any experiences matching your search filters. Try adjusting your query or offer type filter.
+          ) : (
+            <div className="space-y-3">
+              {Object.entries(groupedExperiences).sort(([a], [b]) => a.localeCompare(b)).map(([key, group]) => (
+                <CompanyExperienceSection key={key} company={group.displayName} experiences={group.experiences} />
+              ))}
+            </div>
+          )
+        ) : (
+          <div className="rounded-xl border border-black/10 bg-[#fdfbf7] px-6 py-12 text-center dark:border-white/10 dark:bg-[#1c1a18]">
+            <ListFilter size={20} className="mx-auto text-[#776f65] dark:text-[#8a847a]" aria-hidden="true" />
+            <h2 className="mt-3 text-lg font-medium">{experiences.length ? 'No matching experiences' : 'No experiences shared yet'}</h2>
+            <p className="mx-auto mt-2 max-w-md text-sm leading-6 text-[#5e554a] dark:text-[#aaa398]">
+              {experiences.length ? 'Try another company, role, or offer type.' : 'When someone shares an interview account, it will appear here.'}
             </p>
-            {(searchQuery || selectedOfferType !== 'all') && (
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => {
-                  setSearchQuery('');
-                  setSelectedOfferType('all');
-                }}
-                className="mt-2 rounded-xl"
-              >
-                Reset Filters
-              </Button>
+            {hasFilters && (
+              <button type="button" onClick={() => { setSearchQuery(''); setSelectedOfferType('all'); }} className="mt-4 inline-flex items-center gap-2 text-sm font-medium text-[#2459a6] hover:underline dark:text-[#a8c7f3]">
+                Clear filters <ArrowRight size={14} aria-hidden="true" />
+              </button>
             )}
-          </CardContent>
-        </Card>
-      )}
+          </div>
+        )}
+      </section>
     </div>
   );
 }

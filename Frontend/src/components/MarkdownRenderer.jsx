@@ -47,15 +47,15 @@ export default function MarkdownRenderer({ content }) {
       const codeString = String(children).replace(/\n$/, '');
 
       return !inline && match ? (
-        <div className="relative group my-4 rounded-md overflow-hidden border border-gray-200 dark:border-gray-700 shadow-sm dark:shadow-none">
+        <div className="group relative my-4 overflow-hidden rounded-lg border border-black/10 dark:border-white/10">
           {/* Header bar */}
-          <div className="flex items-center justify-between bg-gray-100 dark:bg-gray-800 px-3 py-1.5">
-            <span className="text-xs font-mono text-gray-600 dark:text-gray-400 uppercase tracking-wide">
+          <div className="flex items-center justify-between border-b border-black/10 bg-[#efe9df] px-3 py-2 dark:border-white/10 dark:bg-[#262421]">
+            <span className="text-xs font-mono text-muted-foreground">
               {match[1]}
             </span>
             <button
               onClick={() => copyToClipboard(codeString)}
-              className="flex items-center gap-1 text-xs px-2 py-0.5 rounded bg-secondary dark:bg-secondary/50 text-muted-foreground hover:bg-primary hover:text-primary-foreground transition-colors">
+              className="flex h-7 items-center gap-1.5 rounded-md border border-black/10 px-2 text-xs text-muted-foreground transition-colors hover:bg-background hover:text-foreground focus-visible:outline focus-visible:outline-2 focus-visible:outline-ring dark:border-white/10 dark:hover:bg-[#1c1a18]">
               {copiedCode === codeString ? (
                 <>
                   <Check className="w-3 h-3" /> Copied
@@ -73,7 +73,7 @@ export default function MarkdownRenderer({ content }) {
             style={isDarkMode ? oneDark : oneLight}
             language={match[1]}
             PreTag="div"
-            className="!mt-0 !rounded-t-none text-sm leading-relaxed !bg-transparent px-0"
+            className="!mt-0 !rounded-t-none px-0 text-sm leading-relaxed !bg-transparent"
             showLineNumbers
             wrapLines
             lineNumberStyle={{
@@ -100,11 +100,9 @@ export default function MarkdownRenderer({ content }) {
     h1({ children, ...props }) {
       return (
         <h1
-          className="text-3xl font-bold mt-10 mb-4 text-gray-900 dark:text-white"
+          className="mb-4 mt-8 text-2xl font-medium leading-tight text-foreground"
           {...props}>
-          <span className="bg-gradient-to-r from-primary to-primary/80 bg-clip-text text-transparent">
-            {children}
-          </span>
+          {children}
         </h1>
       );
     },
@@ -112,9 +110,8 @@ export default function MarkdownRenderer({ content }) {
     h2({ children, ...props }) {
       return (
         <h2
-          className="text-2xl font-semibold mt-8 mb-3 text-gray-800 dark:text-gray-100 flex items-center gap-2"
+          className="mb-3 mt-7 text-xl font-medium leading-tight text-foreground"
           {...props}>
-          <div className="w-1 h-5 bg-gradient-to-b from-primary to-primary/80 rounded-full"></div>
           {children}
         </h2>
       );
@@ -123,7 +120,7 @@ export default function MarkdownRenderer({ content }) {
     h3({ children, ...props }) {
       return (
         <h3
-          className="text-xl font-semibold mt-6 mb-2 text-gray-700 dark:text-gray-200 border-l-4 border-primary pl-2"
+          className="mb-2 mt-6 text-lg font-medium leading-6 text-foreground"
           {...props}>
           {children}
         </h3>
@@ -134,7 +131,7 @@ export default function MarkdownRenderer({ content }) {
     p({ children, ...props }) {
       return (
         <p
-          className="text-base leading-relaxed text-gray-700 dark:text-gray-300 mb-4"
+          className="mb-4 text-[15px] leading-6 text-[#5e554a] dark:text-[#aaa398]"
           {...props}>
           {children}
         </p>
@@ -144,7 +141,7 @@ export default function MarkdownRenderer({ content }) {
     blockquote({ children, ...props }) {
       return (
         <blockquote
-          className="border-l-4 border-primary bg-muted/30 dark:bg-muted/10 pl-4 pr-3 py-2 my-4 rounded-r-md italic text-gray-700 dark:text-gray-300 text-sm"
+          className="my-4 rounded-r-md border-l-2 border-[#386eb8] bg-[#f7f4ee] py-2 pl-4 pr-3 text-sm leading-6 text-[#5e554a] dark:border-[#a8c7f3] dark:bg-[#161513] dark:text-[#aaa398]"
           {...props}>
           {children}
         </blockquote>
@@ -154,7 +151,7 @@ export default function MarkdownRenderer({ content }) {
     ul({ children, ...props }) {
       return (
         <ul
-          className="space-y-1.5 my-4 ml-5 list-disc marker:text-primary"
+          className="my-4 ml-5 list-disc space-y-1.5 marker:text-[#386eb8] dark:marker:text-[#a8c7f3]"
           {...props}>
           {children}
         </ul>
@@ -164,7 +161,7 @@ export default function MarkdownRenderer({ content }) {
     ol({ children, ...props }) {
       return (
         <ol
-          className="space-y-1.5 my-4 ml-5 list-decimal marker:text-primary"
+          className="my-4 ml-5 list-decimal space-y-1.5 marker:text-[#386eb8] dark:marker:text-[#a8c7f3]"
           {...props}>
           {children}
         </ol>
@@ -174,7 +171,7 @@ export default function MarkdownRenderer({ content }) {
     li({ children, ...props }) {
       return (
         <li
-          className="text-base text-gray-700 dark:text-gray-300 leading-relaxed"
+          className="text-[15px] leading-6 text-[#5e554a] dark:text-[#aaa398]"
           {...props}>
           {children}
         </li>
@@ -184,9 +181,9 @@ export default function MarkdownRenderer({ content }) {
     // --- COMPACT TABLES ---
     table({ children, ...props }) {
       return (
-        <div className="overflow-x-auto my-3 rounded-md border border-gray-200 dark:border-gray-700 shadow-sm dark:shadow-none">
+        <div className="my-3 overflow-x-auto rounded-lg border border-black/10 dark:border-white/10">
           <table
-            className="min-w-full border-collapse text-sm text-gray-700 dark:text-gray-300"
+            className="min-w-full border-collapse text-sm text-[#5e554a] dark:text-[#aaa398]"
             {...props}>
             {children}
           </table>
@@ -196,7 +193,7 @@ export default function MarkdownRenderer({ content }) {
 
     thead({ children, ...props }) {
       return (
-        <thead className="bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300">
+        <thead className="bg-[#efe9df] text-[#1f1b16] dark:bg-[#262421] dark:text-[#efe9de]">
           {children}
         </thead>
       );
@@ -209,7 +206,7 @@ export default function MarkdownRenderer({ content }) {
     tr({ children, ...props }) {
       return (
         <tr
-          className="odd:bg-background even:bg-muted/30 dark:odd:bg-background dark:even:bg-muted/10 hover:bg-muted/50 dark:hover:bg-muted/20 transition-colors"
+          className="odd:bg-[#fdfbf7] even:bg-[#f7f4ee] hover:bg-[#efe9df] transition-colors dark:odd:bg-[#1c1a18] dark:even:bg-[#161513] dark:hover:bg-[#262421]"
           {...props}>
           {children}
         </tr>
@@ -219,7 +216,7 @@ export default function MarkdownRenderer({ content }) {
     th({ children, ...props }) {
       return (
         <th
-          className="px-3 py-2 text-xs font-semibold uppercase tracking-wide border-b border-gray-200 dark:border-gray-700 text-left"
+          className="border-b border-black/10 px-3 py-2 text-left text-xs font-medium dark:border-white/10"
           {...props}>
           {children}
         </th>
@@ -229,7 +226,7 @@ export default function MarkdownRenderer({ content }) {
     td({ children, ...props }) {
       return (
         <td
-          className="px-3 py-2 whitespace-nowrap border-b border-gray-100 dark:border-gray-800"
+          className="border-b border-black/10 px-3 py-2 dark:border-white/10"
           {...props}>
           {children}
         </td>

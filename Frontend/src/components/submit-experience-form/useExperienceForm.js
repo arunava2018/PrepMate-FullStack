@@ -1,21 +1,15 @@
 // useExperienceForm.js
 import { useState } from 'react';
 import { addInterviewExperience } from '@/db/apiInterviewExperience';
-import { UrlState } from '@/context';
 
 export const useExperienceForm = () => {
-  const { user } = UrlState();
-
   const [formData, setFormData] = useState({
-    user_name: user?.name || '',
     company: '',
     offer_type: '',
     opportunity_type: '',
     position: '',
     linkedin: '',
     github: '',
-    is_public: false,
-    is_anonymous: false,
   });
 
   const [experience, setExperience] = useState('');
@@ -150,7 +144,7 @@ export const useExperienceForm = () => {
     }
 
     setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
+    return newErrors;
   };
 
   const resetForm = (editorRef) => {
@@ -161,8 +155,6 @@ export const useExperienceForm = () => {
       github: '',
       offer_type: '',
       opportunity_type: '',
-      is_public: false,
-      is_anonymous: false,
     });
     setExperience('');
     if (editorRef?.current?.clearEditor) {
@@ -179,10 +171,11 @@ export const useExperienceForm = () => {
     setIsSubmitting(true);
 
     try {
-      if (!validateForm()) {
+      const validationErrors = validateForm();
+      if (Object.keys(validationErrors).length) {
         setIsSubmitting(false);
 
-        const firstErrorField = Object.keys(errors)[0];
+        const firstErrorField = Object.keys(validationErrors)[0];
         if (firstErrorField === 'experience' && editorRef?.current) {
           editorRef.current.focus();
         } else {
@@ -208,14 +201,11 @@ export const useExperienceForm = () => {
 
       resetForm(editorRef);
       setShowSuccess(true);
-
-      setTimeout(() => {
-        setShowSuccess(false);
-        window.location.href = '/'; // ✅ redirect after toast
-      }, 5000);
+      return true;
     } catch (error) {
       console.error('Submission error:', error);
       setErrors({ submit: 'Failed to submit experience. Please try again.' });
+      return false;
     } finally {
       setIsSubmitting(false);
     }
@@ -228,6 +218,7 @@ export const useExperienceForm = () => {
     errors,
     isSubmitting,
     showSuccess,
+    setShowSuccess,
     handleChange,
     handleExperienceChange,
     handleSubmit,

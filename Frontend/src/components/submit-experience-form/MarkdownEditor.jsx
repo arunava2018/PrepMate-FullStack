@@ -3,7 +3,7 @@ import EasyMDE from 'easymde';
 import 'easymde/dist/easymde.min.css';
 
 const MarkdownEditor = forwardRef(
-  ({ value, onChange, error, label, placeholder }, ref) => {
+  ({ id, value, onChange, error, label, placeholder }, ref) => {
     const textareaRef = useRef(null);
     const editorRef = useRef(null);
 
@@ -42,7 +42,7 @@ const MarkdownEditor = forwardRef(
             'text-foreground',
             'focus-within:ring-2',
             'focus-within:ring-primary/30',
-            'transition'
+            'transition-[color,box-shadow]'
           );
         }
 
@@ -63,11 +63,11 @@ const MarkdownEditor = forwardRef(
     return (
       <div className="space-y-1">
         {label && (
-          <label className="text-sm font-medium text-muted-foreground">
+          <label htmlFor={id} className="text-sm font-medium text-muted-foreground">
             {label}
           </label>
         )}
-        <textarea ref={textareaRef} />
+        <textarea id={id} ref={textareaRef} />
         {error && <p className="text-destructive text-xs mt-1">{error}</p>}
       </div>
     );

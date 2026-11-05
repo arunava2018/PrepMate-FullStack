@@ -1,10 +1,7 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
-import {
-  fetchUserInterviewExperiences,
-  deleteExperience,
-} from '@/db/apiInterviewExperience';
-import { Edit3, Trash2, Calendar, Building, FileText, Eye } from 'lucide-react';
+import { CalendarDays, ChevronDown, Eye, FileText, Plus, Trash2 } from 'lucide-react';
+import { fetchUserInterviewExperiences, deleteExperience } from '@/db/apiInterviewExperience';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -19,252 +16,204 @@ import {
 import { Button } from '../ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
 
+const surface = 'rounded-xl border border-black/10 bg-[#fdfbf7] dark:border-white/10 dark:bg-[#1c1a18]';
+
+function formatDate(value) {
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return 'Date unavailable';
+  return date.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
+}
+
 export default function UserExperiences({ userId }) {
   const [experiences, setExperiences] = useState([]);
   const [loading, setLoading] = useState(true);
   const [deleting, setDeleting] = useState(null);
+  const [error, setError] = useState('');
+
+  const loadData = useCallback(async () => {
+    if (!userId) {
+      setExperiences([]);
+      setLoading(false);
+      return;
+    }
+    setLoading(true);
+    setError('');
+    try {
+      const data = await fetchUserInterviewExperiences(userId);
+      setExperiences(Array.isArray(data) ? data : []);
+    } catch {
+      setError('We couldn’t load your interview accounts. Try again in a moment.');
+    } finally {
+      setLoading(false);
+    }
+  }, [userId]);
 
   useEffect(() => {
-    if (!userId) return;
-    const loadData = async () => {
-      try {
-        const data = await fetchUserInterviewExperiences(userId);
-        setExperiences(data);
-      } catch (err) {
-        console.error('Error loading experiences:', err);
-      } finally {
-        setLoading(false);
-      }
-    };
     loadData();
-  }, [userId]);
+  }, [loadData]);
+
+  const groupedExperiences = useMemo(() => {
+    const groups = new Map();
+    experiences.forEach((experience) => {
+      const company = experience.company_name?.trim() || 'Company not listed';
+      const key = company.toLocaleLowerCase();
+      if (!groups.has(key)) groups.set(key, { key, company, experiences: [] });
+      groups.get(key).experiences.push(experience);
+    });
+    return [...groups.values()]
+      .map((group) => ({
+        ...group,
+        experiences: [...group.experiences].sort((left, right) => {
+          const leftTime = new Date(left.created_at).getTime() || 0;
+          const rightTime = new Date(right.created_at).getTime() || 0;
+          return rightTime - leftTime;
+        }),
+      }))
+      .sort((left, right) => left.company.localeCompare(right.company));
+  }, [experiences]);
 
   const handleDelete = async (id) => {
     setDeleting(id);
+    setError('');
     try {
       await deleteExperience(id);
-      setExperiences((prev) => prev.filter((exp) => exp.id !== id));
-    } catch (err) {
-      console.error('Error deleting experience:', err);
+      setExperiences((current) => current.filter((experience) => experience.id !== id));
+    } catch {
+      setError('We couldn’t delete that account. Try again.');
     } finally {
       setDeleting(null);
     }
   };
 
-  const handleEdit = (exp) => alert('TODO: Open edit form');
-
   if (loading) {
     return (
-      <div className="p-8">
-        {/* Header skeleton */}
-        <div className="flex items-center gap-3 mb-6">
-          <Skeleton className="h-10 w-10 rounded-xl" />
-          <div className="space-y-2">
-            <Skeleton className="h-5 w-40" />
-            <Skeleton className="h-4 w-60" />
-          </div>
+      <section className={surface} aria-label="Loading interview experiences" aria-busy="true">
+        <div className="border-b border-black/10 px-5 py-4 dark:border-white/10 sm:px-6">
+          <Skeleton className="h-5 w-48 bg-[#efe9df] dark:bg-[#262421]" />
+          <Skeleton className="mt-2 h-4 w-64 max-w-full bg-[#efe9df] dark:bg-[#262421]" />
         </div>
-
-        {/* Table skeleton */}
-        <div className="bg-white dark:bg-neutral-900 rounded-xl border border-gray-200 dark:border-neutral-700 shadow-sm">
-          {/* Table header skeleton */}
-          <div className="hidden lg:grid grid-cols-12 px-6 py-3 bg-gray-50 dark:bg-neutral-800/50 border-b border-gray-200 dark:border-neutral-700">
-            <Skeleton className="h-4 w-20 col-span-3" />
-            <Skeleton className="h-4 w-16 col-span-2" />
-            <Skeleton className="h-4 w-20 col-span-2" />
-            <Skeleton className="h-4 w-20 col-span-2" />
-            <Skeleton className="h-4 w-24 col-span-3 justify-self-end" />
-          </div>
-
-          {/* Table rows skeleton */}
-          <div className="divide-y divide-gray-200 dark:divide-neutral-700/40">
-            {Array.from({ length: 3 }).map((_, idx) => (
-              <div
-                key={idx}
-                className="grid grid-cols-1 lg:grid-cols-12 gap-4 p-6">
-                <Skeleton className="h-5 w-40 col-span-3" />
-                <Skeleton className="h-5 w-24 col-span-2" />
-                <Skeleton className="h-5 w-28 col-span-2" />
-                <Skeleton className="h-5 w-28 col-span-2" />
-                <Skeleton className="h-8 w-32 col-span-3 justify-self-end rounded-md" />
+        <div className="divide-y divide-black/10 px-5 dark:divide-white/10 sm:px-6">
+          {Array.from({ length: 3 }).map((_, index) => (
+            <div key={index} className="flex items-center justify-between gap-4 py-5">
+              <div className="flex-1 space-y-2">
+                <Skeleton className="h-4 w-56 max-w-full bg-[#efe9df] dark:bg-[#262421]" />
+                <Skeleton className="h-3 w-40 max-w-full bg-[#efe9df] dark:bg-[#262421]" />
               </div>
-            ))}
-          </div>
+              <Skeleton className="h-8 w-24 bg-[#efe9df] dark:bg-[#262421]" />
+            </div>
+          ))}
         </div>
-      </div>
+      </section>
     );
   }
 
   return (
-    <div className="p-8">
-      {/* Header */}
-      <div className="flex items-center gap-3 mb-6">
-        <div className="h-10 w-10 bg-gradient-to-br from-purple-600 to-blue-600 rounded-xl flex items-center justify-center">
-          <FileText className="text-white text-lg" />
-        </div>
+    <section className={surface} aria-labelledby="experiences-title">
+      <header className="flex flex-col gap-3 border-b border-black/10 px-5 py-4 dark:border-white/10 sm:flex-row sm:items-center sm:justify-between sm:px-6">
         <div>
-          <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
-            Interview Experiences
-          </h2>
-          <p className="text-gray-500 dark:text-gray-400 text-sm">
-            Manage and track your shared experiences
-          </p>
+          <h2 id="experiences-title" className="text-base font-medium">Interview experiences</h2>
+          <p className="mt-1 text-sm text-[#5e554a] dark:text-[#aaa398]">Your shared accounts, grouped by company</p>
         </div>
-      </div>
+        <span className="text-sm tabular-nums text-[#776f65] dark:text-[#8a847a]">
+          {experiences.length} {experiences.length === 1 ? 'account' : 'accounts'} across {groupedExperiences.length} {groupedExperiences.length === 1 ? 'company' : 'companies'}
+        </span>
+      </header>
+
+      {error && (
+        <div role="alert" className="mx-5 mt-4 flex flex-wrap items-center justify-between gap-3 rounded-lg border border-[#a33a32]/20 bg-[#a33a32]/5 px-4 py-3 text-sm text-[#8f3029] dark:text-[#e58a82] sm:mx-6">
+          <span>{error}</span>
+          <button type="button" onClick={loadData} className="rounded-sm font-medium underline underline-offset-4 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring">Reload experiences</button>
+        </div>
+      )}
 
       {experiences.length === 0 ? (
-        <div className="text-center py-12 bg-gray-50 dark:bg-neutral-900 rounded-xl border border-gray-200 dark:border-neutral-800">
-          <FileText className="h-10 w-10 text-gray-400 dark:text-gray-500 mx-auto mb-3" />
-          <p className="text-lg text-gray-600 dark:text-gray-400 mb-1">
-            No experiences yet
+        <div className="px-5 py-10 text-center sm:px-6">
+          <FileText size={19} className="mx-auto text-[#776f65] dark:text-[#8a847a]" aria-hidden="true" />
+          <h3 className="mt-3 text-base font-medium">No experiences shared yet</h3>
+          <p className="mx-auto mt-1 max-w-md text-sm leading-5 text-[#5e554a] dark:text-[#aaa398]">
+            Add an interview account to keep your preparation notes and share what you learned.
           </p>
-          <p className="text-gray-500 text-sm mb-4">
-            Share your first interview experience to help others in their
-            journey.
-          </p>
-          <Link to="/share-experience">
-            <Button className="bg-blue-600 hover:bg-blue-700 text-white cursor-pointer">
-              + Add Experience
-            </Button>
+          <Link to="/share-experience" className="mt-4 inline-flex h-9 items-center gap-2 rounded-md bg-[#2459a6] px-3 text-sm font-medium text-white transition-colors hover:bg-[#1d4a8a] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring">
+            <Plus size={15} aria-hidden="true" /> Share an experience
           </Link>
         </div>
       ) : (
-        <div>
-          <div className="bg-white dark:bg-neutral-900 rounded-xl border border-gray-200 dark:border-neutral-700 overflow-hidden shadow-sm">
-            {/* Table Header */}
-            <div className="hidden lg:grid grid-cols-12 px-6 py-3 bg-gray-50 dark:bg-neutral-800/50 border-b border-gray-200 dark:border-neutral-700 text-sm font-semibold text-gray-700 dark:text-gray-300 uppercase">
-              <div className="col-span-3">Title</div>
-              <div className="col-span-2">Status</div>
-              <div className="col-span-2">Company</div>
-              <div className="col-span-2">Date</div>
-              <div className="col-span-3 text-right">Actions</div>
-            </div>
+        <div className="space-y-2 p-4 sm:p-5">
+          {groupedExperiences.map(({ key, company, experiences: companyExperiences }) => (
+            <details key={key} className="group rounded-lg border border-black/10 bg-[#f7f4ee] dark:border-white/10 dark:bg-[#161513]">
+              <summary className="flex min-h-12 cursor-pointer list-none items-center gap-3 rounded-lg px-4 py-3 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring [&::-webkit-details-marker]:hidden">
+                <span className="min-w-0 flex-1 truncate text-sm font-medium text-[#1f1b16] dark:text-[#efe9de]">{company}</span>
+                <span className="shrink-0 text-xs tabular-nums text-[#5e554a] dark:text-[#aaa398]">
+                  {companyExperiences.length} {companyExperiences.length === 1 ? 'account' : 'accounts'}
+                </span>
+                <ChevronDown size={16} className="shrink-0 text-[#776f65] transition-transform duration-150 group-open:rotate-180 dark:text-[#8a847a]" aria-hidden="true" />
+              </summary>
 
-            {/* Rows */}
-            <div className="divide-y divide-gray-200 dark:divide-neutral-700/40">
-              {experiences.map((exp, idx) => (
-                <div
-                  key={exp.id}
-                  className={`grid grid-cols-1 lg:grid-cols-12 gap-4 p-6 transition ${
-                    idx % 2 === 0
-                      ? 'bg-gray-50 dark:bg-neutral-800/20'
-                      : 'bg-white dark:bg-transparent'
-                  }`}>
-                  {/* Title */}
-                  <div className="lg:col-span-3 flex items-center font-medium text-gray-900 dark:text-gray-200">
-                    <FileText className="h-5 w-5 text-blue-500 dark:text-blue-400 mr-2" />
-                    {exp.company_name} Interview
-                  </div>
+              <div className="divide-y divide-black/10 border-t border-black/10 px-4 dark:divide-white/10 dark:border-white/10">
+                {companyExperiences.map((experience) => {
+                  const pending = !experience.is_public;
+                  const title = experience.role || 'Interview account';
 
-                  {/* Status */}
-                  <div className="lg:col-span-2">
-                    <span
-                      className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium ${
-                        exp.is_public
-                          ? 'bg-green-100 text-green-700 border border-green-200 dark:bg-green-500/20 dark:text-green-400 dark:border-green-500/30'
-                          : 'bg-yellow-100 text-yellow-700 border border-yellow-200 dark:bg-yellow-500/20 dark:text-yellow-400 dark:border-yellow-500/30'
-                      }`}>
-                      <span
-                        className={`w-2 h-2 rounded-full mr-2 ${
-                          exp.is_public ? 'bg-green-500' : 'bg-yellow-500'
-                        }`}
-                      />
-                      {exp.is_public ? 'Published' : 'In Review'}
-                    </span>
-                  </div>
+                  return (
+                    <article key={experience.id} className="flex flex-col gap-3 py-4 sm:flex-row sm:items-center sm:justify-between sm:gap-5">
+                      <div className="min-w-0 flex-1">
+                        <h3 className="flex items-start gap-2 text-sm font-medium leading-5 text-[#1f1b16] dark:text-[#efe9de]">
+                          <FileText size={15} className="mt-0.5 shrink-0 text-[#5e554a] dark:text-[#aaa398]" aria-hidden="true" />
+                          <span className="line-clamp-2">{title}</span>
+                        </h3>
+                        <div className="mt-2 flex flex-wrap items-center gap-x-4 gap-y-2 pl-6 text-xs text-[#5e554a] dark:text-[#aaa398]">
+                          <span className={`inline-flex items-center gap-2 ${pending ? 'text-[#2459a6] dark:text-[#a8c7f3]' : 'text-[#39734f] dark:text-[#9bc5a6]'}`}>
+                            <span className={`h-3.5 w-0.5 rounded-full ${pending ? 'bg-[#386eb8] dark:bg-[#a8c7f3]' : 'bg-[#5d916c] dark:bg-[#9bc5a6]'}`} aria-hidden="true" />
+                            {pending ? 'In review' : 'Published'}
+                          </span>
+                          <span className="inline-flex items-center gap-1.5"><CalendarDays size={13} aria-hidden="true" />{formatDate(experience.created_at)}</span>
+                        </div>
+                      </div>
 
-                  {/* Company */}
-                  <div className="lg:col-span-2 flex items-center text-gray-700 dark:text-gray-300 text-sm">
-                    <Building className="h-4 w-4 mr-1 text-gray-400 dark:text-gray-500" />{' '}
-                    {exp.company_name}
-                  </div>
-
-                  {/* Date */}
-                  <div className="lg:col-span-2 flex items-center text-gray-700 dark:text-gray-300 text-sm">
-                    <Calendar className="h-4 w-4 mr-1 text-gray-400 dark:text-gray-500" />
-                    {new Date(exp.created_at).toLocaleDateString('en-US', {
-                      year: 'numeric',
-                      month: 'short',
-                      day: 'numeric',
-                    })}
-                  </div>
-
-                  {/* Actions */}
-                  <div className="lg:col-span-3 flex gap-2 justify-end">
-                    {!exp.is_public ? (
-                      <>
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          onClick={() => handleEdit(exp)}
-                          className="flex items-center gap-1 border-blue-200 text-blue-600 hover:bg-blue-50 dark:border-blue-500/30 dark:text-blue-400 dark:hover:bg-blue-600/20">
-                          <Edit3 className="h-4 w-4" /> Edit
-                        </Button>
-
-                        <AlertDialog>
-                          <AlertDialogTrigger asChild>
-                            <Button
-                              variant="outline"
-                              size="sm"
-                              className="flex items-center gap-1 border-red-200 text-red-600 hover:bg-red-50 dark:border-red-500/30 dark:text-red-400 dark:hover:bg-red-600/20 disabled:opacity-50"
-                              disabled={deleting === exp.id}>
-                              {deleting === exp.id ? (
-                                <div className="animate-spin h-4 w-4 border-2 border-red-400 border-t-transparent rounded-full" />
-                              ) : (
-                                <Trash2 className="h-4 w-4" />
-                              )}
-                              Delete
-                            </Button>
-                          </AlertDialogTrigger>
-                          <AlertDialogContent className="bg-white dark:bg-neutral-900 border border-gray-200 dark:border-neutral-700 text-gray-900 dark:text-white">
-                            <AlertDialogHeader>
-                              <AlertDialogTitle>
-                                Delete Experience
-                              </AlertDialogTitle>
-                              <AlertDialogDescription className="text-gray-600 dark:text-gray-400">
-                                Are you sure you want to delete{' '}
-                                <span className="font-semibold">
-                                  {exp.company_name} Interview
-                                </span>
-                                ? <br />
-                                This action cannot be undone.
-                              </AlertDialogDescription>
-                            </AlertDialogHeader>
-                            <AlertDialogFooter>
-                              <AlertDialogCancel className="bg-gray-100 hover:bg-gray-200 border border-gray-300 dark:bg-neutral-800 dark:hover:bg-neutral-700 dark:border-neutral-600">
-                                Cancel
-                              </AlertDialogCancel>
-                              <AlertDialogAction
-                                onClick={() => handleDelete(exp.id)}
-                                className="bg-red-600 hover:bg-red-700 text-white">
-                                Confirm Delete
-                              </AlertDialogAction>
-                            </AlertDialogFooter>
-                          </AlertDialogContent>
-                        </AlertDialog>
-                      </>
-                    ) : (
-                      <Link to={`/view-interview-experiences/${exp.id}`}>
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          className="flex items-center gap-1 border-blue-200 text-blue-600 hover:bg-blue-50 dark:border-blue-500/30 dark:text-blue-400 dark:hover:bg-blue-600/20">
-                          <Eye className="h-4 w-4" /> View
-                        </Button>
-                      </Link>
-                    )}
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-          <div className="mt-4 text-right">
-            <Link to={'/share-experience'} className="inline-block">
-              <Button variant="secondary">+ Add New Experience</Button>
-            </Link>
-          </div>
+                      <div className="flex shrink-0 items-center gap-2 pl-6 sm:pl-0">
+                        {pending ? (
+                          <AlertDialog>
+                            <AlertDialogTrigger asChild>
+                              <Button type="button" variant="outline" size="sm" disabled={deleting === experience.id} className="h-8 gap-1.5 rounded-md border-[#a33a32]/25 px-2.5 text-[#8f3029] shadow-none hover:bg-[#a33a32]/5 dark:border-[#e58a82]/25 dark:text-[#e58a82] dark:hover:bg-[#e58a82]/5">
+                                {deleting === experience.id ? <span className="h-3.5 w-3.5 animate-spin rounded-full border-2 border-[#a33a32]/30 border-t-[#a33a32] dark:border-[#e58a82]/30 dark:border-t-[#e58a82]" aria-label="Deleting" /> : <Trash2 size={14} aria-hidden="true" />}
+                                Delete
+                              </Button>
+                            </AlertDialogTrigger>
+                            <AlertDialogContent className="border-black/10 bg-[#fdfbf7] text-[#1f1b16] dark:border-white/10 dark:bg-[#1c1a18] dark:text-[#efe9de]">
+                              <AlertDialogHeader>
+                                <AlertDialogTitle>Delete interview account?</AlertDialogTitle>
+                                <AlertDialogDescription className="text-[#5e554a] dark:text-[#aaa398]">
+                                  This will permanently delete your {company} interview account.
+                                </AlertDialogDescription>
+                              </AlertDialogHeader>
+                              <AlertDialogFooter>
+                                <AlertDialogCancel className="border-black/10 bg-transparent hover:bg-[#f2eee6] dark:border-white/10 dark:hover:bg-[#262421]">Cancel</AlertDialogCancel>
+                                <AlertDialogAction onClick={() => handleDelete(experience.id)} className="bg-[#a33a32] text-white hover:bg-[#8f3029]">Delete account</AlertDialogAction>
+                              </AlertDialogFooter>
+                            </AlertDialogContent>
+                          </AlertDialog>
+                        ) : (
+                          <Link to={`/view-interview-experiences/${experience.id}`} className="inline-flex h-8 items-center gap-1.5 rounded-md border border-black/10 px-2.5 text-sm font-medium text-[#2459a6] transition-colors hover:bg-[#f2eee6] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring dark:border-white/10 dark:text-[#a8c7f3] dark:hover:bg-[#262421]">
+                            <Eye size={14} aria-hidden="true" /> View account
+                          </Link>
+                        )}
+                      </div>
+                    </article>
+                  );
+                })}
+              </div>
+            </details>
+          ))}
         </div>
       )}
-    </div>
+
+      {experiences.length > 0 && (
+        <footer className="border-t border-black/10 px-5 py-4 text-right dark:border-white/10 sm:px-6">
+          <Link to="/share-experience" className="inline-flex h-9 items-center gap-2 rounded-md bg-[#2459a6] px-3 text-sm font-medium text-white transition-colors hover:bg-[#1d4a8a] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring">
+            <Plus size={15} aria-hidden="true" /> Add experience
+          </Link>
+        </footer>
+      )}
+    </section>
   );
 }

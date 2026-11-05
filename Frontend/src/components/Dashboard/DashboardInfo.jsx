@@ -1,272 +1,46 @@
+import { Link } from 'react-router-dom';
+import { ArrowRight } from 'lucide-react';
 import { UrlState } from '@/context';
-import { getProgress } from '@/db/apiProgress';
-import { getSubjects } from '@/db/apiSubjects';
-import useFetch from '@/hooks/useFetch';
-import React, { useEffect, useState } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { motion } from 'framer-motion';
-import { Activity, UserPlus, LogIn } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
-import { getStats } from '@/constants';
-function DashboardInfo() {
+
+function DashboardInfo({ subjects = [], progressMap = {}, progressLoading = false }) {
   const { user } = UrlState();
-  const navigate = useNavigate();
-  const [totalQuestions, setTotalQuestions] = useState(0);
-  const [totalSubjects, setTotalSubjects] = useState(0);
-  const [avgProgressPercentage, setAvgProgressPercentage] = useState(0);
-  const [completedQuestions, setCompletedQuestions] = useState(0);
-  const stats = getStats({
-    totalSubjects,
-    totalQuestions,
-    completedQuestions,
-    avgProgressPercentage,
-  });
-  const {
-    data: subjects,
-    loading,
-    error,
-    fn: fnSubjects,
-  } = useFetch(getSubjects);
 
-  useEffect(() => {
-    if (user?.id) {
-      fnSubjects();
-    }
-  }, [user?.id]);
-
-  useEffect(() => {
-    if (subjects && user?.id) {
-      const totalQ = subjects.reduce(
-        (acc, subj) => acc + (subj.question_count || 0),
-        0
-      );
-      setTotalQuestions(totalQ);
-      setTotalSubjects(subjects.length);
-
-      let totalCompletedQuestions = 0;
-      const fetchProgress = async () => {
-        await Promise.all(
-          subjects.map(async (subj) => {
-            const data = await getProgress(user.id, subj.id);
-            totalCompletedQuestions += data?.completedQ || 0;
-          })
-        );
-
-        setCompletedQuestions(totalCompletedQuestions);
-        const avgProgress =
-          totalQ > 0 ? (totalCompletedQuestions / totalQ) * 100 : 0;
-        setAvgProgressPercentage(avgProgress.toFixed(1));
-      };
-      fetchProgress();
-    }
-  }, [subjects, user?.id]);
-
-  // Compact login prompt for non-logged-in users
   if (!user?.id) {
     return (
-      <div className="mb-6">
-        <Card className="relative bg-card border border-border rounded-xl shadow-sm overflow-hidden">
-          <div className="absolute inset-0 bg-muted/20" />
-
-          <CardContent className="relative z-10 p-6">
-            <div className="flex flex-col sm:flex-row items-center gap-4">
-              <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center shrink-0">
-                <UserPlus className="w-6 h-6 text-primary" />
-              </div>
-
-              <div className="flex-1 text-center sm:text-left">
-                <h3 className="text-lg font-bold text-foreground mb-1">
-                  Track Your Learning Progress
-                </h3>
-                <p className="text-sm text-muted-foreground mb-3">
-                  Create an account to access detailed analytics and track your
-                  progress across subjects.
-                </p>
-
-                <div className="flex flex-wrap gap-2 justify-center sm:justify-start">
-                  <Button
-                    onClick={() => navigate('/auth/signup')}
-                    size="sm"
-                    className="bg-primary text-primary-foreground font-semibold px-4 py-2 rounded-md text-xs">
-                    <UserPlus className="w-3 h-3 mr-1" />
-                    Sign Up
-                  </Button>
-
-                  <Button
-                    onClick={() => navigate('/auth/login')}
-                    variant="outline"
-                    size="sm"
-                    className="border-border text-foreground hover:bg-muted font-semibold px-4 py-2 rounded-md text-xs">
-                    <LogIn className="w-3 h-3 mr-1" />
-                    Sign In
-                  </Button>
-                </div>
-              </div>
-
-              <div className="hidden md:flex items-center gap-6 text-center shrink-0">
-                <div>
-                  <p className="text-lg font-bold text-primary">10k+</p>
-                  <p className="text-xs text-muted-foreground">Questions</p>
-                </div>
-                <div>
-                  <p className="text-lg font-bold text-primary">50+</p>
-                  <p className="text-xs text-muted-foreground">Subjects</p>
-                </div>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
-    );
-  }
-
-  // Circular Progress Component
-  const CircularProgress = ({ percentage, size = 60, strokeWidth = 6 }) => {
-    const radius = (size - strokeWidth) / 2;
-    const circumference = 2 * Math.PI * radius;
-    const strokeDashoffset = circumference - (percentage / 100) * circumference;
-
-    return (
-      <div className="relative">
-        <svg width={size} height={size} className="transform -rotate-90">
-          <circle
-            cx={size / 2}
-            cy={size / 2}
-            r={radius}
-            fill="transparent"
-            stroke="rgb(229, 231, 235)"
-            strokeWidth={strokeWidth}
-          />
-          <motion.circle
-            cx={size / 2}
-            cy={size / 2}
-            r={radius}
-            fill="transparent"
-            stroke="url(#progressGradient)"
-            strokeWidth={strokeWidth}
-            strokeLinecap="round"
-            strokeDasharray={circumference}
-            initial={{ strokeDashoffset: circumference }}
-            animate={{ strokeDashoffset }}
-            transition={{ duration: 1.5, ease: 'easeOut' }}
-          />
-          <defs>
-            <linearGradient
-              id="progressGradient"
-              x1="0%"
-              y1="0%"
-              x2="100%"
-              y2="100%">
-              <stop offset="0%" stopColor="hsl(var(--primary))" />
-              <stop offset="100%" stopColor="hsl(var(--primary))" />
-            </linearGradient>
-          </defs>
-        </svg>
-        <div className="absolute inset-0 flex items-center justify-center">
-          <span className="text-sm font-black text-gray-800 dark:text-white">
-            {percentage}%
-          </span>
+      <section className="mb-8 flex flex-col gap-5 rounded-xl border border-black/10 bg-[#fdfbf7] p-5 dark:border-white/10 dark:bg-[#1c1a18] sm:flex-row sm:items-center sm:justify-between sm:p-6">
+        <div className="max-w-2xl">
+          <h2 className="text-lg font-medium text-[#1f1b16] dark:text-[#efe9de]">Keep your practice in one place</h2>
+          <p className="mt-2 text-sm leading-6 text-[#5e554a] dark:text-[#aaa398]">Sign in to track completed questions by subject and return to your study plan.</p>
         </div>
-      </div>
-    );
-  };
-  if (loading) {
-    return (
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-        {[...Array(4)].map((_, index) => (
-          <Card
-            key={index}
-            className="bg-white/70 dark:bg-gray-800/70 border border-gray-200/50 dark:border-gray-700/50 rounded-xl animate-pulse h-24">
-            <CardContent className="p-4">
-              <div className="flex items-center justify-between mb-2">
-                <div className="h-3 bg-gray-200 dark:bg-gray-700 rounded w-20"></div>
-                <div className="h-6 w-6 bg-gray-200 dark:bg-gray-700 rounded-lg"></div>
-              </div>
-              <div className="h-6 bg-gray-200 dark:bg-gray-700 rounded w-12"></div>
-            </CardContent>
-          </Card>
-        ))}
-      </div>
+        <div className="flex shrink-0 items-center gap-4">
+          <Link to="/auth/login" className="text-sm font-medium text-[#5e554a] underline-offset-4 hover:text-[#1f1b16] hover:underline dark:text-[#aaa398] dark:hover:text-[#efe9de]">Log in</Link>
+          <Link to="/auth/signup" className="inline-flex h-10 items-center gap-2 rounded-lg bg-[#2459a6] px-4 text-sm font-medium text-white transition-colors hover:bg-[#1d4a8a] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring">Create account <ArrowRight size={16} /></Link>
+        </div>
+      </section>
     );
   }
 
-  if (error) {
-    return (
-      <Card className="bg-destructive/10 border border-destructive/20 rounded-xl mb-6">
-        <CardContent className="p-6 text-center">
-          <Activity className="w-8 h-8 text-destructive mx-auto mb-2" />
-          <h3 className="text-lg font-bold text-foreground mb-1">
-            Unable to Load Dashboard
-          </h3>
-          <p className="text-sm text-muted-foreground">
-            There was an error loading your progress data.
-          </p>
-        </CardContent>
-      </Card>
-    );
-  }
+  const totalQuestions = subjects.reduce((sum, subject) => sum + (subject.question_count || 0), 0);
+  const completedQuestions = Object.values(progressMap).reduce((sum, item) => sum + (item?.completedQ || 0), 0);
+  const averageProgress = totalQuestions ? Math.round((completedQuestions / totalQuestions) * 100) : 0;
+  const stats = [
+    { label: 'Subjects', value: subjects.length },
+    { label: 'Questions', value: totalQuestions.toLocaleString() },
+    { label: 'Completed', value: completedQuestions.toLocaleString() },
+    { label: 'Overall progress', value: `${averageProgress}%` },
+  ];
 
   return (
-    <div className="mb-6">
-      {/* Compact Header */}
-      <div className="text-center mb-6">
-        <h2 className="text-2xl font-bold text-gray-800 dark:text-gray-100 mb-1">
-          Dashboard Overview
-        </h2>
-        <p className="text-sm text-gray-600 dark:text-gray-400">
-          Track your learning progress and achievements
-        </p>
-      </div>
-
-      {/* Compact Stats Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-        {stats.map((stat, index) => (
-          <Card
-            key={stat.title}
-            className={`relative ${stat.bgColor} border ${stat.borderColor} rounded-xl shadow-sm overflow-hidden group transition-all hover:border-primary/50`}>
-            <CardHeader className="pb-2">
-              <div className="flex items-center justify-between">
-                <CardTitle className="text-muted-foreground text-xs font-medium">
-                  {stat.title}
-                </CardTitle>
-                <div
-                  className={`p-2 bg-primary/10 rounded-md`}>
-                  <stat.icon className="w-4 h-4 text-primary" />
-                </div>
-              </div>
-            </CardHeader>
-
-            <CardContent className="pt-0">
-              {stat.isProgress ? (
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-2xl font-black text-gray-800 dark:text-gray-100">
-                      {stat.value}
-                    </p>
-                    <p className="text-xs text-gray-600 dark:text-gray-400">
-                      {stat.description}
-                    </p>
-                  </div>
-                  <CircularProgress
-                    percentage={parseFloat(avgProgressPercentage)}
-                  />
-                </div>
-              ) : (
-                <div>
-                  <p className="text-2xl font-black text-gray-800 dark:text-gray-100 mb-1">
-                    {stat.value}
-                  </p>
-                  <p className="text-xs text-gray-600 dark:text-gray-400">
-                    {stat.description}
-                  </p>
-                </div>
-              )}
-            </CardContent>
-          </Card>
-        ))}
-      </div>
-    </div>
+    <section aria-label="Study summary" className="mb-8 grid grid-cols-2 gap-3 lg:grid-cols-4">
+      {stats.map((stat) => (
+        <div key={stat.label} className="rounded-xl border border-black/10 bg-[#fdfbf7] p-4 dark:border-white/10 dark:bg-[#1c1a18] sm:p-5">
+          <p className="text-sm text-[#5e554a] dark:text-[#aaa398]">{stat.label}</p>
+          <p className="mt-3 text-3xl font-medium tabular-nums text-[#1f1b16] dark:text-[#efe9de]">
+            {progressLoading && stat.label !== 'Subjects' ? <span className="text-muted-foreground">—</span> : stat.value}
+          </p>
+        </div>
+      ))}
+    </section>
   );
 }
 

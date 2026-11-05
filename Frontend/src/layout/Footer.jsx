@@ -1,223 +1,106 @@
 import { Link } from 'react-router-dom';
-import { Twitter, Github, Linkedin, Mail } from 'lucide-react';
 import Logo from '@/components/Logo';
 import { UrlState } from '@/context';
 import { socialLinks } from '../constants.js';
+
+const linkClass =
+  'text-sm text-[#5e554a] transition-colors hover:text-[#1f1b16] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring dark:text-[#aaa398] dark:hover:text-[#efe9de]';
+
+const groups = [
+  {
+    heading: 'Practice',
+    links: [
+      { label: 'Dashboard', to: '/dashboard' },
+      { label: 'Features', to: '/features' },
+      { label: 'Interview experiences', to: '/view-interview-experiences' },
+    ],
+  },
+  {
+    heading: 'Company',
+    links: [
+      { label: 'About', to: '/about-us' },
+      { label: 'Contact', to: '/contact-us' },
+    ],
+  },
+  {
+    heading: 'Policies',
+    links: [
+      { label: 'Privacy', to: '/privacy-policy' },
+      { label: 'Terms of service', to: '/terms' },
+      { label: 'Cookie policy', to: '/cookies' },
+    ],
+  },
+];
+
 export default function Footer() {
   const { user } = UrlState();
   const isAuthenticated = !!user?.id;
 
   return (
-    <footer className="bg-background text-foreground border-t border-border mt-12">
-      {/* Main Footer Content */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Links Grid */}
-        <div className="py-12 grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-8 text-center sm:text-left">
-          {/* Brand Column */}
-          <div className="col-span-2 md:col-span-4 lg:col-span-1 mb-6 sm:mb-0">
-            <div className="flex items-center gap-2 mb-4 justify-center sm:justify-start">
-              <Logo iconSize="h-7 w-7" />
-            </div>
-            <p className="text-sm text-muted-foreground leading-relaxed mb-6 max-w-xs mx-auto sm:mx-0">
-              Your personal Q&A bank for Computer Science interview prep.
-              Organize, revise & crack interviews with confidence.
-            </p>
-
-            {/* Social Links */}
-            <div className="flex gap-3 mb-6 flex-wrap justify-center sm:justify-start">
-              {socialLinks.map(({ href, icon: Icon, label }, i) => (
-                <a
-                  key={i}
-                  href={href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label={label}
-                  className="w-9 h-9 flex items-center justify-center rounded-lg border border-border hover:bg-primary hover:text-black hover:border-primary transition-all duration-200">
-                  <Icon size={18} />
-                </a>
-              ))}
-            </div>
-          </div>
-
-          {/* Product */}
-          <div>
-            <h3 className="text-sm font-semibold uppercase tracking-wide text-primary mb-4">
-              Product
-            </h3>
-            <ul className="space-y-3 text-sm">
-              <li>
-                <a
-                  href="#features"
-                  className="text-muted-foreground hover:text-primary">
-                  Features
-                </a>
-              </li>
-              <li>
-                <a
-                  href="#faq"
-                  className="text-muted-foreground hover:text-primary">
-                  FAQ
-                </a>
-              </li>
-              <li>
-                <Link
-                  to="/"
-                  className="text-muted-foreground hover:text-primary">
-                  What's New
-                </Link>
-              </li>
-              <li>
-                <span className="text-muted-foreground">Mobile App</span>
-              </li>
-            </ul>
-          </div>
-
-          {/* Resources */}
-          <div>
-            <h3 className="text-sm font-semibold uppercase tracking-wide text-primary mb-4">
-              Resources
-            </h3>
-            <ul className="space-y-3 text-sm">
-              <li>
-                {!isAuthenticated ? (
-                  <Link
-                    to="/auth/signup"
-                    className="text-muted-foreground hover:text-primary">
-                    Dashboard
-                  </Link>
-                ) : (
-                  <Link
-                    to="/dashboard"
-                    className="text-muted-foreground hover:text-primary">
-                    Dashboard
-                  </Link>
-                )}
-              </li>
-              <li>
-                <Link
-                  to="/view-interview-experiences"
-                  className="text-muted-foreground hover:text-primary">
-                  Interview Experiences
-                </Link>
-              </li>
-              <li>
-                <span className="text-muted-foreground">Study Guides</span>
-              </li>
-              <li>
-                <span className="text-muted-foreground">Help Center</span>
-              </li>
-            </ul>
-          </div>
-
-          {/* Company */}
-          <div>
-            <h3 className="text-sm font-semibold uppercase tracking-wide text-primary mb-4">
-              Company
-            </h3>
-            <ul className="space-y-3 text-sm">
-              <li>
-                <Link
-                  to="/about-us"
-                  className="text-muted-foreground hover:text-primary">
-                  About Us
-                </Link>
-              </li>
-              <li>
-                <Link
-                  to="/contact-us"
-                  className="text-muted-foreground hover:text-primary">
-                  Contact
-                </Link>
-              </li>
-              <li>
-                <Link
-                  to="/privacy-policy"
-                  className="text-muted-foreground hover:text-primary">
-                  Privacy Policy
-                </Link>
-              </li>
-              <li>
-                <Link
-                  to="/terms"
-                  className="text-muted-foreground hover:text-primary">
-                  Terms of Service
-                </Link>
-              </li>
-            </ul>
-          </div>
-
-          {/* Support */}
-          <div>
-            <h3 className="text-sm font-semibold uppercase tracking-wide text-primary mb-4">
-              Support
-            </h3>
-            <ul className="space-y-3 text-sm">
-              <li>
-                {!isAuthenticated ? (
-                  <Link
-                    to="/auth/signup"
-                    className="text-muted-foreground hover:text-primary">
-                    Get Started
-                  </Link>
-                ) : (
-                  <Link
-                    to={`/profile/${user.id}`}
-                    className="text-muted-foreground hover:text-primary">
-                    <span className="sm:inline hidden">My Account</span>
-                    <span className="inline sm:hidden">Account</span>
-                  </Link>
-                )}
-              </li>
-              <li>
-                <div className="text-muted-foreground hover:text-primary flex items-center gap-2 justify-center sm:justify-start cursor-pointer">
-                  <Mail size={14} />
-                  <span className="sm:inline hidden">Support</span>
-                  <span className="inline sm:hidden">Help</span>
-                </div>
-              </li>
-              <li>
-                <Link
-                  to="/"
-                  className="text-muted-foreground hover:text-primary">
-                  <span className="sm:inline hidden">Status</span>
-                  <span className="inline sm:hidden">Site</span>
-                </Link>
-              </li>
-              <li>
-                <Link
-                  to="/"
-                  className="text-muted-foreground hover:text-primary">
-                  <span className="sm:inline hidden">Community</span>
-                  <span className="inline sm:hidden">Forum</span>
-                </Link>
-              </li>
-            </ul>
+    <footer className="mt-12 border-t border-black/10 bg-[#f7f4ee] text-[#1f1b16] dark:border-white/10 dark:bg-[#161513] dark:text-[#efe9de]">
+      <div className="mx-auto grid w-full max-w-[1440px] grid-cols-2 gap-x-8 gap-y-10 px-5 py-10 sm:px-6 sm:py-12 md:grid-cols-4 md:px-8">
+        <div className="col-span-2 max-w-sm md:col-span-1">
+          <Link
+            to="/"
+            aria-label="PrepMate home"
+            className="inline-flex rounded-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-ring">
+            <Logo iconSize="h-8 w-8" />
+          </Link>
+          <p className="mt-4 text-sm leading-6 text-[#5e554a] dark:text-[#aaa398]">
+            A steady place to practice computer science interviews and learn from shared experiences.
+          </p>
+          <div className="mt-5 flex items-center gap-2">
+            {socialLinks.map(({ href, icon: Icon, label }) => (
+              <a
+                key={label}
+                href={href}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label={label}
+                className="inline-flex h-9 w-9 items-center justify-center rounded-md border border-black/10 text-[#5e554a] transition-colors hover:bg-[#efe9df] hover:text-[#1f1b16] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring dark:border-white/10 dark:text-[#aaa398] dark:hover:bg-[#262421] dark:hover:text-[#efe9de]">
+                <Icon size={17} strokeWidth={1.7} />
+              </a>
+            ))}
           </div>
         </div>
+
+        {groups.map(({ heading, links }) => (
+          <nav key={heading} aria-label={heading}>
+            <h2 className="mb-4 text-sm font-medium">{heading}</h2>
+            <ul className="space-y-3">
+              {links.map(({ label, to }) => (
+                <li key={to}>
+                  <Link className={linkClass} to={to}>{label}</Link>
+                </li>
+              ))}
+              {heading === 'Practice' && !isAuthenticated && (
+                <li>
+                  <Link className={linkClass} to="/auth/signup">Create account</Link>
+                </li>
+              )}
+              {heading === 'Practice' && isAuthenticated && (
+                <li>
+                  <Link className={linkClass} to={`/profile/${user.id}`}>My profile</Link>
+                </li>
+              )}
+            </ul>
+          </nav>
+        ))}
       </div>
 
-      {/* Bottom Bar */}
-      <div className="border-t border-border bg-muted/30">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-          <div className="flex flex-col sm:flex-row items-center justify-between gap-3 text-center sm:text-left">
-            <div className="flex flex-col sm:flex-row items-center gap-3 text-xs text-muted-foreground">
-              <span>
-                © {new Date().getFullYear()} PrepMate. All rights reserved.
-              </span>
-              <Link to="/cookies" className="hover:text-primary">
-                Cookie Policy
-              </Link>
-            </div>
-            <div className="text-xs text-muted-foreground">
-              Made by{' '}
-              <Link
-                to="https://arunava-banerjee.vercel.app/"
-                target="_blank"
-                className="hover:text-primary font-medium">
-                Arunava
-              </Link>
-            </div>
-          </div>
+      <div className="border-t border-black/10 dark:border-white/10">
+        <div className="mx-auto flex w-full max-w-[1440px] flex-col items-start gap-2 px-5 py-5 text-xs text-[#776f65] dark:text-[#8a847a] sm:flex-row sm:items-center sm:justify-between sm:px-6 md:px-8">
+          <span>© {new Date().getFullYear()} PrepMate</span>
+          <span>
+            Made by{' '}
+            <a
+              href="https://arunava-banerjee.vercel.app/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="font-medium text-[#5e554a] transition-colors hover:text-[#1f1b16] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring dark:text-[#aaa398] dark:hover:text-[#efe9de]">
+              Arunava
+            </a>
+          </span>
         </div>
       </div>
     </footer>

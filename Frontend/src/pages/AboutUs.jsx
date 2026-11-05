@@ -1,95 +1,64 @@
+import { ArrowRight, BookOpenCheck, MessagesSquare, SquareCheckBig } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import { GraduationCap, Sparkles, ArrowRight } from 'lucide-react';
-import { coreValues } from '@/constants';
+
+const points = [
+  {
+    number: '01',
+    icon: BookOpenCheck,
+    title: 'Practice by subject',
+    description: 'Work through computer science questions grouped into subjects and subtopics.',
+  },
+  {
+    number: '02',
+    icon: SquareCheckBig,
+    title: 'Keep track of what you have covered',
+    description: 'Mark questions as complete and see your progress for each subject.',
+  },
+  {
+    number: '03',
+    icon: MessagesSquare,
+    title: 'Learn from shared experiences',
+    description: 'Read interview accounts from developers and share an account of your own.',
+  },
+];
 
 export default function AboutUs() {
   return (
-    <div className="min-h-screen bg-background text-foreground">
-      {/* Hero Section */}
-      <section className="py-15 sm:py-28 text-center">
-        <div className="max-w-4xl mx-auto px-6">
-          <div className="inline-flex items-center gap-2 bg-primary/10 text-primary px-4 py-2 rounded-full text-sm font-medium mb-6">
-            <Sparkles size={16} />
-            Built by developers, for developers
-          </div>
-          <h1 className="text-4xl sm:text-5xl font-bold mb-3">
-            About <span className="text-primary">PrepMate</span>
-          </h1>
-          <p className="text-lg text-muted-foreground leading-relaxed max-w-2xl mx-auto">
-            PrepMate is your all-in-one Computer Science interview prep
-            companion. We provide structured learning, curated questions, and
-            real interview insights — helping you prepare smarter, not harder.
-          </p>
-        </div>
-      </section>
+    <div className="text-[#1f1b16] dark:text-[#efe9de]">
+      <header className="mx-auto w-full max-w-5xl px-5 pb-10 pt-14 sm:px-6 sm:pb-12 sm:pt-20 md:px-8">
+        <p className="mb-4 text-sm text-[#5e554a] dark:text-[#aaa398]">About PrepMate</p>
+        <h1 className="max-w-3xl text-3xl font-medium leading-tight tracking-tight sm:text-5xl">
+          A steadier way to prepare for CS interviews
+        </h1>
+        <p className="mt-5 max-w-2xl text-base leading-7 text-[#5e554a] dark:text-[#aaa398]">
+          PrepMate brings subject-based computer science practice, progress tracking, and interview accounts shared by developers into one study space.
+        </p>
+      </header>
 
-      {/* Mission Section */}
-      <section className="py-16">
-        <div className="max-w-3xl mx-auto px-6 text-center">
-          <GraduationCap className="w-12 h-12 text-primary mx-auto mb-4" />
-          <h2 className="text-2xl sm:text-3xl font-bold mb-4">Our Mission</h2>
-          <p className="text-lg text-muted-foreground leading-relaxed">
-            We believe every aspiring engineer deserves access to high-quality
-            interview prep. Our mission is to simplify your journey by combining
-            curated content, progress tracking, and a supportive community in
-            one platform.
-          </p>
-        </div>
-      </section>
-
-      {/* Core Values Section */}
-      <section className="py-20">
-        <div className="max-w-6xl mx-auto px-6">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold mb-4">Our Core Values</h2>
-            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-              These principles guide everything we build and how we serve our
-              community
-            </p>
-          </div>
-
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {coreValues.map((value, index) => (
-              <div
-                key={index}
-                className="bg-card border border-border rounded-xl p-6 text-center shadow-sm hover:shadow-md transition">
-                <div className="w-14 h-14 bg-primary/10 rounded-2xl flex items-center justify-center mx-auto mb-4">
-                  <value.icon className="h-7 w-7 text-primary" />
-                </div>
-                <h3 className="text-lg font-semibold mb-2">{value.title}</h3>
-                <p className="text-sm text-muted-foreground">
-                  {value.description}
-                </p>
+      <section className="mx-auto w-full max-w-5xl border-t border-black/10 px-5 py-8 dark:border-white/10 sm:px-6 md:px-8" aria-label="How PrepMate works">
+        <ol className="divide-y divide-black/10 dark:divide-white/10">
+          {points.map(({ number, icon: Icon, title, description }) => (
+            <li key={number} className="grid gap-3 py-6 sm:grid-cols-[56px_1fr] sm:gap-5">
+              <span className="flex h-9 w-9 items-center justify-center rounded-lg border border-black/10 text-[#5e554a] dark:border-white/10 dark:text-[#aaa398]">
+                <Icon size={17} strokeWidth={1.6} aria-hidden="true" />
+              </span>
+              <div>
+                <p className="text-xs tabular-nums text-[#776f65] dark:text-[#8a847a]">{number}</p>
+                <h2 className="mt-1 text-lg font-medium leading-6">{title}</h2>
+                <p className="mt-2 max-w-2xl text-sm leading-6 text-[#5e554a] dark:text-[#aaa398]">{description}</p>
               </div>
-            ))}
-          </div>
-        </div>
+            </li>
+          ))}
+        </ol>
       </section>
 
-      {/* CTA Section */}
-      <section className="py-20 text-center">
-        <div className="max-w-3xl mx-auto px-6">
-          <h2 className="text-2xl sm:text-3xl font-bold mb-4">
-            Ready to Ace Your Next Interview?
-          </h2>
-          <p className="text-muted-foreground mb-6">
-            Join thousands of learners using PrepMate to prepare smarter and
-            land top offers.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link
-              to="/auth/signup"
-              className="inline-flex items-center px-6 py-3 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors font-medium gap-2">
-              Get Started
-              <ArrowRight size={18} />
-            </Link>
-            <Link
-              to="/contact-us"
-              className="inline-flex items-center px-6 py-3 border border-border text-foreground rounded-lg hover:bg-muted transition-colors font-medium">
-              Contact Us
-            </Link>
-          </div>
-        </div>
+      <section className="mx-auto flex w-full max-w-5xl flex-col gap-4 border-t border-black/10 px-5 py-10 dark:border-white/10 sm:flex-row sm:items-center sm:gap-6 sm:px-6 md:px-8">
+        <Link to="/dashboard" className="inline-flex h-10 items-center justify-center gap-2 rounded-md bg-[#2459a6] px-4 text-sm font-medium text-white transition-colors hover:bg-[#1d4a8a] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring dark:bg-[#a8c7f3] dark:text-[#111a27] dark:hover:bg-[#91b8ef]">
+          Explore subjects <ArrowRight size={16} aria-hidden="true" />
+        </Link>
+        <Link to="/view-interview-experiences" className="inline-flex h-10 items-center justify-center rounded-md px-3 text-sm font-medium text-[#5e554a] transition-colors hover:bg-[#efe9df] hover:text-[#1f1b16] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring dark:text-[#aaa398] dark:hover:bg-[#262421] dark:hover:text-[#efe9de]">
+          Read interview accounts
+        </Link>
       </section>
     </div>
   );

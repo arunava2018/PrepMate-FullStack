@@ -1,85 +1,63 @@
-import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
-import { Linkedin, Github, Briefcase, Share2 } from 'lucide-react';
+import { useEffect, useState } from 'react';
+import { Link, useParams } from 'react-router-dom';
+import { ArrowLeft, Briefcase, Github, Linkedin, Share2, ShieldCheck } from 'lucide-react';
+import { toast } from 'sonner';
 import { fetchExperienceById } from '@/db/apiInterviewExperience';
 import MarkdownRenderer from '@/components/MarkdownRenderer';
-import { toast } from 'sonner';
-import { Skeleton } from '@/components/ui/skeleton';
+
+const offerLabels = {
+  full_time: 'Full time',
+  internship_ppo: 'Internship + PPO',
+  internship: 'Internship',
+};
 
 export default function ExperienceDetails() {
   const { experienceId } = useParams();
   const [experience, setExperience] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
-    async function fetchExperience() {
+    let active = true;
+
+    async function loadExperience() {
+      setLoading(true);
+      setError(null);
+      setExperience(null);
       try {
         const data = await fetchExperienceById(experienceId);
-        setExperience(data);
-      } catch (err) {
-        console.error('Failed to fetch experience:', err);
+        if (active) setExperience(data);
+      } catch (fetchError) {
+        if (active) setError(fetchError);
       } finally {
-        setLoading(false);
+        if (active) setLoading(false);
       }
     }
-    fetchExperience();
-  }, [experienceId]);
 
-  const shortenWithTiny = async (longUrl) => {
-    const res = await fetch(
-      `https://tinyurl.com/api-create.php?url=${encodeURIComponent(longUrl)}`
-    );
-    if (!res.ok) throw new Error('TinyURL failed');
-    return res.text()
-  };
+    loadExperience();
+    return () => { active = false; };
+  }, [experienceId]);
 
   const handleShare = async () => {
     try {
-      const shortUrl = await shortenWithTiny(window.location.href);
-      await navigator.clipboard.writeText(shortUrl);
-      toast.success('Short URL copied!');
-    } catch (err) {
-      console.error(err);
-      toast.error('Failed to copy short link — trying full link instead');
       await navigator.clipboard.writeText(window.location.href);
+      toast.success('Link copied');
+    } catch {
+      toast.error('Could not copy the link. You can copy it from the address bar.');
     }
-  };
-
-  // Avatar initials
-  const getInitials = (name) => {
-    const parts = name.trim().split(' ');
-    if (parts.length === 1) return parts[0].charAt(0).toUpperCase();
-    return (
-      parts[0].charAt(0).toUpperCase() +
-      parts[parts.length - 1].charAt(0).toUpperCase()
-    );
   };
 
   if (loading) {
     return (
-      <div className="max-w-5xl mx-auto px-6 py-10 space-y-6">
-        {/* Skeleton */}
-        <div className="flex items-center justify-between">
-          <div className="space-y-3">
-            <Skeleton className="h-6 w-40" />
-            <Skeleton className="h-4 w-28" />
-          </div>
-          <Skeleton className="h-9 w-20 rounded-md" />
-        </div>
-
-        <div className="flex items-center justify-between border border-border rounded-lg px-4 py-3 bg-card text-card-foreground">
-          <div className="flex items-center gap-3">
-            <Skeleton className="w-10 h-10 rounded-full" />
-            <Skeleton className="h-5 w-32" />
-          </div>
-          <Skeleton className="h-4 w-28" />
-        </div>
-
-        <div className="bg-card rounded-xl p-6 border border-border shadow-sm space-y-3">
-          <Skeleton className="h-5 w-2/3" />
-          <Skeleton className="h-4 w-full" />
-          <Skeleton className="h-4 w-5/6" />
-          <Skeleton className="h-4 w-3/4" />
+      <div className="mx-auto w-full max-w-4xl px-5 py-10 sm:px-6 sm:py-12 md:px-8" role="status" aria-label="Loading interview account">
+        <div className="h-4 w-36 rounded bg-[#efe9df] dark:bg-[#262421]" />
+        <div className="mt-8 h-8 w-2/3 rounded bg-[#efe9df] dark:bg-[#262421]" />
+        <div className="mt-3 h-5 w-1/3 rounded bg-[#efe9df] dark:bg-[#262421]" />
+        <div className="mt-8 h-16 rounded-lg border border-black/10 dark:border-white/10" />
+        <div className="mt-6 space-y-3 rounded-xl border border-black/10 p-6 dark:border-white/10">
+          <div className="h-4 w-full rounded bg-[#efe9df] dark:bg-[#262421]" />
+          <div className="h-4 w-5/6 rounded bg-[#efe9df] dark:bg-[#262421]" />
+          <div className="h-4 w-2/3 rounded bg-[#efe9df] dark:bg-[#262421]" />
         </div>
       </div>
     );
@@ -87,16 +65,17 @@ export default function ExperienceDetails() {
 
   if (!experience) {
     return (
-      <div className="text-center py-20">
-        <div className="text-6xl mb-4">😕</div>
-        <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">
-          Experience Not Found
-        </h2>
-        <p className="text-gray-600 dark:text-gray-400">
-          The interview experience you're looking for doesn't exist or has been
-          removed.
-        </p>
-      </div>
+      <section className="mx-auto w-full max-w-4xl px-5 py-12 text-[#1f1b16] dark:text-[#efe9de] sm:px-6 sm:py-16 md:px-8">
+        <Link to="/view-interview-experiences" className="inline-flex items-center gap-2 text-sm text-[#5e554a] hover:text-[#1f1b16] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-ring dark:text-[#aaa398] dark:hover:text-[#efe9de]">
+          <ArrowLeft size={16} aria-hidden="true" /> Interview experiences
+        </Link>
+        <div className="mt-8 max-w-xl border-t border-black/10 pt-6 dark:border-white/10" role="alert">
+          <h1 className="text-2xl font-medium">{error ? 'Could not load this account' : 'Interview account not found'}</h1>
+          <p className="mt-2 text-sm leading-6 text-[#5e554a] dark:text-[#aaa398]">
+            {error ? 'Try again in a moment, or return to the shared accounts.' : 'This account may have been removed or is no longer available.'}
+          </p>
+        </div>
+      </section>
     );
   }
 
@@ -104,115 +83,78 @@ export default function ExperienceDetails() {
     role,
     content,
     users,
-    linkedin_url,
-    github_url,
-    company_name,
-    created_at,
-    is_anonymous,
+    linkedin_url: linkedinUrl,
+    github_url: githubUrl,
+    company_name: companyName,
+    offer_type: offerType,
+    opportunity_type: opportunityType,
+    created_at: createdAt,
+    is_anonymous: isAnonymous,
   } = experience;
-
-  // Anonymity check
-  const userName = is_anonymous
-    ? 'Anonymous User'
-    : users?.full_name || 'Unknown User';
-  const avatarInitials = is_anonymous ? 'A' : getInitials(userName);
-
-  const createdDate = created_at
-    ? new Date(created_at).toLocaleDateString('en-US', {
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric',
-      })
+  const authorName = isAnonymous ? 'Anonymous' : users?.full_name || 'Community member';
+  const initials = authorName.split(/\s+/).map((part) => part[0]).join('').slice(0, 2).toUpperCase();
+  const sharedDate = createdAt
+    ? new Date(createdAt).toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' })
     : null;
 
   return (
-    <div className="max-w-5xl mx-auto px-6 py-10">
-      {/* Header */}
-      <div className="mb-8">
-        <div className="flex items-center justify-between mb-4">
-          {/* Company + Role */}
-          <div>
-            {company_name && (
-              <h1 className="flex items-center gap-2 text-2xl sm:text-3xl font-semibold text-primary dark:text-primary-foreground">
-                <Briefcase className="w-5 h-5" />
-                {company_name}
-              </h1>
-            )}
-            <h2 className="text-base sm:text-lg font-bold text-gray-900 dark:text-white mt-1">
-              {role}
-            </h2>
-          </div>
+    <article className="mx-auto w-full max-w-4xl px-5 py-8 text-[#1f1b16] dark:text-[#efe9de] sm:px-6 sm:py-10 md:px-8">
+      <Link to="/view-interview-experiences" className="inline-flex items-center gap-2 rounded-sm text-sm text-[#5e554a] transition-colors hover:text-[#1f1b16] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-ring dark:text-[#aaa398] dark:hover:text-[#efe9de]">
+        <ArrowLeft size={16} aria-hidden="true" /> Interview experiences
+      </Link>
 
-          {/* Share button */}
-          <button
-            onClick={handleShare}
-            className="flex items-center justify-center rounded-md bg-primary text-primary-foreground hover:bg-primary/90 transition px-3 py-2 text-sm font-medium">
-            <Share2 className="w-5 h-5 block sm:hidden" />
-            <span className="hidden sm:flex items-center gap-2">
-              <Share2 className="w-4 h-4" /> Share
-            </span>
+      <header className="mt-6 border-b border-black/10 pb-6 dark:border-white/10">
+        <p className="mb-3 text-sm text-[#5e554a] dark:text-[#aaa398]">Interview account</p>
+        <div className="flex flex-col gap-5 sm:flex-row sm:items-start sm:justify-between">
+          <div>
+            {companyName && <p className="text-sm font-medium text-[#2459a6] dark:text-[#a8c7f3]">{companyName}</p>}
+            <h1 className="mt-1 text-3xl font-medium leading-tight tracking-tight sm:text-4xl">{role || 'Interview experience'}</h1>
+            <div className="mt-4 flex flex-wrap gap-x-4 gap-y-2 text-sm text-[#5e554a] dark:text-[#aaa398]">
+              {offerType && <span>{offerLabels[offerType] || offerType}</span>}
+              {opportunityType && <span>{opportunityType.toLowerCase().includes('off') ? 'Off campus' : 'On campus'}</span>}
+            </div>
+          </div>
+          <button type="button" onClick={handleShare} className="inline-flex h-10 shrink-0 items-center justify-center gap-2 rounded-md border border-black/10 px-3 text-sm font-medium text-[#5e554a] transition-colors hover:bg-[#efe9df] hover:text-[#1f1b16] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring dark:border-white/10 dark:text-[#aaa398] dark:hover:bg-[#262421] dark:hover:text-[#efe9de]">
+            <Share2 size={16} aria-hidden="true" /> Share
           </button>
         </div>
+      </header>
 
-        {/* Author Row */}
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 px-4 py-3">
-          {/* Left: avatar + name + socials */}
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-full bg-primary text-primary-foreground flex items-center justify-center font-semibold">
-              {avatarInitials}
-            </div>
-            <div className="flex items-center gap-2 flex-wrap">
-              <span className="font-medium text-gray-900 dark:text-gray-100">
-                {userName}
-              </span>
-              {!is_anonymous && linkedin_url && (
-                <a
-                  href={linkedin_url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300"
-                  title="LinkedIn">
-                  <Linkedin className="w-5 h-5" />
-                </a>
-              )}
-              {!is_anonymous && github_url && (
-                <a
-                  href={github_url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-gray-700 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white"
-                  title="GitHub">
-                  <Github className="w-5 h-5" />
-                </a>
-              )}
-            </div>
+      <div className="flex flex-col gap-3 border-b border-black/10 py-5 dark:border-white/10 sm:flex-row sm:items-center sm:justify-between">
+        <div className="flex min-w-0 items-center gap-3">
+          <span className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-black/10 bg-[#f2eee6] text-sm font-medium text-[#5e554a] dark:border-white/10 dark:bg-[#262421] dark:text-[#c2baae]" aria-hidden="true">
+            {isAnonymous ? <ShieldCheck size={17} strokeWidth={1.6} /> : initials}
+          </span>
+          <div className="min-w-0">
+            <p className="truncate text-sm font-medium">{authorName}</p>
+            {sharedDate && <p className="mt-0.5 text-xs text-[#776f65] dark:text-[#8a847a]">Shared {sharedDate}</p>}
           </div>
-
-          {/* Right: published date */}
-          {createdDate && (
-            <p className="text-sm text-gray-500 dark:text-gray-400">
-              Published on <span className="italic">{createdDate}</span>
-            </p>
+        </div>
+        <div className="flex items-center gap-3">
+          {!isAnonymous && linkedinUrl && (
+            <a href={linkedinUrl} target="_blank" rel="noopener noreferrer" aria-label={`${authorName} on LinkedIn`} className="rounded-sm text-[#5e554a] hover:text-[#2459a6] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-ring dark:text-[#aaa398] dark:hover:text-[#a8c7f3]">
+              <Linkedin size={17} strokeWidth={1.6} aria-hidden="true" />
+            </a>
+          )}
+          {!isAnonymous && githubUrl && (
+            <a href={githubUrl} target="_blank" rel="noopener noreferrer" aria-label={`${authorName} on GitHub`} className="rounded-sm text-[#5e554a] hover:text-[#2459a6] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-ring dark:text-[#aaa398] dark:hover:text-[#a8c7f3]">
+              <Github size={17} strokeWidth={1.6} aria-hidden="true" />
+            </a>
           )}
         </div>
       </div>
 
-      {/* Content */}
-      <div className="bg-card text-card-foreground rounded-xl p-6 border border-border shadow-sm">
-        <MarkdownRenderer
-          content={
-            content ||
-            `# No Content Available
-
-This interview experience doesn't have detailed content yet.  
-
-**What you can do:**
-- Check back later
-- Browse other experiences
-- Share your own interview experience`
-          }
-        />
-      </div>
-    </div>
+      <section className="mt-6 rounded-xl border border-black/10 bg-[#fdfbf7] p-5 dark:border-white/10 dark:bg-[#1c1a18] sm:p-7" aria-label="Interview notes">
+        <div className="mb-5 flex items-center gap-2 border-b border-black/10 pb-4 dark:border-white/10">
+          <Briefcase size={16} strokeWidth={1.6} className="text-[#5e554a] dark:text-[#aaa398]" aria-hidden="true" />
+          <h2 className="text-sm font-medium">Interview notes</h2>
+        </div>
+        {content ? (
+          <MarkdownRenderer content={content} />
+        ) : (
+          <p className="text-sm leading-6 text-[#5e554a] dark:text-[#aaa398]">No interview notes were included with this account.</p>
+        )}
+      </section>
+    </article>
   );
 }

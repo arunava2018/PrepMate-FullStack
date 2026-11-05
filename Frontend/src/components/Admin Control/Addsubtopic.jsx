@@ -1,149 +1,68 @@
-import React, { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
+import { useEffect, useState } from 'react';
+import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
-
-import useFetch from '@/hooks/useFetch';
-import { getSubjects } from '@/db/apiSubjects';
 import { addSubtopic } from '@/db/apiSubtopic';
+import { getSubjects } from '@/db/apiSubjects';
+import useFetch from '@/hooks/useFetch';
+import AdminPageShell from './AdminPageShell';
 
-function Addsubtopic() {
-  // ✅ Use subjectId instead of subject name
+function AddSubtopic() {
   const [form, setForm] = useState({ subjectId: '', name: '' });
   const [successMsg, setSuccessMsg] = useState('');
+  const { data: subjects, loading: subjectsLoading, error: subjectsError, fn: fetchSubjects } = useFetch(getSubjects);
+  const { loading: saving, error, fn: saveSubtopic } = useFetch(addSubtopic);
 
-  const { data, loading, error, fn: fnSubjects } = useFetch(getSubjects);
-  const { loading: load, fn: fnSubtopic } = useFetch(addSubtopic);
-
+  useEffect(() => { fetchSubjects(); }, []);
   useEffect(() => {
-    fnSubjects();
-  }, []);
+    if (!successMsg) return;
+    const timer = setTimeout(() => setSuccessMsg(''), 3000);
+    return () => clearTimeout(timer);
+  }, [successMsg]);
 
-  const handleChange = (e) => {
-    setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+  const handleChange = (event) => {
+    setForm((current) => ({ ...current, [event.target.name]: event.target.value }));
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    const res = await fnSubtopic(form); // ✅ form = { subjectId, name }
-    if (res) {
-      setSuccessMsg(
-        `Subtopic "${res.subtopic.name}" has been successfully added.`
-      );
-      setForm({ subjectId: '', name: '' }); // reset
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    const result = await saveSubtopic(form);
+    if (result?.subtopic) {
+      setSuccessMsg(`${result.subtopic.name} added`);
+      setForm((current) => ({ ...current, name: '' }));
     }
   };
 
-  // Auto-dismiss alerts after 2.5s
-  useEffect(() => {
-    if (successMsg || error) {
-      const timer = setTimeout(() => setSuccessMsg(''), 2500);
-      return () => clearTimeout(timer);
-    }
-  }, [successMsg, error]);
+  const fieldClass = 'h-11 rounded-lg border-black/10 bg-[#f7f4ee] px-3 text-sm shadow-none focus-visible:ring-2 dark:border-white/10 dark:bg-[#161513]';
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.4 }}
-      className="max-w-2xl mx-auto mt-10">
-      <Card className="shadow-lg bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700">
-        <CardHeader>
-          <CardTitle className="text-2xl font-bold text-gray-900 dark:text-gray-100 text-center">
-            Add New Subtopic
-          </CardTitle>
-        </CardHeader>
+    <AdminPageShell title="Add a subtopic" description="Choose a subject, then add a focused section of questions">
+      <Card className="gap-0 overflow-hidden rounded-xl border-black/10 bg-[#fdfbf7] py-0 shadow-none dark:border-white/10 dark:bg-[#1c1a18]">
+        <form onSubmit={handleSubmit} className="space-y-5 p-5 sm:p-6">
+          <div className="space-y-2">
+            <label htmlFor="subtopic-subject" className="text-sm font-medium">Subject</label>
+            <select id="subtopic-subject" name="subjectId" value={form.subjectId} onChange={handleChange} disabled={subjectsLoading} required className={`${fieldClass} w-full`}>
+              <option value="">{subjectsLoading ? 'Loading subjects' : 'Choose a subject'}</option>
+              {Array.isArray(subjects) && subjects.map(({ id, name }) => <option key={id} value={id}>{name}</option>)}
+            </select>
+            {subjectsError && <p role="alert" className="text-sm text-destructive">{subjectsError.message}</p>}
+          </div>
 
-        <CardContent>
-          <form onSubmit={handleSubmit} className="space-y-6">
-            {/* Subject Dropdown */}
-            <div>
-              <label className="block mb-2 font-medium text-gray-800 dark:text-gray-200">
-                Subject
-              </label>
-              <select
-                name="subjectId" // ✅ use subjectId
-                value={form.subjectId}
-                onChange={handleChange}
-                required
-                className="w-full p-2 border rounded-lg bg-gray-50 dark:bg-gray-900 dark:text-gray-100">
-                <option value="">Select Subject</option>
-                {Array.isArray(data) &&
-                  data.map(({ id, name }) => (
-                    <option key={id} value={id}>
-                      {name}
-                    </option>
-                  ))}
-              </select>
-            </div>
+          <div className="space-y-2">
+            <label htmlFor="subtopic-name" className="text-sm font-medium">Subtopic name</label>
+            <Input id="subtopic-name" className={fieldClass} name="name" value={form.name} onChange={handleChange} placeholder="Processes and threads" required />
+          </div>
 
-            {/* Subtopic Name */}
-            <div>
-              <label className="block mb-2 font-medium text-gray-800 dark:text-gray-200">
-                Add Subtopic
-              </label>
-              <Input
-                type="text"
-                name="name"
-                value={form.name}
-                onChange={handleChange}
-                placeholder="Enter subtopic..."
-                required
-              />
-            </div>
+          {successMsg && <p role="status" className="rounded-lg border border-emerald-700/20 bg-emerald-700/5 px-4 py-3 text-sm text-emerald-800 dark:text-emerald-300">{successMsg}</p>}
+          {error && <p role="alert" className="rounded-lg border border-destructive/20 bg-destructive/5 px-4 py-3 text-sm text-destructive">{error.message}</p>}
 
-            {/* Alerts */}
-            <AnimatePresence>
-              {successMsg && (
-                <motion.div
-                  initial={{ opacity: 0, y: -10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -10 }}
-                  transition={{ duration: 0.3 }}>
-                  <Alert className="bg-green-50 border-green-500 dark:bg-green-900/20">
-                    <AlertTitle className="text-green-700 dark:text-green-400">
-                      ✅ Success
-                    </AlertTitle>
-                    <AlertDescription className="text-green-600 dark:text-green-300">
-                      {successMsg}
-                    </AlertDescription>
-                  </Alert>
-                </motion.div>
-              )}
-
-              {error && (
-                <motion.div
-                  initial={{ opacity: 0, y: -10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -10 }}
-                  transition={{ duration: 0.3 }}>
-                  <Alert className="bg-red-50 border-red-500 dark:bg-red-900/20">
-                    <AlertTitle className="text-red-700 dark:text-red-400">
-                      ❌ Error
-                    </AlertTitle>
-                    <AlertDescription className="text-red-600 dark:text-red-300">
-                      {error.message}
-                    </AlertDescription>
-                  </Alert>
-                </motion.div>
-              )}
-            </AnimatePresence>
-
-            {/* Submit */}
-            <Button
-              type="submit"
-              disabled={load}
-              className="w-full bg-yellow-500 hover:bg-yellow-600 text-white font-semibold px-4 py-2 rounded-lg transition-colors disabled:opacity-50 cursor-pointer">
-              {load ? 'Saving...' : 'Add Subtopic'}
-            </Button>
-          </form>
-        </CardContent>
+          <Button type="submit" disabled={saving || subjectsLoading || !subjects?.length} className="h-11 w-full rounded-lg bg-[#2459a6] text-sm font-medium text-white shadow-none hover:bg-[#1d4a8a]">
+            {saving ? 'Saving subtopic' : 'Add subtopic'}
+          </Button>
+        </form>
       </Card>
-    </motion.div>
+    </AdminPageShell>
   );
 }
 
-export default Addsubtopic;
+export default AddSubtopic;

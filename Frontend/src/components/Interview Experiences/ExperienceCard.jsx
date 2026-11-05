@@ -1,156 +1,63 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Badge } from '../ui/badge';
-import {
-  Briefcase,
-  ArrowRight,
-  User,
-  ShieldCheck,
-  Building2,
-  Sparkles,
-  CheckCircle2,
-  GraduationCap,
-  Globe,
-  School,
-} from 'lucide-react';
+import { ArrowRight, Globe, School, ShieldCheck } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
-import { motion } from 'framer-motion';
 
-function ExperienceCard({ experience, index = 0, layoutMode = 'grid' }) {
+const offerLabels = {
+  full_time: 'Full time',
+  internship_ppo: 'Internship + PPO',
+  internship: 'Internship',
+};
+
+function ExperienceCard({ experience }) {
   const { id, role, company_name, offer_type, opportunity_type, users, is_anonymous } = experience;
-
-  // Respect anonymity
-  const userName = is_anonymous
-    ? 'Anonymous Candidate'
-    : users?.full_name || 'Community Peer';
-  const userPhoto = !is_anonymous ? users?.profile_photo : null;
-
-  // Company avatar initials
-  const companyInitial = company_name ? company_name.trim().charAt(0).toUpperCase() : 'C';
-
-  // Badge config for Offer Type
-  const getOfferBadgeConfig = (type) => {
-    switch (type) {
-      case 'full_time':
-        return {
-          icon: CheckCircle2,
-          className:
-            'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/20 hover:bg-emerald-500/20',
-          label: 'Full Time',
-        };
-      case 'internship_ppo':
-        return {
-          icon: Sparkles,
-          className:
-            'bg-purple-500/10 text-purple-600 dark:text-purple-400 border-purple-500/20 hover:bg-purple-500/20',
-          label: 'Internship + PPO',
-        };
-      case 'internship':
-        return {
-          icon: GraduationCap,
-          className:
-            'bg-blue-500/10 text-blue-600 dark:text-blue-400 border-blue-500/20 hover:bg-blue-500/20',
-          label: 'Internship',
-        };
-      default:
-        return {
-          icon: Briefcase,
-          className:
-            'bg-slate-500/10 text-slate-600 dark:text-slate-400 border-slate-500/20 hover:bg-slate-500/20',
-          label: type || 'Interview',
-        };
-    }
-  };
-
-  const badgeConfig = getOfferBadgeConfig(offer_type);
-  const BadgeIcon = badgeConfig.icon;
-
-  // Opportunity Type (On Campus / Off Campus)
-  const getOpportunityBadge = (type) => {
-    if (!type) return null;
-    const isOffCampus = type.toLowerCase().includes('off');
-    return (
-      <Badge
-        variant="outline"
-        className="text-[11px] font-medium px-2 py-0.5 rounded-full border-border/60 bg-muted/30 text-muted-foreground flex items-center gap-1"
-      >
-        {isOffCampus ? <Globe className="w-3 h-3" /> : <School className="w-3 h-3" />}
-        {isOffCampus ? 'Off Campus' : 'On Campus'}
-      </Badge>
-    );
-  };
+  const userName = is_anonymous ? 'Anonymous candidate' : users?.full_name || 'Community member';
+  const companyName = company_name?.trim() || 'Company not listed';
+  const companyInitial = companyName.charAt(0).toUpperCase();
+  const isOffCampus = opportunity_type?.toLowerCase().includes('off');
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 15 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.25, delay: index * 0.04 }}
-      className={`group relative overflow-hidden rounded-2xl border border-border/70 bg-card/70 backdrop-blur-md p-5 sm:p-6 
-        shadow-sm hover:shadow-xl hover:border-primary/40 hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between ${
-          layoutMode === 'list' ? 'w-full' : 'h-full'
-        }`}
-    >
-      {/* Top Header: Company Avatar & Badges */}
-      <div>
-        <div className="flex items-start justify-between gap-3 mb-4">
-          <div className="flex items-center gap-3">
-            {/* Company Initial Icon */}
-            <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-indigo-500/10 via-purple-500/10 to-pink-500/10 border border-primary/20 flex items-center justify-center text-primary font-extrabold text-lg shadow-inner group-hover:scale-105 transition-transform">
-              {companyInitial}
-            </div>
-            <div>
-              <h4 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-                {company_name || 'Company'}
-              </h4>
-              <h3 className="text-base sm:text-lg font-bold text-foreground group-hover:text-primary transition-colors line-clamp-1">
-                {role || 'Software Engineering Role'}
-              </h3>
-            </div>
-          </div>
-        </div>
-
-        {/* Offer & Opportunity Badges */}
-        <div className="flex flex-wrap items-center gap-2 mb-4">
-          <Badge
-            variant="outline"
-            className={`text-xs font-semibold px-2.5 py-1 rounded-full border flex items-center gap-1.5 transition-colors ${badgeConfig.className}`}
-          >
-            <BadgeIcon className="w-3.5 h-3.5" />
-            {badgeConfig.label}
-          </Badge>
-
-          {getOpportunityBadge(opportunity_type)}
+    <article className="flex h-full min-h-56 flex-col rounded-xl border border-black/10 bg-[#fdfbf7] p-5 transition-colors hover:bg-[#f7f4ee] dark:border-white/10 dark:bg-[#1c1a18] dark:hover:bg-[#211f1c]">
+      <div className="flex items-start gap-3">
+        <span aria-hidden="true" className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-lg border border-black/10 bg-[#f2eee6] text-sm font-medium text-[#5e554a] dark:border-white/10 dark:bg-[#262421] dark:text-[#c2baae]">
+          {companyInitial}
+        </span>
+        <div className="min-w-0 flex-1">
+          <p className="truncate text-sm font-medium text-[#5e554a] dark:text-[#aaa398]">{companyName}</p>
+          <h2 className="mt-1 line-clamp-2 text-lg font-medium leading-6 text-[#1f1b16] dark:text-[#efe9de]">
+            {role || 'Interview experience'}
+          </h2>
         </div>
       </div>
 
-      {/* Footer: User Info & CTA */}
-      <div className="pt-4 mt-2 border-t border-border/50 flex items-center justify-between gap-3">
-        {/* User profile */}
-        <div className="flex items-center gap-2.5 min-w-0">
-          <Avatar className="h-7 w-7 border border-border flex-shrink-0">
-            {userPhoto ? (
-              <AvatarImage src={userPhoto} alt={userName} />
-            ) : (
-              <AvatarFallback className="bg-primary/10 text-primary text-[10px] font-bold">
-                {is_anonymous ? <ShieldCheck className="w-3.5 h-3.5 text-primary" /> : userName[0]}
-              </AvatarFallback>
-            )}
-          </Avatar>
-          <span className="text-xs font-medium text-muted-foreground truncate" title={userName}>
-            {userName}
+      <div className="mt-5 flex flex-wrap items-center gap-x-4 gap-y-2 border-t border-black/10 pt-4 text-sm dark:border-white/10">
+        {offer_type && <span className="inline-flex items-center gap-2 text-[#5e554a] dark:text-[#c2baae]"><span className="h-4 w-0.5 rounded-full bg-[#386eb8] dark:bg-[#a8c7f3]" aria-hidden="true" />{offerLabels[offer_type] || offer_type}</span>}
+        {opportunity_type && (
+          <span className="inline-flex items-center gap-1.5 text-[#776f65] dark:text-[#8a847a]">
+            {isOffCampus ? <Globe size={14} aria-hidden="true" /> : <School size={14} aria-hidden="true" />}
+            {isOffCampus ? 'Off campus' : 'On campus'}
           </span>
-        </div>
+        )}
+      </div>
 
-        {/* Read CTA button */}
+      <div className="mt-auto flex items-center justify-between gap-3 border-t border-black/10 pt-4 dark:border-white/10">
+        <div className="flex min-w-0 items-center gap-2">
+          <Avatar className="h-7 w-7 shrink-0 border border-black/10 dark:border-white/10">
+            {!is_anonymous && users?.profile_photo && <AvatarImage src={users.profile_photo} alt={userName} />}
+            <AvatarFallback className="bg-[#efe9df] text-[#5e554a] dark:bg-[#262421] dark:text-[#c2baae]">
+              {is_anonymous ? <ShieldCheck size={14} aria-label="Anonymous" /> : userName.charAt(0).toUpperCase()}
+            </AvatarFallback>
+          </Avatar>
+          <span className="truncate text-sm text-[#5e554a] dark:text-[#aaa398]">{userName}</span>
+        </div>
         <Link
           to={`/view-interview-experiences/${id}`}
-          className="inline-flex items-center gap-1.5 text-xs font-semibold text-primary hover:text-primary/80 transition-colors flex-shrink-0 group/link"
+          className="inline-flex shrink-0 items-center gap-1.5 rounded-sm text-sm font-medium text-[#2459a6] hover:underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-ring dark:text-[#a8c7f3]"
         >
-          <span>Read Story</span>
-          <ArrowRight className="w-3.5 h-3.5 group-hover/link:translate-x-1 transition-transform" />
+          Read account <ArrowRight size={15} aria-hidden="true" />
         </Link>
       </div>
-    </motion.div>
+    </article>
   );
 }
 

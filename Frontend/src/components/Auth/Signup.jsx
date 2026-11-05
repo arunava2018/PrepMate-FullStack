@@ -1,31 +1,23 @@
-import React, { useState } from 'react';
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
-import { BeatLoader } from 'react-spinners';
-import { Eye, EyeOff } from 'lucide-react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useState } from 'react';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import * as Yup from 'yup';
+import { Eye, EyeOff } from 'lucide-react';
+import { BeatLoader } from 'react-spinners';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 import { UrlState } from '@/context';
 
-// ✅ Validation Schema
 const signupSchema = Yup.object().shape({
   name: Yup.string().required('Full name is required'),
   email: Yup.string().email('Invalid email').required('Email is required'),
   college: Yup.string().required('College name is required'),
   passoutYear: Yup.number()
-    .typeError('Passout year must be a number')
+    .typeError('Graduation year must be a number')
     .min(2000, 'Enter a valid year')
     .max(new Date().getFullYear() + 10, 'Year too far')
-    .required('Passout year is required'),
+    .required('Graduation year is required'),
   password: Yup.string()
     .min(6, 'Password must be at least 6 characters')
     .required('Password is required'),
@@ -34,62 +26,51 @@ const signupSchema = Yup.object().shape({
     .required('Confirm password is required'),
 });
 
+const fields = [
+  { name: 'name', label: 'Full name', type: 'text', placeholder: 'Your name' },
+  { name: 'email', label: 'Email', type: 'email', placeholder: 'you@example.com' },
+  { name: 'college', label: 'College or institution', type: 'text', placeholder: 'Your college' },
+  { name: 'passoutYear', label: 'Graduation year', type: 'number', placeholder: '2027' },
+];
+
 function Signup() {
   const navigate = useNavigate();
   const location = useLocation();
-  const { signup } = UrlState(); // ✅ use signup from context
-
-  // redirect to the page user originally wanted, or dashboard
+  const { signup } = UrlState();
   const from = location.state?.from?.pathname || '/dashboard';
-
   const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    college: '',
-    passoutYear: '',
-    password: '',
-    confirmPassword: '',
+    name: '', email: '', college: '', passoutYear: '', password: '', confirmPassword: '',
   });
-
   const [errors, setErrors] = useState({});
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [successAlert, setSuccessAlert] = useState(false);
 
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
-    if (errors[name]) setErrors((prev) => ({ ...prev, [name]: undefined }));
+  const handleInputChange = (event) => {
+    const { name, value } = event.target;
+    setFormData((current) => ({ ...current, [name]: value }));
+    if (errors[name]) setErrors((current) => ({ ...current, [name]: undefined }));
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const handleSubmit = async (event) => {
+    event.preventDefault();
     setErrors({});
     try {
       setLoading(true);
-
       await signupSchema.validate(formData, { abortEarly: false });
-
-      // ✅ remove confirmPassword before sending
       const { confirmPassword, ...signupData } = formData;
-
-      // ✅ ensure passoutYear is sent as an integer
       signupData.passoutYear = parseInt(signupData.passoutYear, 10);
-
-      await signup(signupData); // use context signup
-
+      await signup(signupData);
       setSuccessAlert(true);
-
-      // ✅ redirect automatically
       setTimeout(() => navigate(from, { replace: true }), 2000);
-    } catch (err) {
-      if (err?.inner) {
-        const newErrors = {};
-        err.inner.forEach((e) => (newErrors[e.path] = e.message));
-        setErrors(newErrors);
+    } catch (error) {
+      if (error?.inner) {
+        const nextErrors = {};
+        error.inner.forEach((item) => { nextErrors[item.path] = item.message; });
+        setErrors(nextErrors);
       } else {
-        setErrors({ general: err.message });
+        setErrors({ general: error.message });
       }
     } finally {
       setLoading(false);
@@ -97,141 +78,55 @@ function Signup() {
   };
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>Signup</CardTitle>
-        <CardDescription>Create a new account</CardDescription>
-      </CardHeader>
-
+    <>
       {successAlert && (
-        <Alert variant="success" className="mb-4">
-          <AlertTitle>Signup Successful!</AlertTitle>
-          <AlertDescription>Redirecting...</AlertDescription>
+        <Alert variant="success" className="mb-5">
+          <AlertTitle>Account created</AlertTitle>
+          <AlertDescription>Taking you to your dashboard</AlertDescription>
         </Alert>
       )}
-
-      <form onSubmit={handleSubmit}>
-        <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {/* Full Name */}
-          <div className="space-y-1">
-            <Input
-              name="name"
-              type="text"
-              placeholder="Full Name"
-              value={formData.name}
-              onChange={handleInputChange}
-            />
-            {errors.name && (
-              <p className="text-red-500 text-sm">{errors.name}</p>
-            )}
-          </div>
-
-          {/* Email */}
-          <div className="space-y-1">
-            <Input
-              name="email"
-              type="email"
-              placeholder="Email"
-              value={formData.email}
-              onChange={handleInputChange}
-            />
-            {errors.email && (
-              <p className="text-red-500 text-sm">{errors.email}</p>
-            )}
-          </div>
-
-          {/* College */}
-          <div className="space-y-1">
-            <Input
-              name="college"
-              type="text"
-              placeholder="College Name"
-              value={formData.college}
-              onChange={handleInputChange}
-            />
-            {errors.college && (
-              <p className="text-red-500 text-sm">{errors.college}</p>
-            )}
-          </div>
-
-          {/* Passout Year */}
-          <div className="space-y-1">
-            <Input
-              name="passoutYear"
-              type="number"
-              placeholder="Passout Year"
-              value={formData.passoutYear}
-              onChange={handleInputChange}
-            />
-            {errors.passoutYear && (
-              <p className="text-red-500 text-sm">{errors.passoutYear}</p>
-            )}
-          </div>
-
-          {/* Password */}
-          <div className="space-y-1 relative">
-            <Input
-              name="password"
-              type={showPassword ? 'text' : 'password'}
-              placeholder="Password"
-              value={formData.password}
-              onChange={handleInputChange}
-            />
-            <button
-              type="button"
-              onClick={() => setShowPassword((prev) => !prev)}
-              className="absolute right-3 top-2.5 text-gray-500 hover:text-gray-700">
-              {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+      <form onSubmit={handleSubmit} className="space-y-5">
+        <div className="grid grid-cols-1 gap-x-4 gap-y-4 sm:grid-cols-2">
+          {fields.map((field) => (
+            <div className="space-y-2" key={field.name}>
+              <Label htmlFor={field.name}>{field.label}</Label>
+              <Input
+                className="h-11 rounded-lg border-border bg-background/80 px-3 text-sm shadow-none placeholder:text-muted-foreground focus-visible:ring-2"
+                id={field.name}
+                name={field.name}
+                type={field.type}
+                placeholder={field.placeholder}
+                value={formData[field.name]}
+                onChange={handleInputChange}
+                required
+              />
+              {errors[field.name] && <p className="text-sm text-destructive">{errors[field.name]}</p>}
+            </div>
+          ))}
+          <div className="relative space-y-2">
+            <Label htmlFor="signup-password">Password</Label>
+            <Input className="h-11 rounded-lg border-border bg-background/80 px-3 pr-11 text-sm shadow-none placeholder:text-muted-foreground focus-visible:ring-2" id="signup-password" name="password" type={showPassword ? 'text' : 'password'} placeholder="At least 6 characters" value={formData.password} onChange={handleInputChange} required />
+            <button type="button" onClick={() => setShowPassword((value) => !value)} aria-label={showPassword ? 'Hide password' : 'Show password'} className="absolute right-1 top-[29px] inline-flex h-9 w-9 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-muted hover:text-foreground focus-visible:outline focus-visible:outline-2 focus-visible:outline-ring">
+              {showPassword ? <EyeOff size={17} /> : <Eye size={17} />}
             </button>
-            {errors.password && (
-              <p className="text-red-500 text-sm">{errors.password}</p>
-            )}
+            {errors.password && <p className="text-sm text-destructive">{errors.password}</p>}
           </div>
-
-          {/* Confirm Password */}
-          <div className="space-y-1 relative">
-            <Input
-              name="confirmPassword"
-              type={showConfirmPassword ? 'text' : 'password'}
-              placeholder="Confirm Password"
-              value={formData.confirmPassword}
-              onChange={handleInputChange}
-            />
-            <button
-              type="button"
-              onClick={() => setShowConfirmPassword((prev) => !prev)}
-              className="absolute right-3 top-2.5 text-gray-500 hover:text-gray-700">
-              {showConfirmPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+          <div className="relative space-y-2">
+            <Label htmlFor="confirm-password">Confirm password</Label>
+            <Input className="h-11 rounded-lg border-border bg-background/80 px-3 pr-11 text-sm shadow-none placeholder:text-muted-foreground focus-visible:ring-2" id="confirm-password" name="confirmPassword" type={showConfirmPassword ? 'text' : 'password'} placeholder="Enter your password again" value={formData.confirmPassword} onChange={handleInputChange} required />
+            <button type="button" onClick={() => setShowConfirmPassword((value) => !value)} aria-label={showConfirmPassword ? 'Hide password' : 'Show password'} className="absolute right-1 top-[29px] inline-flex h-9 w-9 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-muted hover:text-foreground focus-visible:outline focus-visible:outline-2 focus-visible:outline-ring">
+              {showConfirmPassword ? <EyeOff size={17} /> : <Eye size={17} />}
             </button>
-            {errors.confirmPassword && (
-              <p className="text-red-500 text-sm">{errors.confirmPassword}</p>
-            )}
+            {errors.confirmPassword && <p className="text-sm text-destructive">{errors.confirmPassword}</p>}
           </div>
-        </CardContent>
-
-        {errors.general && (
-          <p className="text-red-500 text-center mt-2">{errors.general}</p>
-        )}
-
-        <CardFooter>
-          <Button
-            type="submit"
-            disabled={loading}
-            className="w-full mt-2 bg-primary hover:bg-primary/90 text-primary-foreground">
-            {loading ? <BeatLoader size={10} color="#fff" /> : 'Signup'}
-          </Button>
-        </CardFooter>
+        </div>
+        {errors.general && <p className="text-sm text-destructive">{errors.general}</p>}
+        <Button type="submit" disabled={loading} className="h-12 w-full rounded-lg bg-primary text-primary-foreground shadow-none hover:bg-primary/90">
+          {loading ? <BeatLoader size={8} color="currentColor" /> : 'Create account'}
+        </Button>
       </form>
-
-      <p className="mx-auto mt-2 pb-6 text-muted-foreground text-sm text-center">
-        Already have an account?{' '}
-        <span
-          onClick={() => navigate('/auth/login')}
-          className="text-primary underline cursor-pointer font-medium hover:text-primary/80">
-          Login
-        </span>
-      </p>
-    </Card>
+      <p className="mt-5 text-center text-sm text-muted-foreground">Already have an account? <Link to="/auth/login" state={location.state} className="font-medium text-primary underline-offset-4 hover:underline">Log in</Link></p>
+    </>
   );
 }
 

@@ -107,7 +107,7 @@ export const faqs = [
   {
     question: 'What is PrepMate?',
     answer:
-      'PrepMate is your personal Computer Science Q&A bank, curated by experts, to help you revise and prepare efficiently for interviews and exams.',
+      'PrepMate is a computer science question bank for reviewing core topics and preparing for technical interviews.',
   },
   {
     question: 'Do I need to pay to use PrepMate?',
@@ -117,12 +117,12 @@ export const faqs = [
   {
     question: 'Is my progress tracked?',
     answer:
-      'Yes! PrepMate tracks your progress subject-wise, showing question counts and performance stats to help you focus on weaker areas.',
+      'Yes. PrepMate tracks completed questions by subject so you can see what you have covered.',
   },
   {
     question: 'Is the content reliable?',
     answer:
-      'Absolutely. Every question is carefully curated and verified by our admins to ensure accuracy and clarity.',
+      'Questions are reviewed by the PrepMate team. As with any study resource, check details against your course materials and references.',
   },
   {
     question: 'Can I access PrepMate on mobile?',
@@ -140,22 +140,22 @@ export const features = [
   {
     icon: BookOpen,
     title: 'Organized Learning',
-    desc: 'Subjects and subtopics mapped for a smooth, structured progression.',
+    desc: 'Browse computer science questions grouped by subject and subtopic.',
   },
   {
     icon: LayoutDashboard,
-    title: 'Smart Dashboard',
-    desc: 'Track your progress with subject-wise insights and real-time stats.',
+    title: 'Study dashboard',
+    desc: 'See completed questions by subject and return to topics you want to review.',
   },
   {
     icon: ShieldCheck,
-    title: 'Reliable Content',
-    desc: 'Every question is admin-curated and verified for accuracy and clarity.',
+    title: 'Question review',
+    desc: 'Review questions and explanations as you work through each topic.',
   },
   {
     icon: BarChart3,
-    title: 'Elegant UI',
-    desc: 'Minimal, distraction-free design with responsive light/dark themes.',
+    title: 'Interview accounts',
+    desc: 'Read preparation notes and interview experiences shared by developers.',
   },
 ];
 

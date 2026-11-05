@@ -1,84 +1,49 @@
-import { Mail, Phone, MapPin, Twitter, Github, Linkedin } from 'lucide-react';
+import { ArrowUpRight, MessagesSquare } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import { socialLinks } from '@/constants';
 
 export default function ContactUs() {
   return (
-    <div className="min-h-screen bg-background text-foreground">
-      {/* Hero */}
-      <section className="py-10 text-center">
-        <div className="max-w-3xl mx-auto px-6">
-          <h1 className="text-4xl sm:text-5xl font-bold mb-3">Contact Us</h1>
-          <p className="text-lg text-muted-foreground leading-relaxed">
-            Have questions, feedback, or partnership ideas? We’d love to hear
-            from you. Reach out through the form below or use the contact
-            details provided.
-          </p>
-        </div>
-      </section>
+    <div className="mx-auto w-full max-w-5xl px-5 py-12 text-[#1f1b16] dark:text-[#efe9de] sm:px-6 sm:py-16 md:px-8">
+      <header className="max-w-2xl border-b border-black/10 pb-8 dark:border-white/10">
+        <p className="mb-3 text-sm text-[#5e554a] dark:text-[#aaa398]">Contact PrepMate</p>
+        <h1 className="text-3xl font-medium leading-tight tracking-tight sm:text-4xl">Get in touch</h1>
+        <p className="mt-4 text-sm leading-6 text-[#5e554a] dark:text-[#aaa398]">
+          For questions, feedback, or corrections, reach out through one of the PrepMate social channels below.
+        </p>
+      </header>
 
-      {/* Contact Form */}
-      <section className="py-10">
-        <div className="max-w-3xl mx-auto px-6">
-          <h2 className="text-2xl font-bold text-center mb-6">
-            Send us a message
-          </h2>
-          <form className="space-y-6">
-            <div>
-              <label className="block text-sm font-medium mb-2">Name</label>
-              <input
-                type="text"
-                placeholder="Your name"
-                className="w-full rounded-lg border border-border bg-background px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary"
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium mb-2">Email</label>
-              <input
-                type="email"
-                placeholder="Your email"
-                className="w-full rounded-lg border border-border bg-background px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary"
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium mb-2">Message</label>
-              <textarea
-                rows="5"
-                placeholder="Write your message..."
-                className="w-full rounded-lg border border-border bg-background px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary"></textarea>
-            </div>
-            <button
-              type="submit"
-              className="w-full bg-primary text-primary-foreground font-medium rounded-lg px-6 py-3 hover:bg-primary/90 transition-colors">
-              Send Message
-            </button>
-          </form>
-        </div>
-      </section>
-
-      {/* Socials */}
-      <section className="py-12 border-t border-border">
-        <div className="max-w-3xl mx-auto px-6 text-center">
-          <h3 className="text-lg font-semibold mb-4">Connect with us</h3>
-          <div className="flex justify-center gap-4">
-            {[
-              { href: 'https://twitter.com/Arunava17818355', icon: Twitter },
-              { href: 'https://github.com/arunava2018', icon: Github },
-              {
-                href: 'https://www.linkedin.com/in/arunava-banerjee1/',
-                icon: Linkedin,
-              },
-            ].map(({ href, icon: Icon }, i) => (
+      <section className="mt-8 max-w-2xl" aria-labelledby="social-contact-heading">
+        <h2 id="social-contact-heading" className="text-base font-medium">Find PrepMate</h2>
+        <ul className="mt-4 divide-y divide-black/10 border-y border-black/10 dark:divide-white/10 dark:border-white/10">
+          {socialLinks.map(({ href, icon: Icon, label }) => (
+            <li key={label}>
               <a
-                key={i}
                 href={href}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-10 h-10 flex items-center justify-center rounded-full border border-border hover:bg-primary hover:text-primary-foreground transition">
-                <Icon size={20} />
+                className="flex min-h-14 items-center justify-between gap-4 py-3 text-sm text-[#5e554a] transition-colors hover:text-[#1f1b16] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring dark:text-[#aaa398] dark:hover:text-[#efe9de]">
+                <span className="inline-flex items-center gap-3">
+                  <Icon size={17} strokeWidth={1.6} aria-hidden="true" />
+                  {label}
+                </span>
+                <ArrowUpRight size={16} aria-hidden="true" />
               </a>
-            ))}
-          </div>
-        </div>
+            </li>
+          ))}
+        </ul>
       </section>
+
+      <aside className="mt-10 flex max-w-2xl items-start gap-4 rounded-xl border border-black/10 bg-[#fdfbf7] p-5 dark:border-white/10 dark:bg-[#1c1a18]">
+        <MessagesSquare size={18} className="mt-0.5 shrink-0 text-[#5e554a] dark:text-[#aaa398]" aria-hidden="true" />
+        <div>
+          <h2 className="text-sm font-medium">Sharing an interview account?</h2>
+          <p className="mt-1 text-sm leading-6 text-[#5e554a] dark:text-[#aaa398]">Add an account to the community collection from the interview experiences page.</p>
+          <Link to="/view-interview-experiences" className="mt-3 inline-flex min-h-9 items-center text-sm font-medium text-[#2459a6] underline-offset-4 hover:underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring dark:text-[#a8c7f3]">
+            View interview experiences
+          </Link>
+        </div>
+      </aside>
     </div>
   );
 }
