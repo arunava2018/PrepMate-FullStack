@@ -5,7 +5,7 @@ import { Card } from '@/components/ui/card';
 import { getSubjects } from '@/db/apiSubjects';
 import { getProgress } from '@/db/apiProgress';
 import useFetch from '@/hooks/useFetch';
-import Loader from '@/components/Loader';
+import { Skeleton } from '@/components/ui/skeleton';
 import { getIcon } from '@/utils/iconmap';
 import { UrlState } from '@/context';
 import DashboardInfo from './DashboardInfo';
@@ -18,6 +18,10 @@ const slugify = (text) =>
     .replace(/\s+/g, '-')
     .replace(/[^a-zA-Z0-9-]/g, '')
     .trim();
+
+function DashboardSkeleton() {
+  return <div className="mx-auto w-full max-w-[1440px] px-5 py-8 sm:px-6 md:px-8" role="status" aria-label="Loading study plan"><Skeleton className="h-8 w-56"/><Skeleton className="mt-3 h-4 w-80 max-w-full"/><div className="mt-8 grid grid-cols-2 gap-3 lg:grid-cols-4">{[0,1,2,3].map((item)=><Skeleton key={item} className="h-24 rounded-xl"/>)}</div><div className="mt-9 flex items-center justify-between"><Skeleton className="h-6 w-28"/><Skeleton className="h-4 w-20"/></div><div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3">{[0,1,2].map((item)=><Skeleton key={item} className="h-52 rounded-xl"/>)}</div></div>;
+}
 
 const DashboardPage = () => {
   const { user } = UrlState();
@@ -63,7 +67,7 @@ const DashboardPage = () => {
     return () => { active = false; };
   }, [isLoggedIn, subjects, user?.id]);
 
-  if (loading) return <Loader />;
+  if (loading) return <DashboardSkeleton />;
 
   if (error) {
     return (

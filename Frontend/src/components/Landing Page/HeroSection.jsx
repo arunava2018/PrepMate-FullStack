@@ -1,22 +1,24 @@
 import { ArrowRight, BookOpen } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { UrlState } from '@/context';
 import './landing.css';
 
 export default function HeroSection() {
+  const { isAuthenticated } = UrlState();
   return (
     <section className="landing-hero">
       <div className="landing-hero-inner">
         <div className="landing-copy">
-          <p className="landing-kicker"><span /> A steadier way to prepare</p>
-          <h1>Build your CS interview knowledge, one question at a time</h1>
+          <p className="landing-kicker"><span /> PrepMate · CS interview practice</p>
+          <h1>Prepare for CS interviews, one topic at a time</h1>
           <p className="landing-intro">
-            Practice computer science questions by subject, keep track of what you’ve covered, and learn from interview experiences shared by other developers.
+            Study questions and explanations by subject, mark what you’ve covered, and learn from interview accounts shared by other candidates.
           </p>
           <div className="landing-actions">
-            <Link to="/dashboard" className="landing-primary">Start practicing <ArrowRight size={17} /></Link>
-            <a href="#features" className="landing-secondary">See how it works</a>
+            <Link to={isAuthenticated ? '/dashboard' : '/auth/signup'} className="landing-primary">{isAuthenticated ? 'Open your study plan' : 'Create your study account'} <ArrowRight size={17} /></Link>
+            <a href="#how-it-works" className="landing-secondary">See how it works</a>
           </div>
-          <p className="landing-note"><BookOpen size={16} /> Subject-based practice · Progress you can follow</p>
+          <p className="landing-note"><BookOpen size={16} /> Subjects and subtopics · Tracked question progress</p>
         </div>
 
         <div className="study-preview" aria-label="PrepMate dashboard preview">

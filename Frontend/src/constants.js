@@ -58,104 +58,52 @@ export const getStats = ({
   },
 ];
 
-export const testimonials = [
-  {
-    name: 'Ankit Sharma',
-    role: 'Software Engineer @ Google',
-    feedback:
-      'PrepMate’s curated question bank saved me hours of prep. The structured layout made revising effortless!',
-  },
-  {
-    name: 'Riya Sen',
-    role: 'CS Student',
-    feedback:
-      'I love the subject-wise progress tracking. It really helped me focus on weak areas before my interviews.',
-  },
-  {
-    name: 'Vikram Das',
-    role: 'Developer @ Microsoft',
-    feedback:
-      'The questions are clear, concise, and relevant. PrepMate is a must-have for anyone preparing for CS interviews.',
-  },
-  {
-    name: 'Priya Mehta',
-    role: 'Software Developer @ Amazon',
-    feedback:
-      'The interface is clean and distraction-free. I can revise quickly without getting lost in unnecessary details.',
-  },
-  {
-    name: 'Siddharth Roy',
-    role: 'CS Student',
-    feedback:
-      'PrepMate’s subject and subtopic mapping made my preparation so much more organized and efficient.',
-  },
-  {
-    name: 'Ananya Gupta',
-    role: 'Backend Engineer @ Infosys',
-    feedback:
-      'The curated question bank is excellent. It helped me cover topics I often overlook while preparing.',
-  },
-  {
-    name: 'Rohan Verma',
-    role: 'Software Engineer @ Adobe',
-    feedback:
-      'I especially love the progress tracking feature. It keeps me motivated to complete all sections on time.',
-  },
-];
-
 export const faqs = [
   {
-    question: 'What is PrepMate?',
-    answer:
-      'PrepMate is a computer science question bank for reviewing core topics and preparing for technical interviews.',
+    question: 'What is PrepMate for?',
+    answer: 'PrepMate helps you prepare for technical interviews by organizing computer science questions and explanations by subject and subtopic.',
   },
   {
-    question: 'Do I need to pay to use PrepMate?',
-    answer:
-      'No, the core features are free. In the future, premium features like cloud backup and advanced analytics may be introduced.',
+    question: 'Do I need an account?',
+    answer: 'You can browse the available subjects on the dashboard. Create an account to open question practice, track your progress, and access interview accounts.',
   },
   {
-    question: 'Is my progress tracked?',
-    answer:
-      'Yes. PrepMate tracks completed questions by subject so you can see what you have covered.',
+    question: 'What does progress tracking measure?',
+    answer: 'When you mark a question as read, PrepMate updates your completed question count and progress for that subject. It records what you have covered, not a score of your mastery.',
   },
   {
-    question: 'Is the content reliable?',
-    answer:
-      'Questions are reviewed by the PrepMate team. As with any study resource, check details against your course materials and references.',
+    question: 'What are interview accounts?',
+    answer: 'They are candidate-submitted notes about an interview, including company and role details, offer path, and the written account. New submissions are reviewed before they appear in the public collection.',
   },
   {
-    question: 'Can I access PrepMate on mobile?',
-    answer:
-      'Yes, the web app is fully responsive and works smoothly on mobile, tablet, and desktop.',
+    question: 'Can I share an account anonymously?',
+    answer: 'Yes. When submitting an account, you can choose to hide your PrepMate profile name. Avoid including identifying details in the written account if you want to remain anonymous.',
   },
   {
-    question: 'Are there preloaded questions?',
-    answer:
-      'Yes, PrepMate comes with a set of common interview questions for each CS subject, ready for practice and revision.',
+    question: 'Does PrepMate create a schedule or mock interview?',
+    answer: 'Not currently. PrepMate provides subject-based questions, explanations, progress tracking, and shared interview accounts.',
   },
 ];
-
 export const features = [
   {
     icon: BookOpen,
-    title: 'Organized Learning',
-    desc: 'Browse computer science questions grouped by subject and subtopic.',
+    title: 'Subject-based practice',
+    desc: 'Work through computer science questions grouped by subject and subtopic.',
   },
   {
     icon: LayoutDashboard,
-    title: 'Study dashboard',
-    desc: 'See completed questions by subject and return to topics you want to review.',
+    title: 'Progress you can see',
+    desc: 'See how many questions you have marked as read in each subject.',
   },
   {
     icon: ShieldCheck,
-    title: 'Question review',
-    desc: 'Review questions and explanations as you work through each topic.',
+    title: 'Questions with explanations',
+    desc: 'Open a question to read its explanation, then mark it read when you have covered it.',
   },
   {
     icon: BarChart3,
-    title: 'Interview accounts',
-    desc: 'Read preparation notes and interview experiences shared by developers.',
+    title: 'Candidate interview accounts',
+    desc: 'Read shared interview notes with company, role, and offer context.',
   },
 ];
 
@@ -197,3 +145,4 @@ export const socialLinks = [
     label: 'LinkedIn',
   },
 ];
+

@@ -6,11 +6,16 @@ import { getSubjectById } from '@/db/apiSubjects';
 import { fetchSubtopics } from '@/db/apiSubtopic';
 import { fetchQuestions } from '@/db/apiQuestion';
 import { getProgress } from '@/db/apiProgress';
-import Loader from '@/components/Loader';
 import { getIcon } from '@/utils/iconmap';
 import { UrlState } from '@/context';
 import ProgressCard from '@/components/Subject/ProgressCard';
 import SubtopicAccordion from '@/components/Subject/SubtopicAccordion';
+import AppBreadcrumbs from '@/components/AppBreadcrumbs';
+import { Skeleton } from '@/components/ui/skeleton';
+
+function SubjectSkeleton() {
+  return <div className="mx-auto w-full max-w-5xl px-5 py-8 sm:px-6 md:py-10" role="status" aria-label="Loading subject practice"><div className="h-4 w-28 animate-pulse rounded bg-[#efe9df] dark:bg-[#262421]"/><div className="mt-7 flex items-center gap-4"><Skeleton className="h-11 w-11 rounded-xl"/><div className="space-y-2"><Skeleton className="h-8 w-56 max-w-[70vw]"/><Skeleton className="h-4 w-80 max-w-[75vw]"/></div></div><Skeleton className="mt-7 h-20 w-full rounded-xl"/><div className="mt-8 space-y-3"><Skeleton className="h-6 w-28"/>{[0,1,2].map((item)=><Skeleton key={item} className="h-16 w-full rounded-xl"/>)}</div></div>;
+}
 
 function SubjectContainer() {
   const { id } = useParams();
@@ -80,23 +85,22 @@ function SubjectContainer() {
   if (subjectError && !subject) {
     return (
       <section className="mx-auto max-w-5xl px-6 py-12 text-[#1f1b16] dark:text-[#efe9de]">
-        <h1 className="text-2xl font-medium">Subject unavailable</h1>
-        <p role="alert" className="mt-3 text-sm text-[#5e554a] dark:text-[#aaa398]">We couldn’t load this subject. {subjectError.message}</p>
-        <Link to="/dashboard" className="mt-5 inline-flex items-center gap-2 text-sm font-medium text-[#2459a6] hover:underline dark:text-[#a8c7f3]"><ArrowLeft size={16} /> Back to subjects</Link>
+        <AppBreadcrumbs items={[{ label: 'Study plan', to: '/dashboard' }, { label: 'Subject unavailable' }]} />
+        <h1 className="text-2xl font-medium">{subjectError.message?.toLowerCase().includes('not found') ? 'This subject is no longer available' : 'Could not load this subject'}</h1>
+        <p role="alert" className="mt-3 text-sm text-[#5e554a] dark:text-[#aaa398]">{subjectError.message?.toLowerCase().includes('not found') ? 'It may have been removed or the link may be outdated.' : 'There was a problem loading this subject. Please try again in a moment.'}</p>
+        <Link to="/dashboard" className="mt-5 inline-flex items-center gap-2 text-sm font-medium text-[#2459a6] hover:underline dark:text-[#a8c7f3]"><ArrowLeft size={16} /> Back to your study plan</Link>
       </section>
     );
   }
 
-  if (subjectLoading || !progressData || subtopicsLoading) return <Loader />;
-  if (!subject) return <p className="mx-auto max-w-5xl px-6 py-12 text-sm text-muted-foreground">Subject not found.</p>;
+  if (subjectLoading || !progressData || subtopicsLoading) return <SubjectSkeleton />;
+  if (!subject) return <section className="mx-auto max-w-5xl px-6 py-12 text-[#1f1b16] dark:text-[#efe9de]"><AppBreadcrumbs items={[{ label: 'Study plan', to: '/dashboard' }, { label: 'Subject unavailable' }]} /><h1 className="text-2xl font-medium">This subject is no longer available</h1><p className="mt-2 text-sm text-[#5e554a] dark:text-[#aaa398]">Return to your study plan to choose another subject.</p><Link to="/dashboard" className="mt-5 inline-flex items-center gap-2 text-sm font-medium text-[#2459a6] hover:underline dark:text-[#a8c7f3]"><ArrowLeft size={16} /> Back to your study plan</Link></section>;
 
   const Icon = getIcon(subject.icon);
 
   return (
     <div className="mx-auto w-full max-w-5xl px-5 py-8 text-[#1f1b16] dark:text-[#efe9de] sm:px-6 md:py-10">
-      <Link to="/dashboard" className="mb-6 inline-flex items-center gap-2 rounded-sm text-sm text-[#5e554a] transition-colors hover:text-[#1f1b16] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-ring dark:text-[#aaa398] dark:hover:text-[#efe9de]">
-        <ArrowLeft size={16} /> All subjects
-      </Link>
+      <AppBreadcrumbs items={[{ label: 'Study plan', to: '/dashboard' }, { label: subject.name }]} />
 
       <header className="mb-6 flex items-start gap-4">
         <span className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-black/10 bg-[#fdfbf7] text-[#5e554a] dark:border-white/10 dark:bg-[#1c1a18] dark:text-[#aaa398]">

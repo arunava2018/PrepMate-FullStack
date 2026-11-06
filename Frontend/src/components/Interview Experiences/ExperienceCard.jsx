@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowRight, Globe, School, ShieldCheck } from 'lucide-react';
+import { ArrowRight, Globe, School, ShieldCheck, CalendarDays } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
 
 const offerLabels = {
@@ -10,11 +10,12 @@ const offerLabels = {
 };
 
 function ExperienceCard({ experience }) {
-  const { id, role, company_name, offer_type, opportunity_type, users, is_anonymous } = experience;
+  const { id, role, company_name, offer_type, opportunity_type, users, is_anonymous, created_at } = experience;
   const userName = is_anonymous ? 'Anonymous candidate' : users?.full_name || 'Community member';
   const companyName = company_name?.trim() || 'Company not listed';
   const companyInitial = companyName.charAt(0).toUpperCase();
   const isOffCampus = opportunity_type?.toLowerCase().includes('off');
+  const sharedDate = created_at ? new Date(created_at).toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' }) : null;
 
   return (
     <article className="flex h-full min-h-56 flex-col rounded-xl border border-black/10 bg-[#fdfbf7] p-5 transition-colors hover:bg-[#f7f4ee] dark:border-white/10 dark:bg-[#1c1a18] dark:hover:bg-[#211f1c]">
@@ -31,13 +32,14 @@ function ExperienceCard({ experience }) {
       </div>
 
       <div className="mt-5 flex flex-wrap items-center gap-x-4 gap-y-2 border-t border-black/10 pt-4 text-sm dark:border-white/10">
-        {offer_type && <span className="inline-flex items-center gap-2 text-[#5e554a] dark:text-[#c2baae]"><span className="h-4 w-0.5 rounded-full bg-[#386eb8] dark:bg-[#a8c7f3]" aria-hidden="true" />{offerLabels[offer_type] || offer_type}</span>}
+        {offer_type && <span className="inline-flex items-center rounded-full border border-[#2459a6]/20 bg-[#2459a6]/5 px-2.5 py-1 text-xs font-medium text-[#2459a6] dark:border-[#a8c7f3]/25 dark:bg-[#a8c7f3]/10 dark:text-[#a8c7f3]">{offerLabels[offer_type] || offer_type}</span>}
         {opportunity_type && (
-          <span className="inline-flex items-center gap-1.5 text-[#776f65] dark:text-[#8a847a]">
+          <span className="inline-flex items-center gap-1.5 rounded-full border border-black/10 px-2.5 py-1 text-xs text-[#5e554a] dark:border-white/10 dark:text-[#aaa398]">
             {isOffCampus ? <Globe size={14} aria-hidden="true" /> : <School size={14} aria-hidden="true" />}
             {isOffCampus ? 'Off campus' : 'On campus'}
           </span>
         )}
+        {sharedDate && <span className="inline-flex items-center gap-1.5 text-xs text-[#776f65] dark:text-[#8a847a]"><CalendarDays size={14} aria-hidden="true" />{sharedDate}</span>}
       </div>
 
       <div className="mt-auto flex items-center justify-between gap-3 border-t border-black/10 pt-4 dark:border-white/10">

@@ -2,7 +2,6 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { fetchPublicInterviewExperiences } from '@/db/apiInterviewExperience';
 import useFetch from '@/hooks/useFetch';
-import Loader from '../Loader';
 import { Button } from '../ui/button';
 import { Input } from '../ui/input';
 import {
@@ -17,6 +16,12 @@ import {
 import CompanyExperienceSection from './CompanyExperienceSection';
 import ExperienceStats from './ExperienceStats';
 import ExperienceCard from './ExperienceCard';
+import AppBreadcrumbs from '@/components/AppBreadcrumbs';
+import { Skeleton } from '@/components/ui/skeleton';
+
+function ExperienceListSkeleton() {
+  return <div className="mx-auto w-full max-w-6xl px-4 pb-14 pt-8 sm:px-6 sm:pt-10" role="status" aria-label="Loading interview experiences"><AppBreadcrumbs items={[{ label: 'Experiences' }]} /><div className="flex flex-col gap-4 border-b border-black/10 pb-7 dark:border-white/10"><Skeleton className="h-4 w-36"/><Skeleton className="h-9 w-2/3 max-w-xl"/><Skeleton className="h-5 w-full max-w-2xl"/></div><Skeleton className="mt-6 h-24 w-full rounded-xl"/><Skeleton className="mt-8 h-24 w-full rounded-xl"/><div className="mt-6 grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">{[0,1,2].map((item)=><Skeleton key={item} className="h-56 rounded-xl"/>)}</div></div>;
+}
 
 const offerTypeFilters = [
   { id: 'all', label: 'All offers' },
@@ -69,7 +74,7 @@ function InterviewExperience() {
     [experiences]
   );
 
-  if (loading) return <Loader />;
+  if (loading) return <ExperienceListSkeleton />;
 
   if (error) {
     return (
@@ -85,6 +90,7 @@ function InterviewExperience() {
 
   return (
     <div className="mx-auto w-full max-w-6xl px-4 pb-14 pt-8 text-[#1f1b16] dark:text-[#efe9de] sm:px-6 sm:pt-10">
+      <AppBreadcrumbs items={[{ label: 'Experiences' }]} />
       <header className="flex flex-col gap-6 border-b border-black/10 pb-7 dark:border-white/10 sm:flex-row sm:items-end sm:justify-between">
         <div className="max-w-2xl">
           <p className="text-sm font-medium text-[#2459a6] dark:text-[#a8c7f3]">PrepMate community</p>

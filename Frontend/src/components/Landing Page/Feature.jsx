@@ -1,8 +1,8 @@
-import { BookOpen, ChartNoAxesColumnIncreasing, ShieldCheck, PanelsTopLeft } from 'lucide-react';
+import { BookOpen, FileText, MessageSquareText, PanelsTopLeft } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
 import { features } from '@/constants.js';
 
-const icons = [BookOpen, PanelsTopLeft, ShieldCheck, ChartNoAxesColumnIncreasing];
+const icons = [BookOpen, PanelsTopLeft, FileText, MessageSquareText];
 
 export default function Features() {
   const { pathname } = useLocation();
@@ -14,11 +14,11 @@ export default function Features() {
         <header className="landing-section-heading">
           {isFeaturesPage && <p className="mb-3 text-sm text-[#5e554a] dark:text-[#aaa398]">PrepMate · Practice</p>}
           {isFeaturesPage ? (
-            <h1 className="m-0 text-3xl font-medium leading-tight tracking-tight sm:text-4xl">A clear plan for CS interview practice</h1>
+          <h1 className="m-0 text-3xl font-medium leading-tight tracking-tight sm:text-4xl">Study CS topics and learn from interview accounts</h1>
           ) : (
-            <h2>Practice with a clear plan</h2>
+            <h2>What you can do with PrepMate</h2>
           )}
-          <p>Work through computer science topics by subject, then return to questions you want to review.</p>
+          <p>Build topic knowledge, see what you’ve covered, and get context from candidates’ interview accounts.</p>
         </header>
         <div className="landing-feature-grid">
           {features.map((feature, index) => {

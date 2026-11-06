@@ -78,6 +78,13 @@ export default function Login() {
         </Alert>
       )}
 
+      {location.state?.sessionExpired && !successAlert && (
+        <Alert>
+          <AlertTitle>Please sign in again</AlertTitle>
+          <AlertDescription>Your session may have expired. After signing in, we’ll return you to the page you requested.</AlertDescription>
+        </Alert>
+      )}
+
       {/* Email */}
       <div className="space-y-2">
         <Label htmlFor="email">Email</Label>

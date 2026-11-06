@@ -2,9 +2,15 @@ import React from 'react';
 import { CalendarDays, GraduationCap, Mail, UserRound } from 'lucide-react';
 import { UrlState } from '@/context';
 import UserExperiences from '@/components/Users Profile/UserExperinces.jsx';
+import { Link, useParams } from 'react-router-dom';
+import AppBreadcrumbs from '@/components/AppBreadcrumbs';
 
 function ProfileInfo() {
   const { user } = UrlState();
+  const { id } = useParams();
+  if (user?.id && id !== user.id) {
+    return <section className="mx-auto w-full max-w-5xl px-5 py-10 text-[#1f1b16] dark:text-[#efe9de] sm:px-6"><AppBreadcrumbs items={[{ label: 'Profile unavailable' }]} /><h1 className="text-2xl font-medium">This profile isn’t available</h1><p className="mt-2 text-sm leading-6 text-[#5e554a] dark:text-[#aaa398]">You can view your own profile and the interview accounts you’ve shared.</p><Link to={user?.id ? `/profile/${user.id}` : '/dashboard'} className="mt-5 inline-flex h-10 items-center rounded-md bg-[#2459a6] px-4 text-sm font-medium text-white hover:bg-[#1d4a8a] dark:bg-[#a8c7f3] dark:text-[#111a27]">{user?.id ? 'Go to your profile' : 'Return to study plan'}</Link></section>;
+  }
   const initials = user?.full_name
     ?.split(' ')
     .filter(Boolean)
@@ -20,6 +26,7 @@ function ProfileInfo() {
 
   return (
     <div className="mx-auto w-full max-w-6xl px-4 py-8 text-[#1f1b16] dark:text-[#efe9de] sm:px-6 md:py-10">
+      <AppBreadcrumbs items={[{ label: 'Account', to: '/dashboard' }, { label: 'Your profile' }]} />
       <header className="mb-7 flex items-center gap-4 border-b border-black/10 pb-6 dark:border-white/10 sm:mb-8 sm:pb-7">
         <div className="relative flex h-14 w-14 shrink-0 items-center justify-center rounded-lg border border-black/10 bg-[#fdfbf7] text-lg font-medium text-[#5e554a] dark:border-white/10 dark:bg-[#1c1a18] dark:text-[#c2baae]" aria-label={`${user?.full_name || 'User'} initials`}>
           <span className="absolute bottom-2 left-0 top-2 w-0.5 rounded-r bg-[#386eb8] dark:bg-[#a8c7f3]" aria-hidden="true" />

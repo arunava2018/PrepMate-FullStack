@@ -29,6 +29,7 @@ import TermsOfService from './pages/TermsOfService';
 import ContactUs from './pages/ContactUs';
 import PrivacyPolicy from './pages/PrivacyPolicy';
 import { Toaster } from 'sonner';
+import PageNotFound from './components/PageNotFound';
 
 const LayoutWithScroll = () => (
   <>
@@ -54,7 +55,7 @@ const router = createBrowserRouter([
           </RequireAuth>
         ),
       },
-      { path: '/profile/:id', element: <Profile /> },
+      { path: '/profile/:id', element: <RequireAuth><Profile /></RequireAuth> },
       {
         path: '/admin',
         element: (
@@ -163,6 +164,7 @@ const router = createBrowserRouter([
         path: '/privacy-policy',
         element: <PrivacyPolicy />,
       },
+      { path: '*', element: <PageNotFound /> },
     ],
   },
 ]);

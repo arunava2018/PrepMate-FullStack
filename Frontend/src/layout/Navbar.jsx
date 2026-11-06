@@ -100,6 +100,15 @@ const Navbar = () => {
       : []),
   ];
 
+  const isLinkActive = (link) => {
+    if (link.name === 'Home') return pathname === '/';
+    if (link.name === 'Features') return (pathname === '/' && hash === '#features') || pathname === '/features';
+    if (link.name === 'Experiences') return pathname.startsWith('/view-interview-experiences') || pathname === '/share-experience';
+    if (link.name === 'Dashboard') return pathname === '/dashboard' || pathname.startsWith('/subject/');
+    if (link.name === 'Admin') return pathname.startsWith('/admin');
+    return pathname === link.to;
+  };
+
   return (
     <nav
       className="site-nav sticky top-0 z-50 w-full border-b border-black/10 bg-[#f7f4ee] text-[#1f1b16] dark:border-white/10 dark:bg-[#161513] dark:text-[#efe9de]">
@@ -117,8 +126,8 @@ const Navbar = () => {
             <Link
               key={link.to}
               to={link.to}
-              aria-current={pathname === link.to || (link.name === 'Features' && pathname === '/' && hash === '#features') ? 'page' : undefined}
-              className={`site-nav-link inline-flex min-h-9 items-center gap-2 rounded-md px-3 text-sm transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring ${pathname === link.to || (link.name === 'Features' && pathname === '/' && hash === '#features') ? 'bg-[#efe9df] text-[#1f1b16] dark:bg-[#262421] dark:text-[#efe9de]' : 'text-[#5e554a] hover:bg-[#efe9df] hover:text-[#1f1b16] dark:text-[#aaa398] dark:hover:bg-[#262421] dark:hover:text-[#efe9de]'}`}>
+              aria-current={isLinkActive(link) ? 'page' : undefined}
+              className={`site-nav-link inline-flex min-h-9 items-center gap-2 rounded-md px-3 text-sm transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring ${isLinkActive(link) ? 'bg-[#efe9df] text-[#1f1b16] dark:bg-[#262421] dark:text-[#efe9de]' : 'text-[#5e554a] hover:bg-[#efe9df] hover:text-[#1f1b16] dark:text-[#aaa398] dark:hover:bg-[#262421] dark:hover:text-[#efe9de]'}`}>
               {link.icon} {link.name}
             </Link>
           ))}
@@ -201,7 +210,8 @@ const Navbar = () => {
                 <Link
                   key={link.to}
                   to={link.to}
-                  className="flex min-h-10 items-center gap-3 rounded-md px-3 py-2 text-sm text-[#5e554a] transition-colors hover:bg-[#efe9df] hover:text-[#1f1b16] focus-visible:outline focus-visible:outline-2 focus-visible:outline-ring dark:text-[#aaa398] dark:hover:bg-[#262421] dark:hover:text-[#efe9de]"
+                  aria-current={isLinkActive(link) ? 'page' : undefined}
+                  className={`flex min-h-10 items-center gap-3 rounded-md px-3 py-2 text-sm transition-colors hover:bg-[#efe9df] hover:text-[#1f1b16] focus-visible:outline focus-visible:outline-2 focus-visible:outline-ring dark:text-[#aaa398] dark:hover:bg-[#262421] dark:hover:text-[#efe9de] ${isLinkActive(link) ? 'bg-[#efe9df] text-[#1f1b16] dark:bg-[#262421] dark:text-[#efe9de]' : ''}`}
                   onClick={() => setMenuOpen(false)}>
                   {link.icon} {link.name}
                 </Link>

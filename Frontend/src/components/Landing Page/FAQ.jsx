@@ -6,7 +6,7 @@ export default function FAQ() {
       <div className="landing-section-inner">
         <header className="landing-section-heading">
           <h2>Frequently asked questions</h2>
-          <p>What to expect when you prepare with PrepMate.</p>
+          <p>How practice, progress, and interview accounts work.</p>
         </header>
         <div className="landing-faq-grid">
           {faqs.map((faq) => (
